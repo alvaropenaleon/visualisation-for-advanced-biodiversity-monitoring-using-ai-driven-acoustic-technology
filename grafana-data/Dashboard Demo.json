@@ -49,11 +49,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
+                "color": "text"
               }
             ]
           }
@@ -130,11 +126,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
+                "color": "text"
               }
             ]
           }
@@ -210,11 +202,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
+                "color": "text"
               }
             ]
           }
@@ -224,7 +212,7 @@
       "gridPos": {
         "h": 4,
         "w": 4,
-        "x": 8,
+        "x": 16,
         "y": 1
       },
       "id": 18,
@@ -272,7 +260,7 @@
           }
         }
       ],
-      "title": "Average Detection Length (Sec)",
+      "title": "Average Audio Length (Sec)",
       "type": "stat"
     },
     {
@@ -296,7 +284,7 @@
                 "color": "red"
               },
               {
-                "color": "orange",
+                "color": "yellow",
                 "value": 60
               },
               {
@@ -308,11 +296,11 @@
                 "value": 80
               },
               {
-                "color": "blue",
+                "color": "green",
                 "value": 90
               },
               {
-                "color": "purple",
+                "color": "green",
                 "value": 100
               }
             ]
@@ -324,7 +312,7 @@
       "gridPos": {
         "h": 4,
         "w": 4,
-        "x": 12,
+        "x": 20,
         "y": 1
       },
       "id": 14,
@@ -401,8 +389,11 @@
             },
             "insertNulls": false,
             "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
             "lineWidth": 1,
-            "pointSize": 5,
+            "pointSize": 4,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -430,32 +421,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "total_detections"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 11,
@@ -469,7 +435,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -483,7 +449,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n  time_bucket('1 day', time) as day,\n  count(*) as total_detections\nFROM sensor_data \nWHERE $__timeFilter(time)\nGROUP BY day\nORDER BY day\n",
+          "rawSql": "SELECT \n  time_bucket('1 hour', time) as day,\n  count(*) as total_detections\nFROM sensor_data \nWHERE $__timeFilter(time)\nGROUP BY day\nORDER BY day\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -505,21 +471,143 @@
           "table": "sensor_data"
         }
       ],
-      "title": "Daily Detection Counts",
+      "title": "Total Detection Counts (Hourly)",
       "type": "timeseries"
     },
     {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 16
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
       },
-      "id": 10,
-      "panels": [],
-      "title": "Species Breakdown",
-      "type": "row"
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "filterable": false,
+            "inspect": false
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text"
+              },
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 0.6
+              },
+              {
+                "color": "green",
+                "value": 0.8
+              },
+              {
+                "color": "text",
+                "value": 1.1
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Detection Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 209
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Common Name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Confidence"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 103
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 8,
+        "x": 16,
+        "y": 5
+      },
+      "id": 19,
+      "options": {
+        "cellHeight": "lg",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  time AS \"Detection Time\",\n  -- scientific_name AS \"Sci Name\",\n  common_name AS \"Common Name\",\n  confidence AS \"Confidence\"\nFROM sensor_data\nWHERE $__timeFilter(time)\nORDER BY time DESC\nLIMIT 10;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Recent Observations",
+      "type": "table"
     },
     {
       "datasource": {
@@ -552,17 +640,22 @@
       },
       "gridPos": {
         "h": 11,
-        "w": 5,
+        "w": 8,
         "x": 0,
-        "y": 17
+        "y": 16
       },
       "id": 8,
       "options": {
-        "displayLabels": [],
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
           "displayMode": "table",
-          "placement": "right",
-          "showLegend": false
+          "placement": "bottom",
+          "showLegend": true,
+          "values": [
+            "value"
+          ]
         },
         "pieType": "pie",
         "reduceOptions": {
@@ -669,9 +762,9 @@
       },
       "gridPos": {
         "h": 11,
-        "w": 19,
-        "x": 5,
-        "y": 17
+        "w": 16,
+        "x": 8,
+        "y": 16
       },
       "id": 17,
       "options": {
@@ -714,7 +807,7 @@
           }
         }
       ],
-      "title": "Average Confidence Species DetectionOver Time ",
+      "title": "Average Confidence Species Detection (Daily)",
       "type": "timeseries"
     },
     {
@@ -745,8 +838,24 @@
                 "color": "text"
               },
               {
+                "color": "text",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 0.01
+              },
+              {
+                "color": "yellow",
+                "value": 0.6
+              },
+              {
                 "color": "green",
-                "value": 1000
+                "value": 0.8
+              },
+              {
+                "color": "text",
+                "value": 1.1
               }
             ]
           }
@@ -785,7 +894,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 27
       },
       "id": 6,
       "options": {
@@ -837,6 +946,19 @@
       ],
       "title": "Raw Table Integration",
       "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 37
+      },
+      "id": 10,
+      "panels": [],
+      "title": "Species Breakdown",
+      "type": "row"
     },
     {
       "collapsed": true,
@@ -911,7 +1033,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 36
+            "y": 39
           },
           "id": 16,
           "options": {
@@ -1022,7 +1144,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 47
+            "y": 50
           },
           "id": 5,
           "options": {
@@ -1099,7 +1221,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 58
+            "y": 61
           },
           "id": 4,
           "options": {
@@ -1192,7 +1314,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 58
+            "y": 61
           },
           "id": 2,
           "options": {
@@ -1254,12 +1376,12 @@
     "list": []
   },
   "time": {
-    "from": "2023-10-15T03:18:10.000Z",
-    "to": "2024-04-29T12:17:09.000Z"
+    "from": "2023-10-18T11:23:00.000Z",
+    "to": "2023-11-16T11:42:00.000Z"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 66
+  "version": 100
 }
