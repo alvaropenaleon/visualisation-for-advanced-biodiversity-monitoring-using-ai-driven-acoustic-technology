@@ -803,7 +803,7 @@
         "sortBy": [
           {
             "desc": false,
-            "displayName": "scientific_name"
+            "displayName": "time"
           }
         ]
       },
@@ -1261,5 +1261,5 @@
   "timezone": "browser",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 65
+  "version": 66
 }
