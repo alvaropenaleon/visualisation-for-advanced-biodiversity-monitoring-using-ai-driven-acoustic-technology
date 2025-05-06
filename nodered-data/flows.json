@@ -63,7 +63,7 @@
         "id": "fbd14997310e037a",
         "type": "postgreSQLConfig",
         "name": "",
-        "host": "digitalisation-aio-package-postgres-1",
+        "host": "postgres",
         "hostFieldType": "str",
         "port": "5432",
         "portFieldType": "num",
