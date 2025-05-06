@@ -113,7 +113,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n  time_bucket('1 day', time) as day,\n  count(*) as total_detections\nFROM sensor_data \nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\nGROUP BY day\nORDER BY day\n",
+          "rawSql": "SELECT \n  time_bucket('1 day', time) as day,\n  count(*) as total_detections\nFROM sensor_data \nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \nGROUP BY day\nORDER BY day\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -232,7 +232,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  time AS \"Detection Time\",\n  -- scientific_name AS \"Sci Name\",\n  common_name AS \"Common Name\",\n  confidence AS \"Confidence\"\nFROM sensor_data\nWHERE $__timeFilter(time)\nORDER BY time DESC\nLIMIT 10;\n",
+          "rawSql": "SELECT\n  time AS \"Detection Time\",\n  -- scientific_name AS \"Sci Name\",\n  common_name AS \"Common Name\",\n  confidence AS \"Confidence\"\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \nORDER BY time DESC\nLIMIT 10;\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -309,7 +309,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n  count(*) AS total_detections\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n",
+          "rawSql": "SELECT \n  count(*) AS total_detections\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -385,7 +385,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  count(DISTINCT common_name) AS unique_species\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n",
+          "rawSql": "SELECT\n  count(DISTINCT common_name) AS unique_species\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -559,7 +559,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n  avg(confidence) AS avg_confidence\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n\n",
+          "rawSql": "SELECT \n  avg(confidence) AS avg_confidence\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -650,7 +650,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  extract(hour from time) AS detection_hour,\n  COUNT(*) AS detections\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\nGROUP BY detection_hour\nORDER BY detection_hour;",
+          "rawSql": "SELECT\n  extract(hour from time) AS detection_hour,\n  COUNT(*) AS detections\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \nGROUP BY detection_hour\nORDER BY detection_hour;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -742,7 +742,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  common_name,\n  COUNT(*) AS total_by_species\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\nGROUP BY common_name\nORDER BY total_by_species DESC;\n",
+          "rawSql": "SELECT\n  common_name,\n  COUNT(*) AS total_by_species\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence \nGROUP BY common_name\nORDER BY total_by_species DESC;\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -853,7 +853,7 @@
           "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT\n  time AS \"time\",\n  confidence,\n  scientific_name\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\nORDER BY time ASC\n",
+          "rawSql": "SELECT\n  time AS \"time\",\n  confidence,\n  scientific_name\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \nORDER BY time ASC\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -969,7 +969,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  time,\n  start_seconds,\n  end_seconds,\n  scientific_name,\n  common_name,\n  confidence,\n  sensor_id\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n",
+          "rawSql": "SELECT\n  time,\n  start_seconds,\n  end_seconds,\n  scientific_name,\n  common_name,\n  confidence,\n  sensor_id\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -2620,10 +2620,14 @@
         "allowCustomValue": false,
         "current": {
           "text": [
-            "All"
+            "Bibron's Toadlet",
+            "Brown Tree Frog",
+            "Dwarf Tree Frog"
           ],
           "value": [
-            "$__all"
+            "Bibron's Toadlet",
+            "Brown Tree Frog",
+            "Dwarf Tree Frog"
           ]
         },
         "definition": "SELECT DISTINCT common_name\t\nFROM sensor_data\t\nORDER BY common_name;",
@@ -2638,16 +2642,85 @@
         "regex": "",
         "sort": 1,
         "type": "query"
+      },
+      {
+        "allValue": "'.*'",
+        "allowCustomValue": false,
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "definition": "SELECT DISTINCT common_name\t\nFROM sensor_data\t\nORDER BY common_name;",
+        "description": "Choose to exclude a species",
+        "includeAll": true,
+        "multi": true,
+        "name": "exclude",
+        "options": [],
+        "query": "SELECT DISTINCT common_name\t\nFROM sensor_data\t\nORDER BY common_name;",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "0",
+          "value": "0"
+        },
+        "label": "Confidence Level (%) >=",
+        "name": "confidence",
+        "options": [
+          {
+            "selected": true,
+            "text": "0",
+            "value": "0"
+          },
+          {
+            "selected": false,
+            "text": "0.5",
+            "value": "0.5"
+          },
+          {
+            "selected": false,
+            "text": "0.6",
+            "value": "0.6"
+          },
+          {
+            "selected": false,
+            "text": "0.7",
+            "value": "0.7"
+          },
+          {
+            "selected": false,
+            "text": "0.8",
+            "value": "0.8"
+          },
+          {
+            "selected": false,
+            "text": "0.9",
+            "value": "0.9"
+          },
+          {
+            "selected": false,
+            "text": "1",
+            "value": "1"
+          }
+        ],
+        "query": "0,0.5,0.6,0.7,0.8,0.9,1",
+        "type": "custom"
       }
     ]
   },
   "time": {
-    "from": "2024-01-01T23:32:30.000Z",
-    "to": "2024-01-30T23:51:30.000Z"
+    "from": "now-5y",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 129
+  "version": 130
 }
