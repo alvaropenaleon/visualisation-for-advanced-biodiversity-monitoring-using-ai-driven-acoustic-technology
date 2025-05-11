@@ -2918,16 +2918,6 @@
         ],
         "query": "0,0.5,0.6,0.7,0.8,0.9,1",
         "type": "custom"
-      },
-      {
-        "baseFilters": [],
-        "datasource": {
-          "type": "grafana-postgresql-datasource",
-          "uid": "fehnkzh0nnegwf"
-        },
-        "filters": [],
-        "name": "Filters",
-        "type": "adhoc"
       }
     ]
   },
@@ -2939,5 +2929,5 @@
   "timezone": "browser",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 169
+  "version": 170
 }
