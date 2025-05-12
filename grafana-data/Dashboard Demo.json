@@ -1104,6 +1104,229 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 6,
+            "pointSize": 12,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 41
+      },
+      "id": 16,
+      "options": {
+        "candleStyle": "candles",
+        "colorStrategy": "open-close",
+        "colors": {
+          "down": "purple",
+          "up": "green"
+        },
+        "includeAllFields": false,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mode": "candles",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH stats AS (\n  SELECT\n    $__timeGroup(time,'1d')   AS bucket_time,\n    min(confidence)            AS low,\n    percentile_cont(0.25)\n      WITHIN GROUP (ORDER BY confidence) AS open,\n    percentile_cont(0.75)\n      WITHIN GROUP (ORDER BY confidence) AS close,\n    max(confidence)            AS high,\n    count(*)                   AS volume\n  FROM sensor_data\n  WHERE $__timeFilter(time)\n  GROUP BY 1\n)\nSELECT\n  bucket_time AS \"time\",\n  open, high, low, close, volume\nFROM stats\nORDER BY bucket_time;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Species Detection Confidence Over Time",
+      "type": "candlestick"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 1,
+            "drawStyle": "points",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 52
+      },
+      "id": 62,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "sortBy": "Name",
+          "sortDesc": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  time AS \"time\",\n  confidence,\n  scientific_name\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \nORDER BY time ASC\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Species Detection Confidence Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "mode": "thresholds"
           },
           "custom": {
@@ -1160,7 +1383,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 63
       },
       "id": 48,
       "options": {
@@ -1219,7 +1442,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 51
+        "y": 73
       },
       "id": 23,
       "panels": [
@@ -1249,7 +1472,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 52
+            "y": 63
           },
           "id": 11,
           "options": {
@@ -1326,7 +1549,7 @@
             "h": 3,
             "w": 4,
             "x": 4,
-            "y": 52
+            "y": 63
           },
           "id": 41,
           "options": {
@@ -1414,7 +1637,7 @@
             "h": 3,
             "w": 4,
             "x": 8,
-            "y": 52
+            "y": 63
           },
           "id": 42,
           "options": {
@@ -1490,7 +1713,7 @@
             "h": 3,
             "w": 4,
             "x": 12,
-            "y": 52
+            "y": 63
           },
           "id": 38,
           "options": {
@@ -1566,7 +1789,7 @@
             "h": 3,
             "w": 4,
             "x": 16,
-            "y": 52
+            "y": 63
           },
           "id": 52,
           "options": {
@@ -1642,7 +1865,7 @@
             "h": 3,
             "w": 4,
             "x": 20,
-            "y": 52
+            "y": 63
           },
           "id": 44,
           "options": {
@@ -1823,7 +2046,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 55
+            "y": 66
           },
           "id": 60,
           "options": {
@@ -1893,7 +2116,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 69
+            "y": 80
           },
           "id": 45,
           "options": {
@@ -1986,7 +2209,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 72
+            "y": 83
           },
           "id": 46,
           "options": {
@@ -2084,7 +2307,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 72
+            "y": 83
           },
           "id": 54,
           "options": {
@@ -2172,7 +2395,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 81
+            "y": 92
           },
           "id": 58,
           "options": {
@@ -2295,7 +2518,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 92
+            "y": 103
           },
           "id": 32,
           "options": {
@@ -2411,9 +2634,9 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 102
+            "y": 113
           },
-          "id": 16,
+          "id": 61,
           "options": {
             "legend": {
               "calcs": [],
@@ -2469,7 +2692,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 52
+        "y": 74
       },
       "id": 15,
       "panels": [],
@@ -2502,7 +2725,7 @@
         "h": 4,
         "w": 4,
         "x": 0,
-        "y": 53
+        "y": 75
       },
       "id": 24,
       "options": {
@@ -2579,7 +2802,7 @@
         "h": 4,
         "w": 4,
         "x": 4,
-        "y": 53
+        "y": 75
       },
       "id": 13,
       "options": {
@@ -2655,7 +2878,7 @@
         "h": 4,
         "w": 4,
         "x": 8,
-        "y": 53
+        "y": 75
       },
       "id": 18,
       "options": {
@@ -2755,7 +2978,7 @@
         "h": 4,
         "w": 4,
         "x": 12,
-        "y": 53
+        "y": 75
       },
       "id": 27,
       "options": {
@@ -2827,7 +3050,7 @@
         "h": 4,
         "w": 8,
         "x": 16,
-        "y": 53
+        "y": 75
       },
       "id": 28,
       "options": {
@@ -2953,7 +3176,7 @@
         "h": 11,
         "w": 16,
         "x": 0,
-        "y": 57
+        "y": 79
       },
       "id": 29,
       "options": {
@@ -3087,7 +3310,7 @@
         "h": 11,
         "w": 8,
         "x": 16,
-        "y": 57
+        "y": 79
       },
       "id": 30,
       "options": {
@@ -3167,7 +3390,7 @@
         "h": 11,
         "w": 8,
         "x": 0,
-        "y": 68
+        "y": 90
       },
       "id": 31,
       "options": {
@@ -3289,7 +3512,7 @@
         "h": 11,
         "w": 16,
         "x": 8,
-        "y": 68
+        "y": 90
       },
       "id": 34,
       "options": {
@@ -3419,7 +3642,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 79
+        "y": 101
       },
       "id": 6,
       "options": {
@@ -3478,7 +3701,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 89
+        "y": 111
       },
       "id": 9,
       "panels": [
@@ -3553,7 +3776,7 @@
             "h": 9,
             "w": 9,
             "x": 0,
-            "y": 476
+            "y": 303
           },
           "id": 19,
           "options": {
@@ -3624,7 +3847,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 485
+            "y": 312
           },
           "id": 36,
           "options": {
@@ -3726,7 +3949,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 497
+            "y": 324
           },
           "id": 59,
           "options": {
@@ -3867,7 +4090,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 509
+            "y": 336
           },
           "id": 35,
           "options": {
@@ -3978,7 +4201,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 520
+            "y": 347
           },
           "id": 33,
           "options": {
@@ -4034,7 +4257,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 90
+        "y": 112
       },
       "id": 10,
       "panels": [],
@@ -4145,5 +4368,5 @@
   "timezone": "browser",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 280
+  "version": 287
 }
