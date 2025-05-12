@@ -1319,6 +1319,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "fixedColor": "text",
             "mode": "palette-classic"
           },
           "custom": {
@@ -1328,10 +1329,10 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "points",
-            "fillOpacity": 0,
-            "gradientMode": "hue",
+            "barWidthFactor": 0.4,
+            "drawStyle": "bars",
+            "fillOpacity": 24,
+            "gradientMode": "scheme",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -1342,12 +1343,12 @@
             "lineStyle": {
               "fill": "solid"
             },
-            "lineWidth": 6,
-            "pointSize": 12,
+            "lineWidth": 4,
+            "pointSize": 8,
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "always",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1380,30 +1381,36 @@
         "candleStyle": "candles",
         "colorStrategy": "open-close",
         "colors": {
-          "down": "purple",
-          "up": "green"
+          "down": "text",
+          "up": "text"
         },
-        "includeAllFields": false,
+        "fields": {
+          "close": "close",
+          "high": "high",
+          "low": "low",
+          "open": "open"
+        },
+        "includeAllFields": true,
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
-        "mode": "candles",
+        "mode": "candles+volume",
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
+          "mode": "multi",
+          "sort": "desc"
         }
       },
       "pluginVersion": "11.6.0",
       "targets": [
         {
           "editorMode": "code",
-          "format": "table",
+          "format": "time_series",
           "rawQuery": true,
-          "rawSql": "WITH stats AS (\n  SELECT\n    $__timeGroup(time,'1d')   AS bucket_time,\n    min(confidence)            AS low,\n    percentile_cont(0.25)\n      WITHIN GROUP (ORDER BY confidence) AS open,\n    percentile_cont(0.75)\n      WITHIN GROUP (ORDER BY confidence) AS close,\n    max(confidence)            AS high,\n    count(*)                   AS volume\n  FROM sensor_data\n  WHERE $__timeFilter(time)\n  GROUP BY 1\n)\nSELECT\n  bucket_time AS \"time\",\n  open, high, low, close, volume\nFROM stats\nORDER BY bucket_time;\n",
+          "rawSql": "WITH stats AS (\n  SELECT\n    $__timeGroup(time, '1d')                   AS bucket_time,          -- daily buckets\n    min(confidence)                             AS low,                 -- whisker bottom\n    percentile_cont(0.25) WITHIN GROUP (ORDER BY confidence) AS open,   -- Q1\n    percentile_cont(0.50) WITHIN GROUP (ORDER BY confidence) AS median, -- median\n    percentile_cont(0.75) WITHIN GROUP (ORDER BY confidence) AS close,  -- Q3\n    max(confidence)                             AS high,                -- whisker top\n    count(*)                                    AS volume               -- count of points\n  FROM sensor_data\n  WHERE $__timeFilter(time)\n  GROUP BY 1\n)\nSELECT\n  bucket_time   AS \"time\", \n  open, \n  high, \n  low, \n  close, \n  median, \n  volume\nFROM stats\nORDER BY bucket_time;\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -2224,7 +2231,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 281
+            "y": 372
           },
           "id": 45,
           "options": {
@@ -2317,7 +2324,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 284
+            "y": 375
           },
           "id": 46,
           "options": {
@@ -2415,7 +2422,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 284
+            "y": 375
           },
           "id": 54,
           "options": {
@@ -2503,7 +2510,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 293
+            "y": 384
           },
           "id": 58,
           "options": {
@@ -2626,7 +2633,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 304
+            "y": 395
           },
           "id": 32,
           "options": {
@@ -2742,7 +2749,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 314
+            "y": 405
           },
           "id": 61,
           "options": {
@@ -2830,7 +2837,7 @@
             "h": 4,
             "w": 4,
             "x": 0,
-            "y": 75
+            "y": 85
           },
           "id": 24,
           "options": {
@@ -2907,7 +2914,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 75
+            "y": 85
           },
           "id": 13,
           "options": {
@@ -2983,7 +2990,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 75
+            "y": 85
           },
           "id": 18,
           "options": {
@@ -3083,7 +3090,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 75
+            "y": 85
           },
           "id": 27,
           "options": {
@@ -3155,7 +3162,7 @@
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 75
+            "y": 85
           },
           "id": 28,
           "options": {
@@ -3281,7 +3288,7 @@
             "h": 11,
             "w": 16,
             "x": 0,
-            "y": 134
+            "y": 89
           },
           "id": 29,
           "options": {
@@ -3415,7 +3422,7 @@
             "h": 11,
             "w": 8,
             "x": 16,
-            "y": 134
+            "y": 89
           },
           "id": 30,
           "options": {
@@ -3495,7 +3502,7 @@
             "h": 11,
             "w": 8,
             "x": 0,
-            "y": 145
+            "y": 100
           },
           "id": 31,
           "options": {
@@ -3617,7 +3624,7 @@
             "h": 11,
             "w": 16,
             "x": 8,
-            "y": 145
+            "y": 100
           },
           "id": 34,
           "options": {
@@ -3747,7 +3754,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 156
+            "y": 111
           },
           "id": 6,
           "options": {
@@ -4072,7 +4079,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 95
+            "y": 186
           },
           "id": 36,
           "options": {
@@ -4174,7 +4181,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 107
+            "y": 198
           },
           "id": 59,
           "options": {
@@ -4315,7 +4322,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 119
+            "y": 210
           },
           "id": 35,
           "options": {
@@ -4426,7 +4433,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 130
+            "y": 221
           },
           "id": 33,
           "options": {
@@ -4498,7 +4505,9 @@
       {
         "allowCustomValue": false,
         "current": {
-          "text": "All",
+          "text": [
+            "All"
+          ],
           "value": [
             "$__all"
           ]
@@ -4593,5 +4602,5 @@
   "timezone": "browser",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 289
+  "version": 293
 }
