@@ -578,11 +578,11 @@
               },
               {
                 "id": "custom.fillOpacity",
-                "value": 77
+                "value": 60
               },
               {
                 "id": "custom.gradientMode",
-                "value": "scheme"
+                "value": "hue"
               },
               {
                 "id": "custom.lineWidth",
@@ -590,7 +590,14 @@
               },
               {
                 "id": "custom.axisColorMode",
-                "value": "text"
+                "value": "series"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
               }
             ]
           },
@@ -624,7 +631,14 @@
               },
               {
                 "id": "custom.gradientMode",
-                "value": "none"
+                "value": "scheme"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-orange",
+                  "mode": "fixed"
+                }
               }
             ]
           }
@@ -779,8 +793,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "super-light-blue",
-            "mode": "continuous-YlBl"
+            "fixedColor": "text",
+            "mode": "fixed"
           },
           "custom": {
             "axisBorderShow": false,
@@ -788,8 +802,8 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "fillOpacity": 86,
-            "gradientMode": "scheme",
+            "fillOpacity": 60,
+            "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -825,7 +839,7 @@
       "options": {
         "barRadius": 0,
         "barWidth": 0.7,
-        "fullHighlight": true,
+        "fullHighlight": false,
         "groupWidth": 0.7,
         "legend": {
           "calcs": [],
@@ -885,7 +899,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "super-light-blue",
+            "fixedColor": "text",
             "mode": "fixed"
           },
           "custom": {
@@ -895,7 +909,7 @@
             "axisLabel": "",
             "axisPlacement": "auto",
             "fillOpacity": 56,
-            "gradientMode": "none",
+            "gradientMode": "hue",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -1809,7 +1823,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 91
+            "y": 55
           },
           "id": 60,
           "options": {
@@ -1879,7 +1893,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 105
+            "y": 69
           },
           "id": 45,
           "options": {
@@ -1972,7 +1986,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 108
+            "y": 72
           },
           "id": 46,
           "options": {
@@ -2070,7 +2084,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 108
+            "y": 72
           },
           "id": 54,
           "options": {
@@ -2158,7 +2172,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 117
+            "y": 81
           },
           "id": 58,
           "options": {
@@ -2281,7 +2295,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 128
+            "y": 92
           },
           "id": 32,
           "options": {
@@ -2397,7 +2411,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 138
+            "y": 102
           },
           "id": 16,
           "options": {
@@ -3539,7 +3553,7 @@
             "h": 9,
             "w": 9,
             "x": 0,
-            "y": 379
+            "y": 476
           },
           "id": 19,
           "options": {
@@ -3610,7 +3624,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 388
+            "y": 485
           },
           "id": 36,
           "options": {
@@ -3712,7 +3726,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 400
+            "y": 497
           },
           "id": 59,
           "options": {
@@ -3853,7 +3867,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 412
+            "y": 509
           },
           "id": 35,
           "options": {
@@ -3964,7 +3978,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 423
+            "y": 520
           },
           "id": 33,
           "options": {
@@ -4131,5 +4145,5 @@
   "timezone": "browser",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 264
+  "version": 280
 }
