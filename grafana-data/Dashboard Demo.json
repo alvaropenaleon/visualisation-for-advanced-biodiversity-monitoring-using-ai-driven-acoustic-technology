@@ -1332,7 +1332,7 @@
             "barWidthFactor": 0.4,
             "drawStyle": "bars",
             "fillOpacity": 24,
-            "gradientMode": "scheme",
+            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -1344,7 +1344,7 @@
               "fill": "solid"
             },
             "lineWidth": 4,
-            "pointSize": 8,
+            "pointSize": 10,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -1368,7 +1368,45 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "median"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "line"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 1
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 11,
@@ -1587,7 +1625,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 63
+            "y": 84
           },
           "id": 11,
           "options": {
@@ -1664,7 +1702,7 @@
             "h": 3,
             "w": 4,
             "x": 4,
-            "y": 63
+            "y": 84
           },
           "id": 41,
           "options": {
@@ -1752,7 +1790,7 @@
             "h": 3,
             "w": 4,
             "x": 8,
-            "y": 63
+            "y": 84
           },
           "id": 42,
           "options": {
@@ -1828,7 +1866,7 @@
             "h": 3,
             "w": 4,
             "x": 12,
-            "y": 63
+            "y": 84
           },
           "id": 38,
           "options": {
@@ -1904,7 +1942,7 @@
             "h": 3,
             "w": 4,
             "x": 16,
-            "y": 63
+            "y": 84
           },
           "id": 52,
           "options": {
@@ -1980,7 +2018,7 @@
             "h": 3,
             "w": 4,
             "x": 20,
-            "y": 63
+            "y": 84
           },
           "id": 44,
           "options": {
@@ -2161,7 +2199,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 66
+            "y": 123
           },
           "id": 60,
           "options": {
@@ -2231,7 +2269,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 372
+            "y": 137
           },
           "id": 45,
           "options": {
@@ -2324,7 +2362,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 375
+            "y": 140
           },
           "id": 46,
           "options": {
@@ -2422,7 +2460,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 375
+            "y": 140
           },
           "id": 54,
           "options": {
@@ -2510,7 +2548,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 384
+            "y": 149
           },
           "id": 58,
           "options": {
@@ -2633,7 +2671,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 395
+            "y": 160
           },
           "id": 32,
           "options": {
@@ -2749,7 +2787,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 405
+            "y": 170
           },
           "id": 61,
           "options": {
@@ -4001,7 +4039,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 84
+            "y": 534
           },
           "id": 63,
           "options": {
@@ -4079,7 +4117,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 186
+            "y": 636
           },
           "id": 36,
           "options": {
@@ -4181,7 +4219,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 198
+            "y": 648
           },
           "id": 59,
           "options": {
@@ -4322,7 +4360,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 210
+            "y": 660
           },
           "id": 35,
           "options": {
@@ -4433,7 +4471,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 221
+            "y": 671
           },
           "id": 33,
           "options": {
@@ -4602,5 +4640,5 @@
   "timezone": "browser",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 293
+  "version": 294
 }
