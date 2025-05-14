@@ -802,7 +802,7 @@
         "defaults": {
           "color": {
             "fixedColor": "text",
-            "mode": "fixed"
+            "mode": "shades"
           },
           "custom": {
             "axisBorderShow": false,
@@ -838,8 +838,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
-        "w": 24,
+        "h": 12,
+        "w": 8,
         "x": 0,
         "y": 21
       },
@@ -947,7 +947,7 @@
           },
           "mappings": [],
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "green"
@@ -958,13 +958,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 14,
-        "w": 24,
-        "x": 0,
-        "y": 31
+        "h": 12,
+        "w": 16,
+        "x": 8,
+        "y": 21
       },
       "id": 65,
-      "interval": "30m",
       "options": {
         "legend": {
           "calcs": [],
@@ -1055,7 +1054,7 @@
         "h": 14,
         "w": 24,
         "x": 0,
-        "y": 45
+        "y": 33
       },
       "id": 66,
       "options": {
@@ -1145,10 +1144,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 12,
         "w": 24,
         "x": 0,
-        "y": 59
+        "y": 47
       },
       "id": 37,
       "options": {
@@ -1215,7 +1214,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "palette-classic-by-name"
           },
           "custom": {
             "axisBorderShow": false,
@@ -1250,6 +1249,7 @@
               "mode": "off"
             }
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1266,7 +1266,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 69
+        "y": 59
       },
       "id": 62,
       "options": {
@@ -1280,7 +1280,7 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -1323,115 +1323,7 @@
         "defaults": {
           "color": {
             "fixedColor": "text",
-            "mode": "fixed"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 56,
-            "gradientMode": "hue",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 0,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text"
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 12,
-        "x": 0,
-        "y": 80
-      },
-      "id": 64,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.77,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "orientation": "auto",
-        "showValue": "never",
-        "stacking": "none",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "xField": "confidence_bucket",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "ae9jue6in1xq8c"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "WITH bucketed AS (\r\n  SELECT\r\n    width_bucket(confidence, 0.0, 1.0, 25) AS bucket,\r\n    count(*)                         AS detections\r\n  FROM sensor_data\r\n  WHERE $__timeFilter(time)\r\n  GROUP BY bucket\r\n)\r\nSELECT\r\n  -- format the lower edge of each bucket as text for the X-axis\r\n  ((bucket - 1) * (1.0/25))::numeric(4,2)::text AS confidence_bucket,\r\n  detections\r\nFROM bucketed\r\nORDER BY confidence_bucket;\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Sensor 2",
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "text",
-            "mode": "palette-classic"
+            "mode": "palette-classic-by-name"
           },
           "custom": {
             "axisBorderShow": false,
@@ -1523,7 +1415,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 91
+        "y": 70
       },
       "id": 16,
       "options": {
@@ -1591,6 +1483,114 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 56,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 81
+      },
+      "id": 64,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.77,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "never",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "confidence_bucket",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "ae9jue6in1xq8c"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH bucketed AS (\r\n  SELECT\r\n    width_bucket(confidence, 0.0, 1.0, 25) AS bucket,\r\n    count(*)                         AS detections\r\n  FROM sensor_data\r\n  WHERE $__timeFilter(time)\r\n  GROUP BY bucket\r\n)\r\nSELECT\r\n  -- format the lower edge of each bucket as text for the X-axis\r\n  ((bucket - 1) * (1.0/25))::numeric(4,2)::text AS confidence_bucket,\r\n  detections\r\nFROM bucketed\r\nORDER BY confidence_bucket;\r\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Sensor 2",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "mode": "thresholds"
           },
           "custom": {
@@ -1647,7 +1647,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 102
+        "y": 92
       },
       "id": 48,
       "options": {
@@ -1706,7 +1706,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 112
+        "y": 102
       },
       "id": 23,
       "panels": [
@@ -2310,7 +2310,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 231
+            "y": 267
           },
           "id": 60,
           "options": {
@@ -2380,7 +2380,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 245
+            "y": 281
           },
           "id": 45,
           "options": {
@@ -2473,7 +2473,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 248
+            "y": 284
           },
           "id": 46,
           "options": {
@@ -2571,7 +2571,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 248
+            "y": 284
           },
           "id": 54,
           "options": {
@@ -2659,7 +2659,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 257
+            "y": 293
           },
           "id": 58,
           "options": {
@@ -2782,7 +2782,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 268
+            "y": 304
           },
           "id": 32,
           "options": {
@@ -2898,7 +2898,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 278
+            "y": 314
           },
           "id": 61,
           "options": {
@@ -2956,7 +2956,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 113
+        "y": 103
       },
       "id": 15,
       "panels": [
@@ -2986,7 +2986,7 @@
             "h": 4,
             "w": 4,
             "x": 0,
-            "y": 113
+            "y": 114
           },
           "id": 24,
           "options": {
@@ -3063,7 +3063,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 113
+            "y": 114
           },
           "id": 13,
           "options": {
@@ -3139,7 +3139,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 113
+            "y": 114
           },
           "id": 18,
           "options": {
@@ -3239,7 +3239,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 113
+            "y": 114
           },
           "id": 27,
           "options": {
@@ -3311,7 +3311,7 @@
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 113
+            "y": 114
           },
           "id": 28,
           "options": {
@@ -3437,7 +3437,7 @@
             "h": 11,
             "w": 16,
             "x": 0,
-            "y": 117
+            "y": 118
           },
           "id": 29,
           "options": {
@@ -3571,7 +3571,7 @@
             "h": 11,
             "w": 8,
             "x": 16,
-            "y": 117
+            "y": 118
           },
           "id": 30,
           "options": {
@@ -3651,7 +3651,7 @@
             "h": 11,
             "w": 8,
             "x": 0,
-            "y": 128
+            "y": 129
           },
           "id": 31,
           "options": {
@@ -3773,7 +3773,7 @@
             "h": 11,
             "w": 16,
             "x": 8,
-            "y": 128
+            "y": 129
           },
           "id": 34,
           "options": {
@@ -3903,7 +3903,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 139
+            "y": 140
           },
           "id": 6,
           "options": {
@@ -3966,7 +3966,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 114
+        "y": 104
       },
       "id": 9,
       "panels": [
@@ -4150,7 +4150,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 642
+            "y": 678
           },
           "id": 63,
           "options": {
@@ -4228,7 +4228,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 744
+            "y": 780
           },
           "id": 36,
           "options": {
@@ -4330,7 +4330,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 756
+            "y": 792
           },
           "id": 59,
           "options": {
@@ -4471,7 +4471,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 768
+            "y": 804
           },
           "id": 35,
           "options": {
@@ -4582,7 +4582,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 779
+            "y": 815
           },
           "id": 33,
           "options": {
@@ -4638,7 +4638,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 115
+        "y": 105
       },
       "id": 10,
       "panels": [],
@@ -4749,5 +4749,5 @@
   "timezone": "browser",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 326
+  "version": 341
 }
