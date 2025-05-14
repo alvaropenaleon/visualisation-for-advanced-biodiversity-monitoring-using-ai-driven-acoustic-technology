@@ -510,6 +510,205 @@
       },
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "fixedColor": "purple",
+            "mode": "continuous-YlBl"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 6,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total observations"
+            },
+            "properties": [
+              {
+                "id": "custom.drawStyle",
+                "value": "bars"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "auto"
+              },
+              {
+                "id": "custom.barWidthFactor",
+                "value": 0.7
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 60
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "hue"
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 0
+              },
+              {
+                "id": "custom.axisColorMode",
+                "value": "series"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "species count"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "fill": "solid"
+                }
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "linear"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.axisBorderShow",
+                "value": false
+              },
+              {
+                "id": "custom.axisColorMode",
+                "value": "series"
+              },
+              {
+                "id": "custom.gradientMode",
+                "value": "none"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-orange",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.showPoints",
+                "value": "never"
+              },
+              {
+                "id": "custom.pointSize",
+                "value": 5
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 56,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('day', time)                        AS \"time\",\n  count(*)                                        AS \"total observations\",\n  count(DISTINCT scientific_name)                  AS \"species count\"\nFROM sensor_data\nWHERE $__timeFilter(time)\nGROUP BY 1\nORDER BY 1;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Panel Title",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
+      },
+      "fieldConfig": {
+        "defaults": {
           "custom": {
             "hideFrom": {
               "legend": false,
@@ -527,7 +726,7 @@
         "h": 3,
         "w": 24,
         "x": 0,
-        "y": 4
+        "y": 18
       },
       "id": 53,
       "options": {
@@ -593,197 +792,6 @@
       ],
       "title": "Activity Pattern Detection Distribution (Hrs)",
       "type": "heatmap"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "purple",
-            "mode": "continuous-YlBl"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 6,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "total_obs"
-            },
-            "properties": [
-              {
-                "id": "custom.drawStyle",
-                "value": "bars"
-              },
-              {
-                "id": "custom.axisPlacement",
-                "value": "auto"
-              },
-              {
-                "id": "custom.barWidthFactor",
-                "value": 0.7
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 60
-              },
-              {
-                "id": "custom.gradientMode",
-                "value": "hue"
-              },
-              {
-                "id": "custom.lineWidth",
-                "value": 0
-              },
-              {
-                "id": "custom.axisColorMode",
-                "value": "series"
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "text",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "species_count"
-            },
-            "properties": [
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "fill": "solid"
-                }
-              },
-              {
-                "id": "custom.lineInterpolation",
-                "value": "linear"
-              },
-              {
-                "id": "custom.axisPlacement",
-                "value": "right"
-              },
-              {
-                "id": "custom.axisBorderShow",
-                "value": false
-              },
-              {
-                "id": "custom.axisColorMode",
-                "value": "series"
-              },
-              {
-                "id": "custom.gradientMode",
-                "value": "scheme"
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-orange",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 14,
-        "w": 24,
-        "x": 0,
-        "y": 7
-      },
-      "id": 56,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  date_trunc('day', time)                        AS \"time\",\n  count(*)                                        AS total_obs,\n  count(DISTINCT scientific_name)                  AS species_count\nFROM sensor_data\nWHERE $__timeFilter(time)\nGROUP BY 1\nORDER BY 1;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Panel Title",
-      "type": "timeseries"
     },
     {
       "datasource": {
@@ -899,6 +907,217 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 35,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 65,
+      "interval": "30m",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(time, '1d'),     \n  common_name                       AS \"species\",\n  COUNT(*)                          AS \"Total\"\nFROM sensor_data\nWHERE\n  $__timeFilter(time)               -- respects your dashboard time picker\n  AND common_name IN ($specie)      -- template var for included species\n  AND common_name NOT IN (${exclude:sqlstring})  -- template var for excluded species\n  AND confidence >= $confidence     -- template var for minimum confidence\nGROUP BY 1, common_name             -- group by your time bucket + species\nORDER BY 1                          -- sort by time asc\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Question it answers: how do detection counts rise and fall over time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 94,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 0,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 45
+      },
+      "id": 66,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.7,
+        "fullHighlight": false,
+        "groupWidth": 0.82,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "normal",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(time, '1d'),     \n  common_name                       AS \"species\",\n  COUNT(*)                          AS \"Total\"\nFROM sensor_data\nWHERE\n  $__timeFilter(time)               -- respects your dashboard time picker\n  AND common_name IN ($specie)      -- template var for included species\n  AND common_name NOT IN (${exclude:sqlstring})  -- template var for excluded species\n  AND confidence >= $confidence     -- template var for minimum confidence\nGROUP BY 1, common_name             -- group by your time bucket + species\nORDER BY 1                          -- sort by time asc\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Question it answers: Of a day's total detections, which species contributed how much",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "fixedColor": "dark-purple",
             "mode": "continuous-YlBl"
           },
@@ -929,7 +1148,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 59
       },
       "id": 37,
       "options": {
@@ -996,7 +1215,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic-by-name"
+            "mode": "palette-classic"
           },
           "custom": {
             "axisBorderShow": false,
@@ -1047,7 +1266,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 69
       },
       "id": 62,
       "options": {
@@ -1071,7 +1290,7 @@
           "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT\n  time AS \"time\",\n  confidence,\n  scientific_name\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \nORDER BY time ASC\n",
+          "rawSql": "SELECT\n  time AS \"time\",\n  confidence AS \"c\",\n  scientific_name\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \nORDER BY time ASC\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1140,120 +1359,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 11,
         "w": 12,
         "x": 0,
-        "y": 52
+        "y": 80
       },
       "id": 64,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.77,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "orientation": "auto",
-        "showValue": "never",
-        "stacking": "none",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "xField": "confidence_bucket",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 0
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "ae9jue6in1xq8c"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "WITH bucketed AS (\r\n  SELECT\r\n    width_bucket(confidence, 0.0, 1.0, 25) AS bucket,\r\n    count(*)                         AS detections\r\n  FROM sensor_data\r\n  WHERE $__timeFilter(time)\r\n  GROUP BY bucket\r\n)\r\nSELECT\r\n  -- format the lower edge of each bucket as text for the X-axis\r\n  ((bucket - 1) * (1.0/25))::numeric(4,2)::text AS confidence_bucket,\r\n  detections\r\nFROM bucketed\r\nORDER BY confidence_bucket;\r\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Sensor 2",
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "text",
-            "mode": "fixed"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 56,
-            "gradientMode": "hue",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 0,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text"
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 52
-      },
-      "id": 2,
       "options": {
         "barRadius": 0,
         "barWidth": 0.77,
@@ -1412,7 +1523,7 @@
         "h": 11,
         "w": 24,
         "x": 0,
-        "y": 62
+        "y": 91
       },
       "id": 16,
       "options": {
@@ -1536,7 +1647,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 73
+        "y": 102
       },
       "id": 48,
       "options": {
@@ -1595,7 +1706,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 83
+        "y": 112
       },
       "id": 23,
       "panels": [
@@ -2199,7 +2310,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 123
+            "y": 231
           },
           "id": 60,
           "options": {
@@ -2269,7 +2380,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 137
+            "y": 245
           },
           "id": 45,
           "options": {
@@ -2362,7 +2473,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 140
+            "y": 248
           },
           "id": 46,
           "options": {
@@ -2460,7 +2571,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 140
+            "y": 248
           },
           "id": 54,
           "options": {
@@ -2548,7 +2659,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 149
+            "y": 257
           },
           "id": 58,
           "options": {
@@ -2671,7 +2782,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 160
+            "y": 268
           },
           "id": 32,
           "options": {
@@ -2787,7 +2898,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 170
+            "y": 278
           },
           "id": 61,
           "options": {
@@ -2845,7 +2956,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 84
+        "y": 113
       },
       "id": 15,
       "panels": [
@@ -2875,7 +2986,7 @@
             "h": 4,
             "w": 4,
             "x": 0,
-            "y": 85
+            "y": 113
           },
           "id": 24,
           "options": {
@@ -2952,7 +3063,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 85
+            "y": 113
           },
           "id": 13,
           "options": {
@@ -3028,7 +3139,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 85
+            "y": 113
           },
           "id": 18,
           "options": {
@@ -3128,7 +3239,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 85
+            "y": 113
           },
           "id": 27,
           "options": {
@@ -3200,7 +3311,7 @@
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 85
+            "y": 113
           },
           "id": 28,
           "options": {
@@ -3326,7 +3437,7 @@
             "h": 11,
             "w": 16,
             "x": 0,
-            "y": 89
+            "y": 117
           },
           "id": 29,
           "options": {
@@ -3460,7 +3571,7 @@
             "h": 11,
             "w": 8,
             "x": 16,
-            "y": 89
+            "y": 117
           },
           "id": 30,
           "options": {
@@ -3540,7 +3651,7 @@
             "h": 11,
             "w": 8,
             "x": 0,
-            "y": 100
+            "y": 128
           },
           "id": 31,
           "options": {
@@ -3662,7 +3773,7 @@
             "h": 11,
             "w": 16,
             "x": 8,
-            "y": 100
+            "y": 128
           },
           "id": 34,
           "options": {
@@ -3792,7 +3903,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 111
+            "y": 139
           },
           "id": 6,
           "options": {
@@ -3855,7 +3966,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 85
+        "y": 114
       },
       "id": 9,
       "panels": [
@@ -4039,7 +4150,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 534
+            "y": 642
           },
           "id": 63,
           "options": {
@@ -4117,7 +4228,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 636
+            "y": 744
           },
           "id": 36,
           "options": {
@@ -4219,7 +4330,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 648
+            "y": 756
           },
           "id": 59,
           "options": {
@@ -4360,7 +4471,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 660
+            "y": 768
           },
           "id": 35,
           "options": {
@@ -4471,7 +4582,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 671
+            "y": 779
           },
           "id": 33,
           "options": {
@@ -4527,7 +4638,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 86
+        "y": 115
       },
       "id": 10,
       "panels": [],
@@ -4543,9 +4654,7 @@
       {
         "allowCustomValue": false,
         "current": {
-          "text": [
-            "All"
-          ],
+          "text": "All",
           "value": [
             "$__all"
           ]
@@ -4633,12 +4742,12 @@
     ]
   },
   "time": {
-    "from": "2023-12-18T11:23:00.000Z",
-    "to": "2024-01-16T11:42:00.000Z"
+    "from": "2023-11-30T22:54:30.000Z",
+    "to": "2024-01-11T23:13:30.000Z"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 294
+  "version": 326
 }
