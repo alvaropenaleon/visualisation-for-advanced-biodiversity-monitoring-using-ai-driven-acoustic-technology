@@ -813,64 +813,32 @@
         "type": "grafana-postgresql-datasource",
         "uid": "fehnkzh0nnegwf"
       },
-      "description": "P95 captures typical worst-case performance, letting us spot creeping latency before the SLA is violated",
+      "description": "Percentage of hourly intervals in the last 24 hours with at least one detection, verifies end to end pipeline completeness",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "mode": "thresholds"
           },
           "mappings": [],
-          "max": 500,
-          "min": 0,
+          "max": 100,
+          "min": 4,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "red"
               },
               {
                 "color": "yellow",
-                "value": 201
+                "value": 75
               },
               {
-                "color": "red",
-                "value": 351
+                "color": "green",
+                "value": 90
               }
             ]
-          }
+          },
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -882,17 +850,19 @@
       },
       "id": 80,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.6.0",
       "targets": [
@@ -900,7 +870,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "WITH hourly AS (\n  SELECT\n    time_bucket('1 hour', inserted_at) AS bucket\n  FROM ingestion_metrics\n  WHERE $__timeFilter(inserted_at)\n  GROUP BY 1\n),\nall_hours AS (\n  SELECT generate_series(\n    date_trunc('hour', to_timestamp($__from / 1000)),\n    date_trunc('hour', to_timestamp($__to   / 1000)),\n    '1 hour'::interval\n  ) AS bucket\n)\nSELECT\n  a.bucket AS \"time\",\n  CASE WHEN h.bucket IS NULL THEN 1 ELSE 0 END AS gap_flag\nFROM all_hours a\nLEFT JOIN hourly h\n  ON a.bucket = h.bucket\nORDER BY a.bucket;\n",
+          "rawSql": "WITH hours AS (\n  SELECT generate_series(\n    date_trunc('hour', now() - '24 hours'::interval),\n    date_trunc('hour', now()),\n    '1 hour'::interval\n  ) AS hr\n),\ningested AS (\n  SELECT\n    time_bucket('1 hour', time) AS hr\n  FROM sensor_data\n  WHERE\n    time >= now() - '24 hours'::interval\n    AND common_name    IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence    >= $confidence\n  GROUP BY 1\n)\nSELECT\n  100.0 * COUNT(ing.hr) / COUNT(hours.hr) AS completeness_pct\nFROM hours\nLEFT JOIN ingested ing USING (hr);\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -936,8 +906,8 @@
           "table": "ingestion_metrics"
         }
       ],
-      "title": "Data Completeness Gauge (last 24 h)",
-      "type": "timeseries"
+      "title": "Data Completeness (last 24 h)",
+      "type": "gauge"
     },
     {
       "collapsed": false,
@@ -2538,7 +2508,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 476
+            "y": 479
           },
           "id": 11,
           "options": {
@@ -2615,7 +2585,7 @@
             "h": 3,
             "w": 4,
             "x": 4,
-            "y": 476
+            "y": 479
           },
           "id": 41,
           "options": {
@@ -2703,7 +2673,7 @@
             "h": 3,
             "w": 4,
             "x": 8,
-            "y": 476
+            "y": 479
           },
           "id": 42,
           "options": {
@@ -2779,7 +2749,7 @@
             "h": 3,
             "w": 4,
             "x": 12,
-            "y": 476
+            "y": 479
           },
           "id": 38,
           "options": {
@@ -2855,7 +2825,7 @@
             "h": 3,
             "w": 4,
             "x": 16,
-            "y": 476
+            "y": 479
           },
           "id": 52,
           "options": {
@@ -2931,7 +2901,7 @@
             "h": 3,
             "w": 4,
             "x": 20,
-            "y": 476
+            "y": 479
           },
           "id": 44,
           "options": {
@@ -3112,7 +3082,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 479
+            "y": 482
           },
           "id": 69,
           "options": {
@@ -3182,7 +3152,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 493
+            "y": 496
           },
           "id": 45,
           "options": {
@@ -3275,7 +3245,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 496
+            "y": 499
           },
           "id": 46,
           "options": {
@@ -3373,7 +3343,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 496
+            "y": 499
           },
           "id": 54,
           "options": {
@@ -3576,7 +3546,7 @@
             "h": 13,
             "w": 24,
             "x": 0,
-            "y": 505
+            "y": 508
           },
           "id": 56,
           "options": {
@@ -3660,7 +3630,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 518
+            "y": 521
           },
           "id": 58,
           "options": {
@@ -3783,7 +3753,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 529
+            "y": 532
           },
           "id": 32,
           "options": {
@@ -3899,7 +3869,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 539
+            "y": 542
           },
           "id": 61,
           "options": {
@@ -3987,7 +3957,7 @@
             "h": 4,
             "w": 4,
             "x": 0,
-            "y": 551
+            "y": 554
           },
           "id": 24,
           "options": {
@@ -4064,7 +4034,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 551
+            "y": 554
           },
           "id": 13,
           "options": {
@@ -4140,7 +4110,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 551
+            "y": 554
           },
           "id": 18,
           "options": {
@@ -4240,7 +4210,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 551
+            "y": 554
           },
           "id": 27,
           "options": {
@@ -4312,7 +4282,7 @@
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 551
+            "y": 554
           },
           "id": 28,
           "options": {
@@ -4438,7 +4408,7 @@
             "h": 11,
             "w": 16,
             "x": 0,
-            "y": 555
+            "y": 558
           },
           "id": 29,
           "options": {
@@ -4572,7 +4542,7 @@
             "h": 11,
             "w": 8,
             "x": 16,
-            "y": 555
+            "y": 558
           },
           "id": 30,
           "options": {
@@ -4652,7 +4622,7 @@
             "h": 11,
             "w": 8,
             "x": 0,
-            "y": 566
+            "y": 569
           },
           "id": 31,
           "options": {
@@ -4774,7 +4744,7 @@
             "h": 11,
             "w": 16,
             "x": 8,
-            "y": 566
+            "y": 569
           },
           "id": 34,
           "options": {
@@ -4904,7 +4874,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 577
+            "y": 580
           },
           "id": 6,
           "options": {
@@ -5042,7 +5012,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 1257
+            "y": 1260
           },
           "id": 19,
           "options": {
@@ -5151,7 +5121,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1265
+            "y": 1268
           },
           "id": 63,
           "options": {
@@ -5229,7 +5199,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 1276
+            "y": 1279
           },
           "id": 36,
           "options": {
@@ -5331,7 +5301,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 1288
+            "y": 1291
           },
           "id": 59,
           "options": {
@@ -5472,7 +5442,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1300
+            "y": 1303
           },
           "id": 35,
           "options": {
@@ -5583,7 +5553,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1311
+            "y": 1314
           },
           "id": 33,
           "options": {
@@ -5730,12 +5700,12 @@
     ]
   },
   "time": {
-    "from": "2024-01-11T00:42:45.722Z",
-    "to": "2024-01-19T23:41:48.442Z"
+    "from": "2023-12-09T05:46:53.487Z",
+    "to": "2024-01-13T01:39:22.836Z"
   },
   "timepicker": {},
   "timezone": "utc",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 417
+  "version": 419
 }
