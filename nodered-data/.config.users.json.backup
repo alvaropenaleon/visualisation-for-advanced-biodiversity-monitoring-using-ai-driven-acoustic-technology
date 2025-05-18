@@ -17,9 +17,11 @@
             },
             "dialog": {
                 "export": {
-                    "pretty": true
+                    "pretty": true,
+                    "json-view": true
                 }
             }
-        }
+        },
+        "menu-menu-item-palette": false
     }
 }

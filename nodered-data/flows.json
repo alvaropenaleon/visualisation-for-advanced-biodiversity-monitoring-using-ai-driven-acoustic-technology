@@ -1,32 +1,24 @@
 [
     {
-        "id": "dbSetupTab",
+        "id": "setupTab",
         "type": "tab",
-        "label": "DB Setup",
+        "label": "Setup",
         "disabled": false,
-        "info": "Creates tables: sensors + sensor_data, then converts sensor_data into a hypertable."
+        "info": "One-time DB setup: tables, hypertable, sensors"
     },
     {
-        "id": "prepareSensorsTab",
+        "id": "ingestTab",
         "type": "tab",
-        "label": "Prepare Sensors",
+        "label": "Ingest",
         "disabled": false,
-        "info": "Inserts sensor rows into the sensors table (dimension table)."
+        "info": "CSV & MQTT ingestion pipeline with metrics"
     },
     {
-        "id": "csvImportTab",
+        "id": "apiTab",
         "type": "tab",
-        "label": "CSV Import Flow",
+        "label": "API & Debug",
         "disabled": false,
-        "info": "Reads CSV data, extracts fields, inserts rows into sensor_data."
-    },
-    {
-        "id": "29a92b2b2cca5fd8",
-        "type": "tab",
-        "label": "MQTT Demo",
-        "disabled": false,
-        "info": "",
-        "env": []
+        "info": "REST API and debug"
     },
     {
         "id": "052aec521515b111",
@@ -85,529 +77,335 @@
         "passwordFieldType": "str"
     },
     {
-        "id": "commentCreateTables",
+        "id": "comment_create_tables",
         "type": "comment",
-        "z": "dbSetupTab",
-        "name": "Step 1: Create sensors + sensor_data Tables",
-        "info": "Run this once to create the two tables in PostgreSQL.\nAlso enables Timescale extension (if not already).",
-        "x": 210,
+        "z": "setupTab",
+        "name": "Step: Create Tables",
+        "info": "Enable Timescale and create sensors, sensor_data, ingestion_metrics, sensor_errors",
+        "x": 200,
         "y": 60,
         "wires": []
     },
     {
-        "id": "injectCreateTables",
+        "id": "inject_create_tables",
         "type": "inject",
-        "z": "dbSetupTab",
+        "z": "setupTab",
         "name": "Trigger: Create Tables",
         "props": [],
         "repeat": "",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "",
-        "x": 160,
-        "y": 120,
+        "x": 200,
+        "y": 100,
         "wires": [
             [
-                "postgresqlCreateTables"
+                "create_tables_pg"
             ]
         ]
     },
     {
-        "id": "postgresqlCreateTables",
+        "id": "create_tables_pg",
         "type": "postgresql",
-        "z": "dbSetupTab",
-        "name": "",
-        "query": "-- Enable Timescale (if not already)\nCREATE EXTENSION IF NOT EXISTS timescaledb;\n\n-- Create a dimension table for sensors\nCREATE TABLE IF NOT EXISTS sensors(\n    id SERIAL PRIMARY KEY,\n    type VARCHAR(50),\n    location VARCHAR(50)\n);\n\n-- Create a time-series table\nCREATE TABLE IF NOT EXISTS sensor_data (\n    time TIMESTAMPTZ NOT NULL,\n    sensor_id INTEGER,\n    start_seconds INTEGER,\n    end_seconds INTEGER,\n    scientific_name VARCHAR(50),\n    common_name VARCHAR(50),\n    confidence DOUBLE PRECISION,\n    FOREIGN KEY (sensor_id) REFERENCES sensors (id)\n);",
+        "z": "setupTab",
+        "name": "Create tables",
+        "query": "-- Enable extension\nCREATE EXTENSION IF NOT EXISTS timescaledb;\n-- Dimension table\nCREATE TABLE IF NOT EXISTS sensors(id SERIAL PRIMARY KEY, type VARCHAR(50), location VARCHAR(50));\n-- Main data\nCREATE TABLE IF NOT EXISTS sensor_data(time TIMESTAMPTZ NOT NULL, sensor_id INTEGER, start_seconds INTEGER, end_seconds INTEGER, scientific_name VARCHAR(50), common_name VARCHAR(50), confidence DOUBLE PRECISION, FOREIGN KEY(sensor_id) REFERENCES sensors(id));\n-- Ingestion metrics\nCREATE TABLE IF NOT EXISTS ingestion_metrics(received_at timestamptz NOT NULL, inserted_at timestamptz NOT NULL);\n-- Error log\nCREATE TABLE IF NOT EXISTS sensor_errors(time timestamptz DEFAULT NOW(), error_msg text NOT NULL, raw_payload jsonb);",
         "postgreSQLConfig": "fbd14997310e037a",
         "split": false,
         "rowsPerMsg": "",
         "outputs": 1,
-        "x": 430,
-        "y": 120,
+        "x": 440,
+        "y": 100,
         "wires": [
             [
-                "debugCreateTables"
+                "debug_create_tables"
             ]
         ]
     },
     {
-        "id": "debugCreateTables",
+        "id": "debug_create_tables",
         "type": "debug",
-        "z": "dbSetupTab",
-        "name": "Debug msg",
+        "z": "setupTab",
+        "name": "Debug Create",
         "active": true,
         "tosidebar": true,
-        "console": false,
-        "tostatus": false,
         "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 650,
-        "y": 120,
+        "x": 700,
+        "y": 100,
         "wires": []
     },
     {
-        "id": "commentHypertable",
+        "id": "comment_hypertable",
         "type": "comment",
-        "z": "dbSetupTab",
-        "name": "Step 2: Convert sensor_data to Hypertable",
-        "info": "Run this after creating the table. This uses 'time' as the partition column.",
+        "z": "setupTab",
+        "name": "Step: Create Hypertable",
+        "info": "Convert sensor_data to TimescaleDB hypertable",
         "x": 200,
-        "y": 200,
+        "y": 160,
         "wires": []
     },
     {
-        "id": "injectHypertable",
+        "id": "inject_hypertable",
         "type": "inject",
-        "z": "dbSetupTab",
-        "name": "Trigger: Convert to Hypertable",
+        "z": "setupTab",
+        "name": "Trigger: Hypertable",
         "props": [],
         "repeat": "",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "",
-        "payloadType": "date",
-        "x": 180,
-        "y": 260,
+        "x": 200,
+        "y": 200,
         "wires": [
             [
-                "postgresqlHypertable"
+                "hypertable_pg"
             ]
         ]
     },
     {
-        "id": "postgresqlHypertable",
+        "id": "hypertable_pg",
         "type": "postgresql",
-        "z": "dbSetupTab",
-        "name": "",
-        "query": "SELECT create_hypertable('sensor_data', 'time', if_not_exists => TRUE);",
+        "z": "setupTab",
+        "name": "Create Hypertable",
+        "query": "SELECT create_hypertable('sensor_data','time', if_not_exists => TRUE);",
         "postgreSQLConfig": "fbd14997310e037a",
         "split": false,
         "rowsPerMsg": "",
         "outputs": 1,
-        "x": 430,
-        "y": 260,
+        "x": 440,
+        "y": 200,
         "wires": [
             [
-                "debugHypertable"
+                "debug_hypertable"
             ]
         ]
     },
     {
-        "id": "debugHypertable",
+        "id": "debug_hypertable",
         "type": "debug",
-        "z": "dbSetupTab",
-        "name": "Debug msg",
+        "z": "setupTab",
+        "name": "Debug Hypertable",
         "active": true,
         "tosidebar": true,
-        "console": false,
-        "tostatus": false,
         "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 650,
+        "x": 700,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "comment_insert_sensors",
+        "type": "comment",
+        "z": "setupTab",
+        "name": "Step: Insert Sensors",
+        "info": "Seed sensors table with initial devices",
+        "x": 200,
         "y": 260,
         "wires": []
     },
     {
-        "id": "72eacaffc26d48a9",
+        "id": "inject_insert_sensors",
         "type": "inject",
-        "z": "dbSetupTab",
-        "name": "Trigger: Drop Tables",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 150,
-        "y": 400,
-        "wires": [
-            [
-                "d0e880e2ab35d326"
-            ]
-        ]
-    },
-    {
-        "id": "d0e880e2ab35d326",
-        "type": "postgresql",
-        "z": "dbSetupTab",
-        "name": "",
-        "query": "DROP TABLE IF EXISTS sensor_data;\nDROP TABLE IF EXISTS sensors;",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": 1,
-        "outputs": 1,
-        "x": 430,
-        "y": 400,
-        "wires": [
-            [
-                "b90294df620ae895"
-            ]
-        ]
-    },
-    {
-        "id": "b90294df620ae895",
-        "type": "debug",
-        "z": "dbSetupTab",
-        "name": "Debug msg",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 650,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "0f78ceea519bc95c",
-        "type": "comment",
-        "z": "dbSetupTab",
-        "name": "Optional: Drop Tables",
-        "info": "",
-        "x": 140,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "commentPrepareSensors",
-        "type": "comment",
-        "z": "prepareSensorsTab",
-        "name": "Step 3: Insert sensor rows",
-        "info": "Add a few rows to the sensors table, so we have sensor_id(s) to reference in sensor_data.\nIf you only have 1 device, you can keep just one row. If you'd like to simulate multiple sensors, add more.\n\nYou can skip this if you plan to dynamically insert sensors from Node-RED logic or CSV parse.",
-        "x": 150,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "injectPrepareSensors",
-        "type": "inject",
-        "z": "prepareSensorsTab",
+        "z": "setupTab",
         "name": "Trigger: Insert Sensors",
         "props": [],
         "repeat": "",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "",
-        "x": 160,
-        "y": 120,
+        "x": 200,
+        "y": 300,
         "wires": [
             [
-                "postgresqlPrepareSensors"
+                "insert_sensors_pg"
             ]
         ]
     },
     {
-        "id": "postgresqlPrepareSensors",
+        "id": "insert_sensors_pg",
         "type": "postgresql",
-        "z": "prepareSensorsTab",
-        "name": "",
-        "query": "-- Example: Insert multiple sensors\nINSERT INTO sensors (type, location)\nVALUES\n('frog-detector','AUVIC_Yirraba_11F'),\n('frog-detector','AUVIC_Yirraba_12A'),\n('frog-detector','FAKE_LOCATION_X'),\n('other-detector','FAKE_LOCATION_Y');\n",
+        "z": "setupTab",
+        "name": "Insert Sensors",
+        "query": "INSERT INTO sensors(type, location) VALUES('frog-detector','AUVIC_Yirraba_11F'),('frog-detector','AUVIC_Yirraba_12A'),('frog-detector','FAKE_LOCATION_X'),('other-detector','FAKE_LOCATION_Y');",
         "postgreSQLConfig": "fbd14997310e037a",
         "split": false,
         "rowsPerMsg": "",
         "outputs": 1,
-        "x": 430,
-        "y": 120,
+        "x": 440,
+        "y": 300,
         "wires": [
             [
-                "debugPrepareSensors"
+                "debug_insert_sensors"
             ]
         ]
     },
     {
-        "id": "debugPrepareSensors",
+        "id": "debug_insert_sensors",
         "type": "debug",
-        "z": "prepareSensorsTab",
-        "name": "Debug msg",
+        "z": "setupTab",
+        "name": "Debug InsertSensors",
         "active": true,
         "tosidebar": true,
-        "console": false,
-        "tostatus": false,
         "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 690,
-        "y": 120,
+        "x": 700,
+        "y": 300,
         "wires": []
     },
     {
-        "id": "commentCsvImport",
+        "id": "comment_drop",
         "type": "comment",
-        "z": "csvImportTab",
-        "name": "Step 4: CSV Import Flow",
-        "info": "Reads a CSV, extracts columns:\n- start_seconds\n- end_seconds\n- scientific_name\n- common_name\n- confidence\n- File\n\nParses the File path to deduce 'time' (timestamp) and possibly the sensor_id.\nThen inserts a row into sensor_data for each CSV line.\n\nAdapt the function node logic to suit your file path format.\nIf you only have 1 sensor, you can hard-code sensor_id=1.\nOtherwise, parse the location substring from the File name and do a lookup in the sensors table.\n",
-        "x": 150,
-        "y": 60,
+        "z": "setupTab",
+        "name": "Optional: Drop Tables",
+        "info": "Reset schema: drops tables",
+        "x": 200,
+        "y": 360,
         "wires": []
     },
     {
-        "id": "fileInCsv",
+        "id": "inject_drop",
+        "type": "inject",
+        "z": "setupTab",
+        "name": "Trigger: Drop Tables",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 200,
+        "y": 400,
+        "wires": [
+            [
+                "drop_tables_pg"
+            ]
+        ]
+    },
+    {
+        "id": "drop_tables_pg",
+        "type": "postgresql",
+        "z": "setupTab",
+        "name": "Drop Tables",
+        "query": "DROP TABLE IF EXISTS sensor_data CASCADE; DROP TABLE IF EXISTS sensors, ingestion_metrics, sensor_errors;",
+        "postgreSQLConfig": "fbd14997310e037a",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 440,
+        "y": 400,
+        "wires": [
+            [
+                "debug_drop_tables"
+            ]
+        ]
+    },
+    {
+        "id": "debug_drop_tables",
+        "type": "debug",
+        "z": "setupTab",
+        "name": "Debug Drop",
+        "active": true,
+        "tosidebar": true,
+        "complete": "true",
+        "x": 700,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "comment_ingest",
+        "type": "comment",
+        "z": "ingestTab",
+        "name": "CSV & MQTT Input → Normalize → DB + Metrics",
+        "info": "Unified ingestion path for edge devices",
+        "x": 300,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "inject_csv",
+        "type": "inject",
+        "z": "ingestTab",
+        "name": "Trigger CSV Import",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 170,
+        "y": 100,
+        "wires": [
+            [
+                "read_csv"
+            ]
+        ]
+    },
+    {
+        "id": "read_csv",
         "type": "file in",
-        "z": "csvImportTab",
+        "z": "ingestTab",
         "name": "Read CSV File",
         "filename": "/data/sensor_data.csv",
         "filenameType": "str",
         "format": "utf8",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
         "allProps": false,
         "x": 380,
-        "y": 160,
+        "y": 100,
         "wires": [
             [
-                "csvParser"
+                "csv_parser"
             ]
         ]
     },
     {
-        "id": "csvParser",
+        "id": "csv_parser",
         "type": "csv",
-        "z": "csvImportTab",
+        "z": "ingestTab",
         "name": "CSV Parser",
         "sep": ",",
         "hdrin": true,
-        "hdrout": "none",
+        "hdrout": "parsed",
         "multi": "one",
-        "ret": "\\n",
-        "temp": "",
+        "ret": "\n",
         "skip": "0",
         "strings": true,
-        "include_empty_strings": false,
         "include_null_values": false,
-        "x": 570,
-        "y": 160,
-        "wires": [
-            [
-                "functionParseRow"
-            ]
-        ]
-    },
-    {
-        "id": "functionParseRow",
-        "type": "function",
-        "z": "csvImportTab",
-        "name": "Parse CSV Row -> INSERT statement",
-        "func": "let row = msg.payload;\n\n// Convert numeric fields from string to number\nlet startSec = parseInt(row[\"Start (s)\"] || 0);\nlet endSec = parseInt(row[\"End (s)\"] || 0);\nlet conf = parseFloat(row[\"Confidence\"] || 0);\n\n// Extract time from row.File\n\nlet filePath = row[\"File\"] || \"\";\n\n// extract \"20240103_054000\"\n// split on underscore, where last 2 parts are date/time\n\nlet parts = filePath.split(\"_\");\n\n// The date might be parts[parts.length - 2] = \"20240103\"\n// The time might be parts[parts.length - 1].replace(\".WAV\",\"\") = \"054000\"\n\nlet dateStr = parts[parts.length - 2] || \"20240101\";\nlet timeStr = parts[parts.length - 1] || \"000000.WAV\";\n\n// Remove extension\ntimeStr = timeStr.replace(\".WAV\",\"\");\n\n// build a timestamp: 'YYYY-MM-DD HH:MM:SS'\nlet year = dateStr.substring(0,4);\nlet month = dateStr.substring(4,6);\nlet day = dateStr.substring(6,8);\n\nlet hour = timeStr.substring(0,2);\nlet minute = timeStr.substring(2,4);\nlet second = timeStr.substring(4,6);\n\n// Final timestring\nlet timestr = `${year}-${month}-${day} ${hour}:${minute}:${second}`;\n\n// We assume only have 1 sensor at the moment\n// Potentially parse location (e.g. 'AUVIC_Yirraba_11F') from the file here\n\nlet sensorId = 1;\n\n// Build the SQL Insert\n// Query in the PostgreSQL node, we pass an array of parameters.\n\nmsg.params = [\n    timestr,                // $1\n    sensorId,               // $2\n    startSec,               // $3\n    endSec,                 // $4\n    row[\"Scientific name\"], // $5\n    row[\"Common name\"],     // $6\n    conf                    // $7\n];\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 850,
-        "y": 160,
-        "wires": [
-            [
-                "postgresqlInsertData"
-            ]
-        ]
-    },
-    {
-        "id": "postgresqlInsertData",
-        "type": "postgresql",
-        "z": "csvImportTab",
-        "name": "Insert detection row",
-        "query": "INSERT INTO sensor_data(\n    time,\n    sensor_id,\n    start_seconds,\n    end_seconds,\n    scientific_name,\n    common_name,\n    confidence\n) VALUES($1, $2, $3, $4, $5, $6, $7);",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 1140,
-        "y": 160,
-        "wires": [
-            [
-                "debugCsvInsert"
-            ]
-        ]
-    },
-    {
-        "id": "debugCsvInsert",
-        "type": "debug",
-        "z": "csvImportTab",
-        "name": "Debug msg",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1350,
-        "y": 160,
-        "wires": []
-    },
-    {
-        "id": "commentFileIn",
-        "type": "comment",
-        "z": "csvImportTab",
-        "name": "Set the CSV file path in 'Read CSV File' node",
-        "info": "Update the File In node with your actual CSV path.\nThen Deploy and inject to run.\nAll rows will be inserted into sensor_data with the parse logic in the function node.",
-        "x": 210,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "051a06c2c37f7bef",
-        "type": "inject",
-        "z": "csvImportTab",
-        "name": "Trigger: Import CSV",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 150,
-        "y": 160,
-        "wires": [
-            [
-                "fileInCsv"
-            ]
-        ]
-    },
-    {
-        "id": "a04218edf1ee1a46",
-        "type": "comment",
-        "z": "csvImportTab",
-        "name": "Optional: Confirm Number of Records Loaded ",
-        "info": "",
-        "x": 210,
-        "y": 240,
-        "wires": []
-    },
-    {
-        "id": "c4e42fa4c6b3333c",
-        "type": "inject",
-        "z": "csvImportTab",
-        "name": "Triger: Confirm Data Load",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 170,
-        "y": 300,
-        "wires": [
-            [
-                "f0a11ffbb453e0cc"
-            ]
-        ]
-    },
-    {
-        "id": "f0a11ffbb453e0cc",
-        "type": "postgresql",
-        "z": "csvImportTab",
-        "name": "",
-        "query": "SELECT COUNT(*) AS total_records\nFROM sensor_data;",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": 1,
-        "outputs": 1,
-        "x": 390,
-        "y": 300,
-        "wires": [
-            [
-                "a9633e3c62dd4430"
-            ]
-        ]
-    },
-    {
-        "id": "a9633e3c62dd4430",
-        "type": "debug",
-        "z": "csvImportTab",
-        "name": "Debug msg",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
         "x": 590,
-        "y": 300,
-        "wires": []
+        "y": 100,
+        "wires": [
+            [
+                "normalize"
+            ]
+        ]
     },
     {
-        "id": "d9b084b935ad0517",
+        "id": "inject_mqtt_test",
         "type": "inject",
-        "z": "29a92b2b2cca5fd8",
-        "name": "",
+        "z": "ingestTab",
+        "name": "Trigger MQTT Test",
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             }
         ],
         "repeat": "",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "L1/L2/L3",
-        "payload": "",
-        "payloadType": "date",
-        "x": 150,
-        "y": 100,
+        "topic": "frog-detector/data",
+        "payload": "{ \"time\": \"2025-05-11T05:39:00Z\", \"sensor_id\": 1, \"start_seconds\":45, \"end_seconds\":48, \"scientific_name\": \"Geocrinia laevis\", \"common_name\": \"Southern Smooth Froglet\", \"confidence\": 0.9 }",
+        "payloadType": "json",
+        "x": 200,
+        "y": 160,
         "wires": [
             [
-                "04168769110e0757"
+                "mqtt_out"
             ]
         ]
     },
     {
-        "id": "04168769110e0757",
+        "id": "mqtt_out",
         "type": "mqtt out",
-        "z": "29a92b2b2cca5fd8",
-        "name": "",
-        "topic": "",
-        "qos": "",
+        "z": "ingestTab",
+        "name": "MQTT Out",
+        "topic": "frog-detector/data",
+        "qos": "2",
         "retain": "",
         "respTopic": "",
         "contentType": "",
@@ -615,55 +413,307 @@
         "correl": "",
         "expiry": "",
         "broker": "052aec521515b111",
-        "x": 350,
-        "y": 100,
+        "x": 390,
+        "y": 280,
         "wires": []
     },
     {
-        "id": "e99c74958498335f",
+        "id": "mqtt_in",
         "type": "mqtt in",
-        "z": "29a92b2b2cca5fd8",
-        "name": "",
-        "topic": "L1/L2/#",
+        "z": "ingestTab",
+        "name": "MQTT In",
+        "topic": "frog-detector/data",
         "qos": "2",
         "datatype": "auto-detect",
         "broker": "052aec521515b111",
         "nl": false,
-        "rap": true,
+        "rap": false,
         "rh": 0,
         "inputs": 0,
-        "x": 170,
-        "y": 160,
+        "x": 440,
+        "y": 180,
         "wires": [
             [
-                "55b67ac4ada00c76"
+                "normalize"
             ]
         ]
     },
     {
-        "id": "55b67ac4ada00c76",
+        "id": "normalize",
+        "type": "function",
+        "z": "ingestTab",
+        "name": "Normalize detection",
+        "func": "// Normalize detection: extract true timestamp for CSV, use msg.payload.time for MQTT\nconst row = msg.payload;\nlet timeVal;\n\n// 1) If this row came from your CSV parser, it'll have a File field\nif (row.File) {\n  const filePath = row.File;\n  const parts   = filePath.split(/[_\\/\\\\]/);         // split on underscore or path separators\n  const dateStr = parts[parts.length - 2] || \"\";      // e.g. \"20240103\"\n  let   timeStr = (parts[parts.length - 1] || \"\")     // e.g. \"054000.WAV\"\n                    .replace(/\\.wav$/i, \"\");         // strip extension\n\n  if (dateStr.length === 8 && timeStr.length === 6) {\n    const y = dateStr.slice(0,4),\n          M = dateStr.slice(4,6),\n          d = dateStr.slice(6,8),\n          h = timeStr.slice(0,2),\n          m = timeStr.slice(2,4),\n          s = timeStr.slice(4,6);\n    timeVal = `${y}-${M}-${d} ${h}:${m}:${s}`;\n  }\n}\n\n// 2) Otherwise, if it came in from MQTT, use the time field\nif (!timeVal && row.time) {\n  timeVal = row.time;\n}\n\n// 3) Last resort: use now (only happens if neither File nor time were present)\nif (!timeVal) {\n  timeVal = new Date().toISOString();\n}\n\n// Build the rec and params exactly as before\nconst rec = {\n  time:            timeVal,\n  sensor_id:       row.sensor_id    || 1,\n  start_seconds:   parseInt(row[\"Start (s)\"])||row.start_seconds||0,\n  end_seconds:     parseInt(row[\"End (s)\"])  ||row.end_seconds  ||0,\n  scientific_name: row[\"Scientific name\"]    ||row.scientific_name,\n  common_name:     row[\"Common name\"]        ||row.common_name,\n  confidence:      parseFloat(row.Confidence)||row.confidence     ||0\n};\n\n// Pass both time and the other fields into msg.params for the INSERT\nmsg.params = [\n  rec.time,\n  rec.sensor_id,\n  rec.start_seconds,\n  rec.end_seconds,\n  rec.scientific_name,\n  rec.common_name,\n  rec.confidence\n];\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 130,
+        "wires": [
+            [
+                "stamp_receive"
+            ]
+        ]
+    },
+    {
+        "id": "stamp_receive",
+        "type": "function",
+        "z": "ingestTab",
+        "name": "Stamp received_at",
+        "func": "msg.received_at=new Date().toISOString(); return msg;",
+        "outputs": 1,
+        "x": 1000,
+        "y": 130,
+        "wires": [
+            [
+                "insert_detection"
+            ]
+        ]
+    },
+    {
+        "id": "insert_detection",
+        "type": "postgresql",
+        "z": "ingestTab",
+        "name": "Insert detection row",
+        "query": "INSERT INTO sensor_data(time,sensor_id,start_seconds,end_seconds,scientific_name,common_name,confidence) VALUES($1,$2,$3,$4,$5,$6,$7);",
+        "postgreSQLConfig": "fbd14997310e037a",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 1220,
+        "y": 130,
+        "wires": [
+            [
+                "debug_insert",
+                "prepare_latency_params"
+            ]
+        ]
+    },
+    {
+        "id": "debug_insert",
         "type": "debug",
-        "z": "29a92b2b2cca5fd8",
-        "name": "debug 1",
+        "z": "ingestTab",
+        "name": "Debug Insert",
         "active": true,
         "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 400,
-        "y": 160,
+        "complete": "true",
+        "x": 1420,
+        "y": 130,
         "wires": []
     },
     {
-        "id": "683892973307683f",
+        "id": "prepare_latency_params",
+        "type": "function",
+        "z": "ingestTab",
+        "name": "Prepare latency params",
+        "func": "msg.params = [ msg.received_at ]; return msg;",
+        "outputs": 1,
+        "x": 1220,
+        "y": 180,
+        "wires": [
+            [
+                "log_latency"
+            ]
+        ]
+    },
+    {
+        "id": "log_latency",
+        "type": "postgresql",
+        "z": "ingestTab",
+        "name": "Log ingestion latency",
+        "query": "INSERT INTO ingestion_metrics(received_at, inserted_at) VALUES($1, NOW());",
+        "postgreSQLConfig": "fbd14997310e037a",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 1420,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "error_catch",
+        "type": "catch",
+        "z": "ingestTab",
+        "name": "Catch errors",
+        "scope": [
+            "read_csv",
+            "csv_parser",
+            "normalize",
+            "stamp_receive",
+            "insert_detection"
+        ],
+        "x": 740,
+        "y": 260,
+        "wires": [
+            [
+                "format_error"
+            ]
+        ]
+    },
+    {
+        "id": "format_error",
+        "type": "function",
+        "z": "ingestTab",
+        "name": "Format error",
+        "func": "msg.error_msg=msg.error.message||String(msg.error); msg.raw_payload={row:msg.payload}; return msg;",
+        "outputs": 1,
+        "x": 940,
+        "y": 260,
+        "wires": [
+            [
+                "log_error"
+            ]
+        ]
+    },
+    {
+        "id": "log_error",
+        "type": "postgresql",
+        "z": "ingestTab",
+        "name": "Log sensor_error",
+        "query": "INSERT INTO sensor_errors(time,error_msg,raw_payload) VALUES(NOW(), $1, $2);",
+        "postgreSQLConfig": "fbd14997310e037a",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 1140,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "comment_api",
         "type": "comment",
-        "z": "29a92b2b2cca5fd8",
-        "name": "Server Configuration",
-        "info": "Since containers are connected via \nthe virtual network \"digi_pkg\" under \nthe same stack, they can reach each other \nusing their container name. In this case, the \nname of the Mosquitto container is \n\"digi_pkg-mosquitto-1\".",
-        "x": 110,
-        "y": 20,
+        "z": "apiTab",
+        "name": "Expose /observations endpoint",
+        "info": "HTTP GET with filters applied",
+        "x": 300,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "inject_api_test",
+        "type": "inject",
+        "z": "apiTab",
+        "name": "Trigger API Test",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"start\":\"2023-10-19T00:00:00Z\",\"end\":\"2024-01-23T23:59:59Z\",\"species\":[\"Southern Smooth Froglet\"],\"exclude\":[],\"confidence_min\":0.6}",
+        "payloadType": "json",
+        "x": 300,
+        "y": 80,
+        "wires": [
+            [
+                "http_request"
+            ]
+        ]
+    },
+    {
+        "id": "http_request",
+        "type": "http request",
+        "z": "apiTab",
+        "name": "API Request",
+        "method": "GET",
+        "ret": "obj",
+        "url": "http://localhost:1880/observations?start={{payload.start}}&end={{payload.end}}&species={{payload.species}}&exclude={{payload.exclude}}&confidence_min={{payload.confidence_min}}",
+        "tls": "",
+        "x": 520,
+        "y": 80,
+        "wires": [
+            [
+                "debug_api"
+            ]
+        ]
+    },
+    {
+        "id": "http_in",
+        "type": "http in",
+        "z": "apiTab",
+        "name": "GET /observations",
+        "url": "/observations",
+        "method": "get",
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 140,
+        "wires": [
+            [
+                "build_query"
+            ]
+        ]
+    },
+    {
+        "id": "build_query",
+        "type": "function",
+        "z": "apiTab",
+        "name": "Build SQL & Params",
+        "func": "// Build SQL & Params\nconst q = msg.req.query;\nconst toArray = v => Array.isArray(v) ? v : v ? [v] : [];\n\n// 1) Parse & normalize start/end in full ISO 8601 (with Z)\nconst startDt = new Date(q.start);\nconst startIso = startDt.toISOString();\n\nconst endDt = new Date(q.end);\nendDt.setUTCDate(endDt.getUTCDate() + 1);      // INCLUDE the entire end-day\nconst endIso = endDt.toISOString();\n\n// 2) Prepare species/exclude as Postgres arrays\nconst speciesArr = toArray(q.species);\nconst excludeArr = toArray(q.exclude);\nconst speciesParam = '{' + speciesArr.join(',') + '}';\nconst excludeParam = '{' + excludeArr.join(',') + '}';\n\n// 3) Confidence floor\nconst conf = parseFloat(q.confidence_min) || 0;\n\n// 4) Build params & query\nmsg.params = [\n  startIso,        // $1\n  endIso,          // $2\n  speciesParam,    // $3\n  excludeParam,    // $4\n  conf             // $5\n];\n\nmsg.query = `\nSELECT time, sensor_id, start_seconds, end_seconds,\n       scientific_name, common_name, confidence\nFROM sensor_data\nWHERE time BETWEEN $1::timestamptz AND $2::timestamptz\n  AND common_name = ANY($3::text[])\n  AND common_name <> ALL($4::text[])\n  AND confidence >= $5\nORDER BY time;\n`;\n\n// 5) DEBUG LOGGING — uncomment these two lines to see exactly what you send:\n// node.warn(\"SQL → \" + msg.query);\n// node.warn(\"Params → \" + JSON.stringify(msg.params));\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 140,
+        "wires": [
+            [
+                "api_pg"
+            ]
+        ]
+    },
+    {
+        "id": "api_pg",
+        "type": "postgresql",
+        "z": "apiTab",
+        "name": "Query observations",
+        "query": "msg.query",
+        "postgreSQLConfig": "fbd14997310e037a",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 700,
+        "y": 140,
+        "wires": [
+            [
+                "http_response",
+                "debug_api"
+            ]
+        ]
+    },
+    {
+        "id": "http_response",
+        "type": "http response",
+        "z": "apiTab",
+        "name": "Response",
+        "statusCode": "",
+        "headers": {},
+        "x": 940,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "debug_api",
+        "type": "debug",
+        "z": "apiTab",
+        "name": "API Response",
+        "active": true,
+        "tosidebar": true,
+        "complete": "payload",
+        "x": 960,
+        "y": 180,
         "wires": []
     }
 ]
