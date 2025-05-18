@@ -29,22 +29,9 @@
         "x": 0,
         "y": 0
       },
-      "id": 86,
-      "panels": [],
-      "title": "OPERATIONAL (Ops engineers) keep the pipeline healthy, catch errors fast, and drill into raw events",
-      "type": "row"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 1
-      },
       "id": 71,
       "panels": [],
-      "title": "1: Pipeline & Infrastructure Health",
+      "title": "OPERATIONAL - Pipeline & Infrastructure Health",
       "type": "row"
     },
     {
@@ -85,7 +72,7 @@
         "h": 3,
         "w": 8,
         "x": 0,
-        "y": 2
+        "y": 1
       },
       "id": 76,
       "options": {
@@ -187,7 +174,7 @@
         "h": 3,
         "w": 8,
         "x": 8,
-        "y": 2
+        "y": 1
       },
       "id": 75,
       "options": {
@@ -316,7 +303,7 @@
         "h": 3,
         "w": 8,
         "x": 16,
-        "y": 2
+        "y": 1
       },
       "id": 74,
       "options": {
@@ -383,11 +370,11 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 5
+        "y": 4
       },
       "id": 81,
       "panels": [],
-      "title": "2: Data Quality & Integrity",
+      "title": "OPERATIONAL - Data Quality & Integrity",
       "type": "row"
     },
     {
@@ -476,7 +463,7 @@
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 6
+        "y": 5
       },
       "id": 77,
       "options": {
@@ -598,7 +585,7 @@
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 6
+        "y": 5
       },
       "id": 78,
       "options": {
@@ -747,7 +734,7 @@
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 6
+        "y": 5
       },
       "id": 82,
       "options": {
@@ -846,7 +833,7 @@
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 6
+        "y": 5
       },
       "id": 80,
       "options": {
@@ -910,29 +897,16 @@
       "type": "gauge"
     },
     {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 12
-      },
-      "id": 70,
-      "panels": [],
-      "title": "ANALYTICS (Data Analysts, Biology Teams) explore patterns, composition, confidence, and compare slices",
-      "type": "row"
-    },
-    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 11
       },
       "id": 83,
       "panels": [],
-      "title": "3: Overview Metrics",
+      "title": "ANALYTICS - Overview Metrics",
       "type": "row"
     },
     {
@@ -962,7 +936,7 @@
         "h": 3,
         "w": 4,
         "x": 0,
-        "y": 14
+        "y": 12
       },
       "id": 40,
       "options": {
@@ -1045,7 +1019,7 @@
         "h": 3,
         "w": 4,
         "x": 4,
-        "y": 14
+        "y": 12
       },
       "id": 14,
       "options": {
@@ -1122,7 +1096,7 @@
         "h": 3,
         "w": 4,
         "x": 8,
-        "y": 14
+        "y": 12
       },
       "id": 25,
       "options": {
@@ -1200,7 +1174,7 @@
         "h": 3,
         "w": 4,
         "x": 12,
-        "y": 14
+        "y": 12
       },
       "id": 43,
       "options": {
@@ -1279,7 +1253,7 @@
         "h": 3,
         "w": 4,
         "x": 16,
-        "y": 14
+        "y": 12
       },
       "id": 51,
       "options": {
@@ -1357,7 +1331,7 @@
         "h": 3,
         "w": 4,
         "x": 20,
-        "y": 14
+        "y": 12
       },
       "id": 49,
       "options": {
@@ -1413,90 +1387,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 15
       },
       "id": 84,
       "panels": [],
-      "title": "4: Trend & Composition ",
+      "title": "ANALYTICS - Trend & Composition ",
       "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Average duration of each audio clip per detection in seconds",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text"
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 0,
-        "y": 18
-      },
-      "id": 89,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  round(avg(end_seconds - start_seconds)::numeric, 1) AS avg_audio_length_sec\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence;\n\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Avg Audio Length",
-      "type": "stat"
     },
     {
       "datasource": {
@@ -1589,9 +1485,9 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 18,
-        "x": 6,
-        "y": 18
+        "w": 24,
+        "x": 0,
+        "y": 16
       },
       "id": 87,
       "options": {
@@ -1636,107 +1532,6 @@
       ],
       "title": "Daily Volume  and Species Count",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Percentage of hourly intervals in the last 24 hours with at least one detection, verifies end to end pipeline completeness",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 4,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red"
-              },
-              {
-                "color": "yellow",
-                "value": 75
-              },
-              {
-                "color": "green",
-                "value": 90
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 0,
-        "y": 21
-      },
-      "id": 88,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "WITH hours AS (\n  SELECT generate_series(\n    date_trunc('hour', now() - '24 hours'::interval),\n    date_trunc('hour', now()),\n    '1 hour'::interval\n  ) AS hr\n),\ningested AS (\n  SELECT\n    time_bucket('1 hour', time) AS hr\n  FROM sensor_data\n  WHERE\n    time >= now() - '24 hours'::interval\n    AND common_name    IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence    >= $confidence\n  GROUP BY 1\n)\nSELECT\n  100.0 * COUNT(ing.hr) / COUNT(hours.hr) AS completeness_pct\nFROM hours\nLEFT JOIN ingested ing USING (hr);\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "$__timeGroup",
-                "parameters": [
-                  {
-                    "name": "inserted_at",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "$__interval",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "previous",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "ingestion_metrics"
-        }
-      ],
-      "title": "Data Completeness (last 24 h)",
-      "type": "gauge"
     },
     {
       "datasource": {
@@ -1800,9 +1595,9 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 18,
-        "x": 6,
-        "y": 27
+        "w": 12,
+        "x": 0,
+        "y": 25
       },
       "id": 91,
       "options": {
@@ -1846,6 +1641,141 @@
         }
       ],
       "title": "Daily Composition by Species",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
+      },
+      "description": "Time-series lines of hourly detection counts for each species. Highlights fine grained and intraday activity patterns",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.7,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Common Eastern Froglet"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 25
+      },
+      "id": 92,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  time_bucket('1 hour', time) AS \"time\",\n  common_name AS \"metric\",\n  count(*) AS \"value\"\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence\nGROUP BY 1, common_name\nORDER BY 1;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Hourly Trend by Species",
       "type": "timeseries"
     },
     {
@@ -1910,9 +1840,9 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 18,
-        "x": 6,
-        "y": 36
+        "w": 12,
+        "x": 0,
+        "y": 34
       },
       "id": 90,
       "options": {
@@ -1963,7 +1893,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "fehnkzh0nnegwf"
       },
-      "description": "Time-series lines of hourly detection counts for each species. Highlights fine grained and intraday activity patterns",
+      "description": "Smoothed trend line showing the 7 day moving average of daily detection counts, filters out day to day noise to highlight underlying volume trends",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2020,11 +1950,11 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 18,
-        "x": 6,
-        "y": 45
+        "w": 12,
+        "x": 12,
+        "y": 34
       },
-      "id": 92,
+      "id": 93,
       "options": {
         "legend": {
           "calcs": [],
@@ -2044,7 +1974,7 @@
           "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT\n  time_bucket('1 hour', time) AS \"time\",\n  common_name AS \"metric\",\n  count(*) AS \"value\"\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence\nGROUP BY 1, common_name\nORDER BY 1;\n",
+          "rawSql": "WITH daily AS (\n  SELECT\n    time_bucket('1 day', time) AS day,\n    count(*) AS total_obs\n  FROM sensor_data\n  WHERE\n    $__timeFilter(time)\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY 1\n)\nSELECT\n  day AS \"time\",\n  round(\n    avg(total_obs) OVER (\n      ORDER BY day\n      ROWS BETWEEN 6 PRECEDING AND CURRENT ROW\n    )::numeric\n  , 2) AS \"7-Day Rolling Avg\"\nFROM daily\nORDER BY day;\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -2065,7 +1995,7 @@
           }
         }
       ],
-      "title": "Hourly Trend by Species",
+      "title": "7-Day Rolling Avg of Daily Totals",
       "type": "timeseries"
     },
     {
@@ -2074,7 +2004,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 54
+        "y": 43
       },
       "id": 39,
       "panels": [
@@ -2223,7 +2153,7 @@
             "h": 9,
             "w": 16,
             "x": 0,
-            "y": 55
+            "y": 103
           },
           "id": 85,
           "options": {
@@ -2317,7 +2247,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 55
+            "y": 103
           },
           "id": 8,
           "options": {
@@ -2438,7 +2368,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 64
+            "y": 112
           },
           "id": 67,
           "options": {
@@ -2544,7 +2474,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 73
+            "y": 121
           },
           "id": 68,
           "options": {
@@ -2691,7 +2621,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 82
+            "y": 130
           },
           "id": 16,
           "options": {
@@ -2789,7 +2719,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 93
+            "y": 141
           },
           "id": 37,
           "options": {
@@ -2908,7 +2838,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 102
+            "y": 150
           },
           "id": 62,
           "options": {
@@ -2980,7 +2910,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 113
+            "y": 161
           },
           "id": 53,
           "options": {
@@ -3111,7 +3041,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 116
+            "y": 164
           },
           "id": 48,
           "options": {
@@ -3169,7 +3099,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 55
+        "y": 44
       },
       "id": 23,
       "panels": [
@@ -3199,7 +3129,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 201
+            "y": 320
           },
           "id": 11,
           "options": {
@@ -3276,7 +3206,7 @@
             "h": 3,
             "w": 4,
             "x": 4,
-            "y": 201
+            "y": 320
           },
           "id": 41,
           "options": {
@@ -3364,7 +3294,7 @@
             "h": 3,
             "w": 4,
             "x": 8,
-            "y": 201
+            "y": 320
           },
           "id": 42,
           "options": {
@@ -3440,7 +3370,7 @@
             "h": 3,
             "w": 4,
             "x": 12,
-            "y": 201
+            "y": 320
           },
           "id": 38,
           "options": {
@@ -3516,7 +3446,7 @@
             "h": 3,
             "w": 4,
             "x": 16,
-            "y": 201
+            "y": 320
           },
           "id": 52,
           "options": {
@@ -3592,7 +3522,7 @@
             "h": 3,
             "w": 4,
             "x": 20,
-            "y": 201
+            "y": 320
           },
           "id": 44,
           "options": {
@@ -3773,7 +3703,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 204
+            "y": 323
           },
           "id": 69,
           "options": {
@@ -3843,7 +3773,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 218
+            "y": 337
           },
           "id": 45,
           "options": {
@@ -3936,7 +3866,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 221
+            "y": 340
           },
           "id": 46,
           "options": {
@@ -4034,7 +3964,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 221
+            "y": 340
           },
           "id": 54,
           "options": {
@@ -4237,7 +4167,7 @@
             "h": 13,
             "w": 24,
             "x": 0,
-            "y": 230
+            "y": 349
           },
           "id": 56,
           "options": {
@@ -4321,7 +4251,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 243
+            "y": 362
           },
           "id": 58,
           "options": {
@@ -4444,7 +4374,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 254
+            "y": 373
           },
           "id": 32,
           "options": {
@@ -4560,7 +4490,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 264
+            "y": 383
           },
           "id": 61,
           "options": {
@@ -4618,7 +4548,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 56
+        "y": 45
       },
       "id": 15,
       "panels": [
@@ -4648,7 +4578,7 @@
             "h": 4,
             "w": 4,
             "x": 0,
-            "y": 1884
+            "y": 2003
           },
           "id": 24,
           "options": {
@@ -4725,7 +4655,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 1884
+            "y": 2003
           },
           "id": 13,
           "options": {
@@ -4801,7 +4731,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 1884
+            "y": 2003
           },
           "id": 18,
           "options": {
@@ -4901,7 +4831,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 1884
+            "y": 2003
           },
           "id": 27,
           "options": {
@@ -4973,7 +4903,7 @@
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 1884
+            "y": 2003
           },
           "id": 28,
           "options": {
@@ -5099,7 +5029,7 @@
             "h": 11,
             "w": 16,
             "x": 0,
-            "y": 1888
+            "y": 2007
           },
           "id": 29,
           "options": {
@@ -5233,7 +5163,7 @@
             "h": 11,
             "w": 8,
             "x": 16,
-            "y": 1888
+            "y": 2007
           },
           "id": 30,
           "options": {
@@ -5313,7 +5243,7 @@
             "h": 11,
             "w": 8,
             "x": 0,
-            "y": 1899
+            "y": 2018
           },
           "id": 31,
           "options": {
@@ -5435,7 +5365,7 @@
             "h": 11,
             "w": 16,
             "x": 8,
-            "y": 1899
+            "y": 2018
           },
           "id": 34,
           "options": {
@@ -5565,7 +5495,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 1910
+            "y": 2029
           },
           "id": 6,
           "options": {
@@ -5628,7 +5558,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 57
+        "y": 46
       },
       "id": 9,
       "panels": [
@@ -5703,7 +5633,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 31
+            "y": 79
           },
           "id": 19,
           "options": {
@@ -5812,7 +5742,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 400
+            "y": 519
           },
           "id": 63,
           "options": {
@@ -5890,7 +5820,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 411
+            "y": 530
           },
           "id": 36,
           "options": {
@@ -5992,7 +5922,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 423
+            "y": 542
           },
           "id": 59,
           "options": {
@@ -6133,7 +6063,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 435
+            "y": 554
           },
           "id": 35,
           "options": {
@@ -6244,7 +6174,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 446
+            "y": 565
           },
           "id": 33,
           "options": {
@@ -6436,7 +6366,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 457
+            "y": 576
           },
           "id": 60,
           "options": {
@@ -6583,12 +6513,12 @@
     ]
   },
   "time": {
-    "from": "2023-10-20T15:26:42.848Z",
-    "to": "2023-11-01T23:56:46.683Z"
+    "from": "2023-10-18T08:55:19.438Z",
+    "to": "2023-11-17T23:13:35.690Z"
   },
   "timepicker": {},
   "timezone": "utc",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 457
+  "version": 462
 }
