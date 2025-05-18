@@ -1991,6 +1991,113 @@
         "type": "grafana-postgresql-datasource",
         "uid": "fehnkzh0nnegwf"
       },
+      "description": "Pie chart of the five most frequent species by count, with a combined “Other” slice representing the rest",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "value",
+                  "Southern Smooth Froglet",
+                  "Common Eastern Froglet"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 0,
+        "y": 44
+      },
+      "id": 97,
+      "options": {
+        "displayLabels": [],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^value$/",
+          "values": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH counts AS (\n  SELECT\n    common_name,\n    count(*) AS cnt\n  FROM sensor_data\n  WHERE\n    $__timeFilter(time)\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY common_name\n),\ntop5 AS (\n  SELECT common_name, cnt\n  FROM counts\n  ORDER BY cnt DESC\n  LIMIT 5\n),\nothers AS (\n  SELECT\n    'Other' AS common_name,\n    COALESCE(SUM(cnt),0) AS cnt\n  FROM counts\n  WHERE common_name NOT IN (SELECT common_name FROM top5)\n)\nSELECT metric, value\nFROM (\n  SELECT common_name AS metric, cnt AS value FROM top5\n  UNION ALL\n  SELECT common_name AS metric, cnt AS value FROM others\n) AS unioned\nORDER BY\n  CASE WHEN metric = 'Other' THEN 2 ELSE 1 END,\n  value DESC;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Top 5 Species Pie",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
+      },
       "description": "Heatmap showing daily detection counts for each species, where brighter cells indicate higher daily activity per species",
       "fieldConfig": {
         "defaults": {
@@ -2010,7 +2117,7 @@
       "gridPos": {
         "h": 9,
         "w": 12,
-        "x": 0,
+        "x": 6,
         "y": 44
       },
       "id": 95,
@@ -2353,7 +2460,7 @@
             "h": 9,
             "w": 16,
             "x": 0,
-            "y": 208
+            "y": 343
           },
           "id": 85,
           "options": {
@@ -2447,7 +2554,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 208
+            "y": 343
           },
           "id": 8,
           "options": {
@@ -2568,7 +2675,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 291
+            "y": 426
           },
           "id": 67,
           "options": {
@@ -2674,7 +2781,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 300
+            "y": 435
           },
           "id": 68,
           "options": {
@@ -2821,7 +2928,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 309
+            "y": 444
           },
           "id": 16,
           "options": {
@@ -2919,7 +3026,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 320
+            "y": 455
           },
           "id": 37,
           "options": {
@@ -3038,7 +3145,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 329
+            "y": 464
           },
           "id": 62,
           "options": {
@@ -3110,7 +3217,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 340
+            "y": 475
           },
           "id": 53,
           "options": {
@@ -3241,7 +3348,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 343
+            "y": 478
           },
           "id": 48,
           "options": {
@@ -3329,7 +3436,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 209
+            "y": 344
           },
           "id": 11,
           "options": {
@@ -3406,7 +3513,7 @@
             "h": 3,
             "w": 4,
             "x": 4,
-            "y": 209
+            "y": 344
           },
           "id": 41,
           "options": {
@@ -3494,7 +3601,7 @@
             "h": 3,
             "w": 4,
             "x": 8,
-            "y": 209
+            "y": 344
           },
           "id": 42,
           "options": {
@@ -3570,7 +3677,7 @@
             "h": 3,
             "w": 4,
             "x": 12,
-            "y": 209
+            "y": 344
           },
           "id": 38,
           "options": {
@@ -3646,7 +3753,7 @@
             "h": 3,
             "w": 4,
             "x": 16,
-            "y": 209
+            "y": 344
           },
           "id": 52,
           "options": {
@@ -3722,7 +3829,7 @@
             "h": 3,
             "w": 4,
             "x": 20,
-            "y": 209
+            "y": 344
           },
           "id": 44,
           "options": {
@@ -3903,7 +4010,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 212
+            "y": 347
           },
           "id": 69,
           "options": {
@@ -3973,7 +4080,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 226
+            "y": 361
           },
           "id": 45,
           "options": {
@@ -4066,7 +4173,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 229
+            "y": 364
           },
           "id": 46,
           "options": {
@@ -4164,7 +4271,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 229
+            "y": 364
           },
           "id": 54,
           "options": {
@@ -4367,7 +4474,7 @@
             "h": 13,
             "w": 24,
             "x": 0,
-            "y": 238
+            "y": 373
           },
           "id": 56,
           "options": {
@@ -4451,7 +4558,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 251
+            "y": 386
           },
           "id": 58,
           "options": {
@@ -4574,7 +4681,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 262
+            "y": 397
           },
           "id": 32,
           "options": {
@@ -4690,7 +4797,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 272
+            "y": 407
           },
           "id": 61,
           "options": {
@@ -4778,7 +4885,7 @@
             "h": 4,
             "w": 4,
             "x": 0,
-            "y": 1014
+            "y": 65
           },
           "id": 24,
           "options": {
@@ -4855,7 +4962,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 1014
+            "y": 65
           },
           "id": 13,
           "options": {
@@ -4931,7 +5038,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 1014
+            "y": 65
           },
           "id": 18,
           "options": {
@@ -5031,7 +5138,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 1014
+            "y": 65
           },
           "id": 27,
           "options": {
@@ -5103,7 +5210,7 @@
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 1014
+            "y": 65
           },
           "id": 28,
           "options": {
@@ -5229,7 +5336,7 @@
             "h": 11,
             "w": 16,
             "x": 0,
-            "y": 1018
+            "y": 69
           },
           "id": 29,
           "options": {
@@ -5363,7 +5470,7 @@
             "h": 11,
             "w": 8,
             "x": 16,
-            "y": 1018
+            "y": 69
           },
           "id": 30,
           "options": {
@@ -5443,7 +5550,7 @@
             "h": 11,
             "w": 8,
             "x": 0,
-            "y": 1029
+            "y": 80
           },
           "id": 31,
           "options": {
@@ -5565,7 +5672,7 @@
             "h": 11,
             "w": 16,
             "x": 8,
-            "y": 1029
+            "y": 80
           },
           "id": 34,
           "options": {
@@ -5695,7 +5802,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 1040
+            "y": 91
           },
           "id": 6,
           "options": {
@@ -5833,7 +5940,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 1337
+            "y": 1472
           },
           "id": 19,
           "options": {
@@ -5942,7 +6049,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1777
+            "y": 1912
           },
           "id": 63,
           "options": {
@@ -6020,7 +6127,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 1788
+            "y": 1923
           },
           "id": 36,
           "options": {
@@ -6122,7 +6229,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 1800
+            "y": 1935
           },
           "id": 59,
           "options": {
@@ -6263,7 +6370,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1812
+            "y": 1947
           },
           "id": 35,
           "options": {
@@ -6374,7 +6481,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1823
+            "y": 1958
           },
           "id": 33,
           "options": {
@@ -6566,7 +6673,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 1834
+            "y": 1969
           },
           "id": 60,
           "options": {
@@ -6625,7 +6732,9 @@
       {
         "allowCustomValue": false,
         "current": {
-          "text": "All",
+          "text": [
+            "All"
+          ],
           "value": [
             "$__all"
           ]
@@ -6720,5 +6829,5 @@
   "timezone": "utc",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 468
+  "version": 472
 }
