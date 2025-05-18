@@ -22,7 +22,7 @@
   "links": [],
   "panels": [
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -395,7 +395,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "fehnkzh0nnegwf"
       },
-      "description": "Highlight any hours with zero ingestions so can immediately see when the pipeline went silent.",
+      "description": "Highlight any hours with zero ingestions so can immediately see when the pipeline went silent",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -675,7 +675,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "fehnkzh0nnegwf"
       },
-      "description": "TrackS when low-confidence (< 0.6) detections spike, this may indicate noise or mis-triggers.",
+      "description": "Hourly count of detections below confidence threshold (0.6), highlighting potential noise or mis-classification events",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -936,7 +936,7 @@
           "table": "ingestion_metrics"
         }
       ],
-      "title": "P95 Write Latency (SLA)",
+      "title": "Data Completeness Gauge (last 24 h)",
       "type": "timeseries"
     },
     {
@@ -2538,7 +2538,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 443
+            "y": 476
           },
           "id": 11,
           "options": {
@@ -2615,7 +2615,7 @@
             "h": 3,
             "w": 4,
             "x": 4,
-            "y": 443
+            "y": 476
           },
           "id": 41,
           "options": {
@@ -2703,7 +2703,7 @@
             "h": 3,
             "w": 4,
             "x": 8,
-            "y": 443
+            "y": 476
           },
           "id": 42,
           "options": {
@@ -2779,7 +2779,7 @@
             "h": 3,
             "w": 4,
             "x": 12,
-            "y": 443
+            "y": 476
           },
           "id": 38,
           "options": {
@@ -2855,7 +2855,7 @@
             "h": 3,
             "w": 4,
             "x": 16,
-            "y": 443
+            "y": 476
           },
           "id": 52,
           "options": {
@@ -2931,7 +2931,7 @@
             "h": 3,
             "w": 4,
             "x": 20,
-            "y": 443
+            "y": 476
           },
           "id": 44,
           "options": {
@@ -3112,7 +3112,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 446
+            "y": 479
           },
           "id": 69,
           "options": {
@@ -3182,7 +3182,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 460
+            "y": 493
           },
           "id": 45,
           "options": {
@@ -3275,7 +3275,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 463
+            "y": 496
           },
           "id": 46,
           "options": {
@@ -3373,7 +3373,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 463
+            "y": 496
           },
           "id": 54,
           "options": {
@@ -3576,7 +3576,7 @@
             "h": 13,
             "w": 24,
             "x": 0,
-            "y": 472
+            "y": 505
           },
           "id": 56,
           "options": {
@@ -3660,7 +3660,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 485
+            "y": 518
           },
           "id": 58,
           "options": {
@@ -3783,7 +3783,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 496
+            "y": 529
           },
           "id": 32,
           "options": {
@@ -3899,7 +3899,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 506
+            "y": 539
           },
           "id": 61,
           "options": {
@@ -3987,7 +3987,7 @@
             "h": 4,
             "w": 4,
             "x": 0,
-            "y": 518
+            "y": 551
           },
           "id": 24,
           "options": {
@@ -4064,7 +4064,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 518
+            "y": 551
           },
           "id": 13,
           "options": {
@@ -4140,7 +4140,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 518
+            "y": 551
           },
           "id": 18,
           "options": {
@@ -4240,7 +4240,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 518
+            "y": 551
           },
           "id": 27,
           "options": {
@@ -4312,7 +4312,7 @@
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 518
+            "y": 551
           },
           "id": 28,
           "options": {
@@ -4438,7 +4438,7 @@
             "h": 11,
             "w": 16,
             "x": 0,
-            "y": 522
+            "y": 555
           },
           "id": 29,
           "options": {
@@ -4572,7 +4572,7 @@
             "h": 11,
             "w": 8,
             "x": 16,
-            "y": 522
+            "y": 555
           },
           "id": 30,
           "options": {
@@ -4652,7 +4652,7 @@
             "h": 11,
             "w": 8,
             "x": 0,
-            "y": 533
+            "y": 566
           },
           "id": 31,
           "options": {
@@ -4774,7 +4774,7 @@
             "h": 11,
             "w": 16,
             "x": 8,
-            "y": 533
+            "y": 566
           },
           "id": 34,
           "options": {
@@ -4904,7 +4904,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 544
+            "y": 577
           },
           "id": 6,
           "options": {
@@ -5042,7 +5042,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 1224
+            "y": 1257
           },
           "id": 19,
           "options": {
@@ -5151,7 +5151,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1232
+            "y": 1265
           },
           "id": 63,
           "options": {
@@ -5229,7 +5229,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 1243
+            "y": 1276
           },
           "id": 36,
           "options": {
@@ -5331,7 +5331,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 1255
+            "y": 1288
           },
           "id": 59,
           "options": {
@@ -5472,7 +5472,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1267
+            "y": 1300
           },
           "id": 35,
           "options": {
@@ -5583,7 +5583,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1278
+            "y": 1311
           },
           "id": 33,
           "options": {
@@ -5737,5 +5737,5 @@
   "timezone": "utc",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 413
+  "version": 417
 }
