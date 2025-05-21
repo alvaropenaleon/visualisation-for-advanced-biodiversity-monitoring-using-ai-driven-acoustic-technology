@@ -22,7 +22,7 @@
   "links": [],
   "panels": [
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -30,1364 +30,1367 @@
         "y": 0
       },
       "id": 71,
-      "panels": [],
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "P95 captures typical worst-case performance, letting us spot creeping latency before the SLA is violated",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 500,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 201
+                  },
+                  {
+                    "color": "red",
+                    "value": 351
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 8,
+            "x": 0,
+            "y": 1
+          },
+          "id": 76,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  percentile_cont(0.95)\n    WITHIN GROUP (\n      ORDER BY extract(epoch FROM (inserted_at - received_at)) * 1000\n    ) AS p95_latency_ms\nFROM ingestion_metrics\nWHERE $__timeFilter(inserted_at);\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "$__timeGroup",
+                    "parameters": [
+                      {
+                        "name": "inserted_at",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "$__interval",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "previous",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "ingestion_metrics"
+            }
+          ],
+          "title": "P95 Write Latency (SLA)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Ingestion Rate (Throughput) for CSV/MQTT loads. Instant “ops per minute” at a glance, with the sparkline revealing past bursts\n\n",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red"
+                  },
+                  {
+                    "color": "orange",
+                    "value": 51
+                  },
+                  {
+                    "color": "green",
+                    "value": 201
+                  }
+                ]
+              },
+              "unit": "opm"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 8,
+            "x": 8,
+            "y": 1
+          },
+          "id": 75,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time_bucket('1 minute', inserted_at) AS time,\n  COUNT(*) AS rate_per_min\nFROM ingestion_metrics\nWHERE $__timeFilter(inserted_at)\nGROUP BY 1\nORDER BY 1;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "$__timeGroup",
+                    "parameters": [
+                      {
+                        "name": "inserted_at",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "$__interval",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "previous",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "ingestion_metrics"
+            }
+          ],
+          "title": "Ingestion Rate (Throughput) (CSV/MQTT loads)",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Hourly bars give immediate insight into when and how often errors spike",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "bars",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "orange"
+                  },
+                  {
+                    "color": "red",
+                    "value": 5
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 8,
+            "x": 16,
+            "y": 1
+          },
+          "id": 74,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time_bucket('1 hour', time) AS \"time\",\n  count(*) AS \"errors_per_hr\"\nFROM sensor_errors\nWHERE $__timeFilter(time)\nGROUP BY 1\nORDER BY 1;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "$__timeGroup",
+                    "parameters": [
+                      {
+                        "name": "inserted_at",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "$__interval",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "previous",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "ingestion_metrics"
+            }
+          ],
+          "title": "Error rate (malformed/hr)",
+          "type": "timeseries"
+        }
+      ],
       "title": "OPERATIONAL 1 - Pipeline & Infrastructure Health",
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "P95 captures typical worst-case performance, letting us spot creeping latency before the SLA is violated",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 500,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "yellow",
-                "value": 201
-              },
-              {
-                "color": "red",
-                "value": 351
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 8,
-        "x": 0,
-        "y": 1
-      },
-      "id": 76,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  percentile_cont(0.95)\n    WITHIN GROUP (\n      ORDER BY extract(epoch FROM (inserted_at - received_at)) * 1000\n    ) AS p95_latency_ms\nFROM ingestion_metrics\nWHERE $__timeFilter(inserted_at);\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "$__timeGroup",
-                "parameters": [
-                  {
-                    "name": "inserted_at",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "$__interval",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "previous",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "ingestion_metrics"
-        }
-      ],
-      "title": "P95 Write Latency (SLA)",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Ingestion Rate (Throughput) for CSV/MQTT loads. Instant “ops per minute” at a glance, with the sparkline revealing past bursts\n\n",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red"
-              },
-              {
-                "color": "orange",
-                "value": 51
-              },
-              {
-                "color": "green",
-                "value": 201
-              }
-            ]
-          },
-          "unit": "opm"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 8,
-        "x": 8,
-        "y": 1
-      },
-      "id": 75,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  time_bucket('1 minute', inserted_at) AS time,\n  COUNT(*) AS rate_per_min\nFROM ingestion_metrics\nWHERE $__timeFilter(inserted_at)\nGROUP BY 1\nORDER BY 1;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "$__timeGroup",
-                "parameters": [
-                  {
-                    "name": "inserted_at",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "$__interval",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "previous",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "ingestion_metrics"
-        }
-      ],
-      "title": "Ingestion Rate (Throughput) (CSV/MQTT loads)",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Hourly bars give immediate insight into when and how often errors spike",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "orange"
-              },
-              {
-                "color": "red",
-                "value": 5
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 8,
-        "x": 16,
-        "y": 1
-      },
-      "id": 74,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  time_bucket('1 hour', time) AS \"time\",\n  count(*) AS \"errors_per_hr\"\nFROM sensor_errors\nWHERE $__timeFilter(time)\nGROUP BY 1\nORDER BY 1;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "$__timeGroup",
-                "parameters": [
-                  {
-                    "name": "inserted_at",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "$__interval",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "previous",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "ingestion_metrics"
-        }
-      ],
-      "title": "Error rate (malformed/hr)",
-      "type": "timeseries"
-    },
-    {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 4
+        "y": 1
       },
       "id": 81,
-      "panels": [],
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Highlight any hours with zero ingestions so can immediately see when the pipeline went silent",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.1,
+                "drawStyle": "bars",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 3,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "gap_flag"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  },
+                  {
+                    "id": "custom.fillOpacity",
+                    "value": 65
+                  },
+                  {
+                    "id": "custom.lineWidth",
+                    "value": 0
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 2
+          },
+          "id": 77,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "WITH all_hours AS (\n  SELECT generate_series(\n    date_trunc('hour',   to_timestamp($__from/1000)),\n    date_trunc('hour',   to_timestamp($__to  /1000)),\n    '1 hour'::interval\n  ) AS bucket\n),\nseen AS (\n  SELECT time_bucket('1 hour', inserted_at) AS bucket\n  FROM ingestion_metrics\n  WHERE $__timeFilter(inserted_at)\n  GROUP BY 1\n)\nSELECT\n  a.bucket   AS \"time\",\n  1          AS gap_flag\nFROM all_hours a\nLEFT JOIN seen s\n  ON a.bucket = s.bucket\nWHERE s.bucket IS NULL\nORDER BY a.bucket;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "$__timeGroup",
+                    "parameters": [
+                      {
+                        "name": "inserted_at",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "$__interval",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "previous",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "ingestion_metrics"
+            }
+          ],
+          "title": "Missing-Data Gaps (> 2h zero ingest)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "See how the model’s scores are distributed, are pushing too many low-confidence calls",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "super-light-blue",
+                "mode": "shades"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 60,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "cnt"
+                },
+                "properties": [
+                  {
+                    "id": "custom.transform"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 6,
+            "y": 2
+          },
+          "id": 78,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "colorByField": "cnt",
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "orientation": "vertical",
+            "showValue": "never",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xField": "bucket_start",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 100
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  ((width_bucket(confidence, 0, 1, 20) - 1)::float / 20) AS bucket_start,\n  count(*) AS cnt\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name    IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence    >= $confidence\nGROUP BY bucket_start\nORDER BY bucket_start;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "$__timeGroup",
+                    "parameters": [
+                      {
+                        "name": "inserted_at",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "$__interval",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "previous",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "ingestion_metrics"
+            }
+          ],
+          "title": "Confidence Score Distribution (0 – 1)",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Hourly count of detections below confidence threshold (0.6), highlighting potential noise or mis-classification events",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "super-light-blue",
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "scheme",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "#EAB839",
+                    "value": 10
+                  },
+                  {
+                    "color": "red",
+                    "value": 20
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "cnt"
+                },
+                "properties": []
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 12,
+            "y": 2
+          },
+          "id": 82,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time_bucket('1 hour', time) AS \"time\",\n  count(*) FILTER (WHERE confidence < 0.6) AS \"low_conf_per_hr\"\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\nGROUP BY 1\nORDER BY 1;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "$__timeGroup",
+                    "parameters": [
+                      {
+                        "name": "inserted_at",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "$__interval",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "previous",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "ingestion_metrics"
+            }
+          ],
+          "title": "Low-Confidence Detections (/hr)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Percentage of hourly intervals in the last 24 hours with at least one detection, verifies end to end pipeline completeness",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 100,
+              "min": 4,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "red"
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 75
+                  },
+                  {
+                    "color": "green",
+                    "value": 90
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 18,
+            "y": 2
+          },
+          "id": 80,
+          "options": {
+            "minVizHeight": 75,
+            "minVizWidth": 75,
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "sizing": "auto"
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "WITH hours AS (\n  SELECT generate_series(\n    date_trunc('hour', now() - '24 hours'::interval),\n    date_trunc('hour', now()),\n    '1 hour'::interval\n  ) AS hr\n),\ningested AS (\n  SELECT\n    time_bucket('1 hour', time) AS hr\n  FROM sensor_data\n  WHERE\n    time >= now() - '24 hours'::interval\n    AND common_name    IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence    >= $confidence\n  GROUP BY 1\n)\nSELECT\n  100.0 * COUNT(ing.hr) / COUNT(hours.hr) AS completeness_pct\nFROM hours\nLEFT JOIN ingested ing USING (hr);\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "$__timeGroup",
+                    "parameters": [
+                      {
+                        "name": "inserted_at",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "$__interval",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "previous",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "ingestion_metrics"
+            }
+          ],
+          "title": "Data Completeness (last 24 h)",
+          "type": "gauge"
+        }
+      ],
       "title": "OPERATIONAL 2 - Data Quality & Integrity",
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Highlight any hours with zero ingestions so can immediately see when the pipeline went silent",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.1,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 3,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "max": 1,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "gap_flag"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 65
-              },
-              {
-                "id": "custom.lineWidth",
-                "value": 0
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 0,
-        "y": 5
-      },
-      "id": 77,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "WITH all_hours AS (\n  SELECT generate_series(\n    date_trunc('hour',   to_timestamp($__from/1000)),\n    date_trunc('hour',   to_timestamp($__to  /1000)),\n    '1 hour'::interval\n  ) AS bucket\n),\nseen AS (\n  SELECT time_bucket('1 hour', inserted_at) AS bucket\n  FROM ingestion_metrics\n  WHERE $__timeFilter(inserted_at)\n  GROUP BY 1\n)\nSELECT\n  a.bucket   AS \"time\",\n  1          AS gap_flag\nFROM all_hours a\nLEFT JOIN seen s\n  ON a.bucket = s.bucket\nWHERE s.bucket IS NULL\nORDER BY a.bucket;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "$__timeGroup",
-                "parameters": [
-                  {
-                    "name": "inserted_at",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "$__interval",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "previous",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "ingestion_metrics"
-        }
-      ],
-      "title": "Missing-Data Gaps (> 2h zero ingest)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "See how the model’s scores are distributed, are pushing too many low-confidence calls",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "super-light-blue",
-            "mode": "shades"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 60,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "cnt"
-            },
-            "properties": [
-              {
-                "id": "custom.transform"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 5
-      },
-      "id": 78,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "colorByField": "cnt",
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "orientation": "vertical",
-        "showValue": "never",
-        "stacking": "none",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "xField": "bucket_start",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 100
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  ((width_bucket(confidence, 0, 1, 20) - 1)::float / 20) AS bucket_start,\n  count(*) AS cnt\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name    IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence    >= $confidence\nGROUP BY bucket_start\nORDER BY bucket_start;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "$__timeGroup",
-                "parameters": [
-                  {
-                    "name": "inserted_at",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "$__interval",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "previous",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "ingestion_metrics"
-        }
-      ],
-      "title": "Confidence Score Distribution (0 – 1)",
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Hourly count of detections below confidence threshold (0.6), highlighting potential noise or mis-classification events",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "super-light-blue",
-            "mode": "thresholds"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "scheme",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "#EAB839",
-                "value": 10
-              },
-              {
-                "color": "red",
-                "value": 20
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "cnt"
-            },
-            "properties": []
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 12,
-        "y": 5
-      },
-      "id": 82,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  time_bucket('1 hour', time) AS \"time\",\n  count(*) FILTER (WHERE confidence < 0.6) AS \"low_conf_per_hr\"\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\nGROUP BY 1\nORDER BY 1;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "$__timeGroup",
-                "parameters": [
-                  {
-                    "name": "inserted_at",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "$__interval",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "previous",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "ingestion_metrics"
-        }
-      ],
-      "title": "Low-Confidence Detections (/hr)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Percentage of hourly intervals in the last 24 hours with at least one detection, verifies end to end pipeline completeness",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 100,
-          "min": 4,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red"
-              },
-              {
-                "color": "yellow",
-                "value": 75
-              },
-              {
-                "color": "green",
-                "value": 90
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 18,
-        "y": 5
-      },
-      "id": 80,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto"
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "WITH hours AS (\n  SELECT generate_series(\n    date_trunc('hour', now() - '24 hours'::interval),\n    date_trunc('hour', now()),\n    '1 hour'::interval\n  ) AS hr\n),\ningested AS (\n  SELECT\n    time_bucket('1 hour', time) AS hr\n  FROM sensor_data\n  WHERE\n    time >= now() - '24 hours'::interval\n    AND common_name    IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence    >= $confidence\n  GROUP BY 1\n)\nSELECT\n  100.0 * COUNT(ing.hr) / COUNT(hours.hr) AS completeness_pct\nFROM hours\nLEFT JOIN ingested ing USING (hr);\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "$__timeGroup",
-                "parameters": [
-                  {
-                    "name": "inserted_at",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "$__interval",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "previous",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "ingestion_metrics"
-        }
-      ],
-      "title": "Data Completeness (last 24 h)",
-      "type": "gauge"
-    },
-    {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 11
+        "y": 2
       },
       "id": 83,
-      "panels": [],
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Total number of detection events in the selected time window (filtered by species & confidence)",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text"
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 4,
+            "x": 0,
+            "y": 3
+          },
+          "id": 40,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {},
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  count(*) AS total_observations\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Total Observations",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Mean model confidence score for all detections in the time window (higher = more certain)",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "text",
+                "mode": "fixed"
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "super-light-yellow"
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 4,
+            "x": 4,
+            "y": 3
+          },
+          "id": 14,
+          "options": {
+            "colorMode": "none",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "same_as_value",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "value",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  round(avg(confidence)::numeric, 3) AS avg_confidence\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Avg Confidence",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Count of distinct species detected in the time window",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text"
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 4,
+            "x": 8,
+            "y": 3
+          },
+          "id": 25,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  count(DISTINCT common_name) AS unique_species\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence;\n\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Unique Species",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Average duration of each audio clip per detection in seconds",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text"
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 4,
+            "x": 12,
+            "y": 3
+          },
+          "id": 43,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  round(avg(end_seconds - start_seconds)::numeric, 1) AS avg_audio_length_sec\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence;\n\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Avg Audio Length",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Duration of the selected time window in hours (used for rate calculations)",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "decimals": 2,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text"
+                  }
+                ]
+              },
+              "unit": "h"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 4,
+            "x": 16,
+            "y": 3
+          },
+          "id": 51,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  extract(\n    epoch\n    FROM $__timeTo()::timestamp\n      - $__timeFrom()::timestamp\n  ) \n  / 3600.0\n  AS window_hours;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Window Length",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Total detections divided by window length (hrs), giving the average hourly detection rate",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text"
+                  }
+                ]
+              },
+              "unit": "/h"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 3,
+            "w": 4,
+            "x": 20,
+            "y": 3
+          },
+          "id": 49,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  ROUND(\n    count(*) * 3600.0\n    / EXTRACT(\n        EPOCH\n        FROM $__timeTo()::timestamp\n          - $__timeFrom()::timestamp\n      )\n  , 2) AS avg_detections_per_hour\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name    IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence    >= $confidence;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Avg Detections",
+          "type": "stat"
+        }
+      ],
       "title": "ANALYTICAL 1 - Overview Metrics",
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Total number of detection events in the selected time window (filtered by species & confidence)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text"
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 0,
-        "y": 12
-      },
-      "id": 40,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "text": {},
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  count(*) AS total_observations\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Total Observations",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Mean model confidence score for all detections in the time window (higher = more certain)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "text",
-            "mode": "fixed"
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "max": 1,
-          "min": 0,
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "super-light-yellow"
-              }
-            ]
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 4,
-        "y": 12
-      },
-      "id": 14,
-      "options": {
-        "colorMode": "none",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "same_as_value",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "value",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  round(avg(confidence)::numeric, 3) AS avg_confidence\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Avg Confidence",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Count of distinct species detected in the time window",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text"
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 8,
-        "y": 12
-      },
-      "id": 25,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  count(DISTINCT common_name) AS unique_species\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence;\n\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Unique Species",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Average duration of each audio clip per detection in seconds",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text"
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 12,
-        "y": 12
-      },
-      "id": 43,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  round(avg(end_seconds - start_seconds)::numeric, 1) AS avg_audio_length_sec\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence;\n\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Avg Audio Length",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Duration of the selected time window in hours (used for rate calculations)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 2,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text"
-              }
-            ]
-          },
-          "unit": "h"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 16,
-        "y": 12
-      },
-      "id": 51,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  extract(\n    epoch\n    FROM $__timeTo()::timestamp\n      - $__timeFrom()::timestamp\n  ) \n  / 3600.0\n  AS window_hours;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Window Length",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Total detections divided by window length (hrs), giving the average hourly detection rate",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text"
-              }
-            ]
-          },
-          "unit": "/h"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 4,
-        "x": 20,
-        "y": 12
-      },
-      "id": 49,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  ROUND(\n    count(*) * 3600.0\n    / EXTRACT(\n        EPOCH\n        FROM $__timeTo()::timestamp\n          - $__timeFrom()::timestamp\n      )\n  , 2) AS avg_detections_per_hour\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name    IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence    >= $confidence;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Avg Detections",
-      "type": "stat"
-    },
-    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 3
       },
       "id": 84,
       "panels": [],
@@ -1487,7 +1490,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 4
       },
       "id": 87,
       "options": {
@@ -1597,7 +1600,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 25
+        "y": 13
       },
       "id": 91,
       "options": {
@@ -1707,7 +1710,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 25
+        "y": 13
       },
       "id": 92,
       "options": {
@@ -1817,7 +1820,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 34
+        "y": 22
       },
       "id": 90,
       "options": {
@@ -1928,7 +1931,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 34
+        "y": 22
       },
       "id": 93,
       "options": {
@@ -1975,1195 +1978,652 @@
       "type": "timeseries"
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 43
+        "y": 31
       },
       "id": 94,
-      "panels": [],
-      "title": "ANALYTICAL 3 - Composition & Breakdown",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Pie chart of the five most frequent species by count, with a combined “Other” slice representing the rest",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
           },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          },
-          "mappings": []
-        },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "value",
-                  "Other",
-                  "Southern Smooth Froglet",
-                  "Common Eastern Froglet",
-                  "Spotted Marsh Frog"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
+          "description": "Pie chart of the five most frequent species by count, with a combined “Other” slice representing the rest",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
                   "legend": false,
                   "tooltip": false,
-                  "viz": true
+                  "viz": false
                 }
+              },
+              "mappings": []
+            },
+            "overrides": [
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "value",
+                      "Other",
+                      "Southern Smooth Froglet",
+                      "Common Eastern Froglet",
+                      "Spotted Marsh Frog"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": [
+                  {
+                    "id": "custom.hideFrom",
+                    "value": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": true
+                    }
+                  }
+                ]
               }
             ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 0,
-        "y": 44
-      },
-      "id": 100,
-      "options": {
-        "displayLabels": [],
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true,
-          "values": [
-            "percent"
-          ]
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 0,
+            "y": 92
+          },
+          "id": 100,
+          "options": {
+            "displayLabels": [],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true,
+              "values": [
+                "percent"
+              ]
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "/^value$/",
+              "values": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "WITH counts AS (\n  SELECT\n    common_name,\n    count(*) AS cnt\n  FROM sensor_data\n  WHERE\n    $__timeFilter(time)\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY common_name\n),\ntop5 AS (\n  SELECT common_name, cnt\n  FROM counts\n  ORDER BY cnt DESC\n  LIMIT 5\n),\nothers AS (\n  SELECT\n    'Other' AS common_name,\n    COALESCE(SUM(cnt),0) AS cnt\n  FROM counts\n  WHERE common_name NOT IN (SELECT common_name FROM top5)\n)\nSELECT metric, value\nFROM (\n  SELECT common_name AS metric, cnt AS value FROM top5\n  UNION ALL\n  SELECT common_name AS metric, cnt AS value FROM others\n) AS unioned\nORDER BY\n  CASE WHEN metric = 'Other' THEN 2 ELSE 1 END,\n  value DESC;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
           ],
-          "fields": "/^value$/",
-          "values": true
+          "title": "Top 5 Species Pie",
+          "type": "piechart"
         },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
         {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "WITH counts AS (\n  SELECT\n    common_name,\n    count(*) AS cnt\n  FROM sensor_data\n  WHERE\n    $__timeFilter(time)\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY common_name\n),\ntop5 AS (\n  SELECT common_name, cnt\n  FROM counts\n  ORDER BY cnt DESC\n  LIMIT 5\n),\nothers AS (\n  SELECT\n    'Other' AS common_name,\n    COALESCE(SUM(cnt),0) AS cnt\n  FROM counts\n  WHERE common_name NOT IN (SELECT common_name FROM top5)\n)\nSELECT metric, value\nFROM (\n  SELECT common_name AS metric, cnt AS value FROM top5\n  UNION ALL\n  SELECT common_name AS metric, cnt AS value FROM others\n) AS unioned\nORDER BY\n  CASE WHEN metric = 'Other' THEN 2 ELSE 1 END,\n  value DESC;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Top 5 Species Pie",
-      "type": "piechart"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Horizontal bar gauge ranking species by total detection count and colour thresholds to quickly identify the most and least common species",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "super-light-blue",
-            "mode": "continuous-RdYlGr"
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 6,
-        "y": 44
-      },
-      "id": 107,
-      "options": {
-        "displayMode": "basic",
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "maxVizHeight": 30,
-        "minVizHeight": 30,
-        "minVizWidth": 8,
-        "namePlacement": "top",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [],
-          "fields": "",
-          "values": true
-        },
-        "showUnfilled": true,
-        "sizing": "manual",
-        "text": {},
-        "valueMode": "color"
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  common_name AS \"metric\",\n  count(*) AS \"value\"\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence\nGROUP BY common_name\nORDER BY value DESC;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Species Distribution",
-      "type": "bargauge"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Heatmap showing daily detection counts for each species, where brighter cells indicate higher daily activity per species",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "scaleDistribution": {
-              "type": "linear"
-            }
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 44
-      },
-      "id": 95,
-      "options": {
-        "calculate": false,
-        "calculation": {
-          "xBuckets": {
-            "mode": "size",
-            "value": ""
-          },
-          "yBuckets": {
-            "mode": "size",
-            "value": ""
-          }
-        },
-        "cellGap": 1,
-        "color": {
-          "exponent": 0.4,
-          "fill": "super-light-blue",
-          "mode": "scheme",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Oranges",
-          "steps": 128
-        },
-        "exemplars": {
-          "color": "rgba(255,0,255,0.7)"
-        },
-        "filterValues": {
-          "le": 1e-9
-        },
-        "legend": {
-          "show": false
-        },
-        "rowsFrame": {
-          "layout": "auto"
-        },
-        "tooltip": {
-          "mode": "single",
-          "showColorScale": true,
-          "yHistogram": true
-        },
-        "yAxis": {
-          "axisPlacement": "left",
-          "reverse": false
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  time_bucket('1 day', time) AS \"time\",\n  common_name AS \"metric\",\n  count(*) AS \"value\"\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence\nGROUP BY 1,2\nORDER BY 1,2;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Daily Species Pattern Detection",
-      "type": "heatmap"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Stacked-bar chart showing per-hour detection counts, with each colour segment representing a species’s share of the total",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
+          "description": "Horizontal bar gauge ranking species by total detection count and colour thresholds to quickly identify the most and least common species",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "super-light-blue",
+                "mode": "continuous-RdYlGr"
               },
-              {
-                "color": "red",
-                "value": 80
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
               }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Time"
             },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dthms"
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 6,
+            "y": 92
+          },
+          "id": 107,
+          "options": {
+            "displayMode": "basic",
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "maxVizHeight": 30,
+            "minVizHeight": 30,
+            "minVizWidth": 8,
+            "namePlacement": "top",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [],
+              "fields": "",
+              "values": true
+            },
+            "showUnfilled": true,
+            "sizing": "manual",
+            "text": {},
+            "valueMode": "color"
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  common_name AS \"metric\",\n  count(*) AS \"value\"\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence\nGROUP BY common_name\nORDER BY value DESC;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
               }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 53
-      },
-      "id": 103,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "right",
-          "showLegend": true
+            }
+          ],
+          "title": "Species Distribution",
+          "type": "bargauge"
         },
-        "orientation": "auto",
-        "showValue": "never",
-        "stacking": "normal",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "desc"
-        },
-        "xField": "Time",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 100
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
         {
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "WITH by_hour AS (\n  SELECT\n    extract(hour FROM time)::int AS h,\n    common_name AS species,\n    count(*) AS cnt\n  FROM sensor_data\n  WHERE\n    $__timeFilter(time)\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY 1,2\n)\nSELECT\n  date_trunc('day', now())\n    + (h || ' hours')::interval AS \"time\",\n  species AS \"metric\",\n  cnt AS \"value\"\nFROM by_hour\nORDER BY h, species;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Heatmap showing daily detection counts for each species, where brighter cells indicate higher daily activity per species",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
                 },
-                "type": "groupBy"
+                "scaleDistribution": {
+                  "type": "linear"
+                }
               }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Hourly Detections by Species",
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Bubble chart plotting each species’ ordinal rank by detection count (x-axis) against its total detections (y-axis), with bubble size proportional to count, visualising dominance and the long-tail drop-off in relative abundance",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "super-light-blue",
-            "mode": "fixed"
+            },
+            "overrides": []
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 60,
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "pointShape": "circle",
-            "pointSize": {
-              "fixed": 5
-            },
-            "pointStrokeWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "show": "points"
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 92
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
+          "id": 95,
+          "options": {
+            "calculate": false,
+            "calculation": {
+              "xBuckets": {
+                "mode": "size",
+                "value": ""
               },
+              "yBuckets": {
+                "mode": "size",
+                "value": ""
+              }
+            },
+            "cellGap": 1,
+            "color": {
+              "exponent": 0.4,
+              "fill": "super-light-blue",
+              "mode": "scheme",
+              "reverse": false,
+              "scale": "exponential",
+              "scheme": "Oranges",
+              "steps": 128
+            },
+            "exemplars": {
+              "color": "rgba(255,0,255,0.7)"
+            },
+            "filterValues": {
+              "le": 1e-9
+            },
+            "legend": {
+              "show": false
+            },
+            "rowsFrame": {
+              "layout": "auto"
+            },
+            "tooltip": {
+              "mode": "single",
+              "showColorScale": true,
+              "yHistogram": true
+            },
+            "yAxis": {
+              "axisPlacement": "left",
+              "reverse": false
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time_bucket('1 day', time) AS \"time\",\n  common_name AS \"metric\",\n  count(*) AS \"value\"\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence\nGROUP BY 1,2\nORDER BY 1,2;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Daily Species Pattern Detection",
+          "type": "heatmap"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Stacked-bar chart showing per-hour detection counts, with each colour segment representing a species’s share of the total",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
               {
-                "color": "red",
-                "value": 80
+                "matcher": {
+                  "id": "byName",
+                  "options": "Time"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "dthms"
+                  }
+                ]
               }
             ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 12,
-        "y": 53
-      },
-      "id": 98,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "mapping": "auto",
-        "series": [
-          {
-            "size": {
-              "matcher": {
-                "id": "byName",
-                "options": "Size"
-              }
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 143
+          },
+          "id": 103,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "right",
+              "showLegend": true
             },
-            "x": {
-              "matcher": {
-                "id": "byName",
-                "options": "Rank"
-              }
+            "orientation": "auto",
+            "showValue": "never",
+            "stacking": "normal",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "desc"
             },
-            "y": {
-              "matcher": {
-                "id": "byName",
-                "options": "Total Detections"
+            "xField": "Time",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 100
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "WITH by_hour AS (\n  SELECT\n    extract(hour FROM time)::int AS h,\n    common_name AS species,\n    count(*) AS cnt\n  FROM sensor_data\n  WHERE\n    $__timeFilter(time)\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY 1,2\n)\nSELECT\n  date_trunc('day', now())\n    + (h || ' hours')::interval AS \"time\",\n  species AS \"metric\",\n  cnt AS \"value\"\nFROM by_hour\nORDER BY h, species;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
               }
             }
-          }
-        ],
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
+          ],
+          "title": "Hourly Detections by Species",
+          "type": "barchart"
+        },
         {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "WITH counts AS (\n  SELECT\n    common_name,\n    count(*) AS cnt\n  FROM sensor_data\n  WHERE\n    $__timeFilter(time)\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY common_name\n),\nranked AS (\n  SELECT\n    common_name,\n    cnt,\n    row_number() OVER (ORDER BY cnt DESC) AS rank\n  FROM counts\n)\nSELECT\n  rank AS \"Rank\",\n  cnt AS \"Total Detections\",\n  cnt AS \"Size\",\n  common_name AS \"Name\"\nFROM ranked;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Bubble chart plotting each species’ ordinal rank by detection count (x-axis) against its total detections (y-axis), with bubble size proportional to count, visualising dominance and the long-tail drop-off in relative abundance",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "super-light-blue",
+                "mode": "fixed"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 60,
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
                 },
-                "type": "groupBy"
+                "pointShape": "circle",
+                "pointSize": {
+                  "fixed": 5
+                },
+                "pointStrokeWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "show": "points"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
               }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Species Rank-vs-Count Bubble Chart",
-      "type": "xychart"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Heatmap of total call volume for each hour of the day (0–23), highlighting peak times of detections, lighter means more detections in that hour",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
             },
-            "scaleDistribution": {
-              "type": "linear"
-            }
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 18,
-        "y": 53
-      },
-      "id": 28,
-      "options": {
-        "calculate": false,
-        "cellGap": 1,
-        "color": {
-          "exponent": 0.5,
-          "fill": "dark-orange",
-          "mode": "scheme",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Oranges",
-          "steps": 65
-        },
-        "exemplars": {
-          "color": "rgba(255,0,255,0.7)"
-        },
-        "filterValues": {
-          "le": 1e-9
-        },
-        "legend": {
-          "show": true
-        },
-        "rowsFrame": {
-          "layout": "auto"
-        },
-        "tooltip": {
-          "mode": "single",
-          "showColorScale": false,
-          "yHistogram": false
-        },
-        "yAxis": {
-          "axisPlacement": "left",
-          "reverse": false
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  extract(hour from time) AS detection_hour,\n  COUNT(*) AS detections\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence\nGROUP BY detection_hour\nORDER BY detection_hour;",
-          "refId": "A",
-          "sql": {
-            "columns": [
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 12,
+            "y": 143
+          },
+          "id": 98,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "mapping": "auto",
+            "series": [
               {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
+                "size": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Size"
+                  }
                 },
-                "type": "groupBy"
+                "x": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Rank"
+                  }
+                },
+                "y": {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Total Detections"
+                  }
+                }
               }
             ],
-            "limit": 50
-          }
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "WITH counts AS (\n  SELECT\n    common_name,\n    count(*) AS cnt\n  FROM sensor_data\n  WHERE\n    $__timeFilter(time)\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY common_name\n),\nranked AS (\n  SELECT\n    common_name,\n    cnt,\n    row_number() OVER (ORDER BY cnt DESC) AS rank\n  FROM counts\n)\nSELECT\n  rank AS \"Rank\",\n  cnt AS \"Total Detections\",\n  cnt AS \"Size\",\n  common_name AS \"Name\"\nFROM ranked;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Species Rank-vs-Count Bubble Chart",
+          "type": "xychart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Heatmap of total call volume for each hour of the day (0–23), highlighting peak times of detections, lighter means more detections in that hour",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "scaleDistribution": {
+                  "type": "linear"
+                }
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 18,
+            "y": 143
+          },
+          "id": 28,
+          "options": {
+            "calculate": false,
+            "cellGap": 1,
+            "color": {
+              "exponent": 0.5,
+              "fill": "dark-orange",
+              "mode": "scheme",
+              "reverse": false,
+              "scale": "exponential",
+              "scheme": "Oranges",
+              "steps": 65
+            },
+            "exemplars": {
+              "color": "rgba(255,0,255,0.7)"
+            },
+            "filterValues": {
+              "le": 1e-9
+            },
+            "legend": {
+              "show": true
+            },
+            "rowsFrame": {
+              "layout": "auto"
+            },
+            "tooltip": {
+              "mode": "single",
+              "showColorScale": false,
+              "yHistogram": false
+            },
+            "yAxis": {
+              "axisPlacement": "left",
+              "reverse": false
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  extract(hour from time) AS detection_hour,\n  COUNT(*) AS detections\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence\nGROUP BY detection_hour\nORDER BY detection_hour;",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Hourly Activity Pattern Detection",
+          "type": "heatmap"
         }
       ],
-      "title": "Hourly Activity Pattern Detection",
-      "type": "heatmap"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 62
-      },
-      "id": 110,
-      "panels": [],
-      "title": "ANALYTICAL 4 - Confidence Analysis",
+      "title": "ANALYTICAL 3 - Composition & Breakdown",
       "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Bar chart showing how often model outputs low vs high confidence scores across all species in the current time window",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "super-light-blue",
-            "mode": "shades"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 60,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "cnt"
-            },
-            "properties": [
-              {
-                "id": "custom.transform"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 0,
-        "y": 63
-      },
-      "id": 118,
-      "options": {
-        "barRadius": 0,
-        "barWidth": 0.96,
-        "colorByField": "cnt",
-        "fullHighlight": false,
-        "groupWidth": 0.63,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "orientation": "vertical",
-        "showValue": "never",
-        "stacking": "none",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        },
-        "xField": "bucket_start",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 100
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  ((width_bucket(confidence, 0, 1, 20) - 1)::float / 20) AS bucket_start,\n  count(*) AS cnt\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence\nGROUP BY bucket_start\nORDER BY bucket_start;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "$__timeGroup",
-                "parameters": [
-                  {
-                    "name": "inserted_at",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "$__interval",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "previous",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "ingestion_metrics"
-        }
-      ],
-      "title": "Confidence Score Distribution",
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Displays per-day confidence distributions (min, Q1, median, Q3, max) for all species, good for spotting days when the model’s certainty was unusually tight or widely scattered",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "super-light-blue",
-            "mode": "palette-classic-by-name"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.3,
-            "drawStyle": "bars",
-            "fillOpacity": 33,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 0,
-            "pointSize": 10,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "always",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text"
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "median"
-            },
-            "properties": [
-              {
-                "id": "custom.drawStyle",
-                "value": "line"
-              },
-              {
-                "id": "custom.fillOpacity",
-                "value": 0
-              },
-              {
-                "id": "custom.lineWidth",
-                "value": 1
-              },
-              {
-                "id": "custom.lineStyle",
-                "value": {
-                  "dash": [
-                    10,
-                    10
-                  ],
-                  "fill": "dash"
-                }
-              },
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-orange",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 18,
-        "x": 6,
-        "y": 63
-      },
-      "id": 16,
-      "options": {
-        "candleStyle": "candles",
-        "colorStrategy": "open-close",
-        "colors": {
-          "down": "text",
-          "up": "text"
-        },
-        "fields": {
-          "close": "close",
-          "high": "high",
-          "low": "low",
-          "open": "open"
-        },
-        "includeAllFields": true,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "mode": "candles+volume",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "WITH stats AS (\n  SELECT\n    $__timeGroup(time, '1d')                   AS bucket_time,          -- daily buckets\n    min(confidence)                             AS low,                 -- whisker bottom\n    percentile_cont(0.25) WITHIN GROUP (ORDER BY confidence) AS open,   -- Q1\n    percentile_cont(0.50) WITHIN GROUP (ORDER BY confidence) AS median, -- median\n    percentile_cont(0.75) WITHIN GROUP (ORDER BY confidence) AS close,  -- Q3\n    max(confidence)                             AS high,                -- whisker top\n    count(*)                                    AS volume               -- count of points\n  FROM sensor_data\n  WHERE $__timeFilter(time)\n  GROUP BY 1\n)\nSELECT\n  bucket_time   AS \"time\", \n  open, \n  high, \n  low, \n  close, \n  median, \n  volume\nFROM stats\nORDER BY bucket_time;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Daily Confidence Ranges (Box & Whisker)",
-      "type": "candlestick"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Each dot is one detection plotted by timestamp (x-axis) vs. confidence (y-axis), colour-coded by species. This allows to see both the spread of low vs high confidence calls and any temporal patterns per specie",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "points",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 72
-      },
-      "id": 61,
-      "interval": "1m",
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Name",
-          "sortDesc": false
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  time AS time,\n  confidence AS \" \",\n  common_name AS species\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \nORDER BY time ASC\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Detection Confidence Scatter (by Species)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": "Plots the mean confidence per hour (0–1) as a time series. Helps track drift in overall model certainty throughout the day and time",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "super-light-blue",
-            "mode": "shades"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 90,
-            "gradientMode": "opacity",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 72
-      },
-      "id": 117,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "time_series",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  time_bucket('1 hour', time)    AS \"time\",\n  round(avg(confidence)::numeric, 3) AS \"Mean confidence\"\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\nGROUP BY 1\nORDER BY 1;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "name": "$__timeGroup",
-                "parameters": [
-                  {
-                    "name": "inserted_at",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "$__interval",
-                    "type": "functionParameter"
-                  },
-                  {
-                    "name": "previous",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          },
-          "table": "ingestion_metrics"
-        }
-      ],
-      "title": "Hourly Mean Confidence",
-      "type": "timeseries"
     },
     {
       "collapsed": true,
@@ -3171,7 +2631,552 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 81
+        "y": 32
+      },
+      "id": 110,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Bar chart showing how often model outputs low vs high confidence scores across all species in the current time window",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "super-light-blue",
+                "mode": "shades"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 60,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "cnt"
+                },
+                "properties": [
+                  {
+                    "id": "custom.transform"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 0,
+            "y": 93
+          },
+          "id": 118,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.96,
+            "colorByField": "cnt",
+            "fullHighlight": false,
+            "groupWidth": 0.63,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "orientation": "vertical",
+            "showValue": "never",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xField": "bucket_start",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 100
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "table",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  ((width_bucket(confidence, 0, 1, 20) - 1)::float / 20) AS bucket_start,\n  count(*) AS cnt\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\n  AND confidence >= $confidence\nGROUP BY bucket_start\nORDER BY bucket_start;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "$__timeGroup",
+                    "parameters": [
+                      {
+                        "name": "inserted_at",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "$__interval",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "previous",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "ingestion_metrics"
+            }
+          ],
+          "title": "Confidence Score Distribution",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Displays per-day confidence distributions (min, Q1, median, Q3, max) for all species, good for spotting days when the model’s certainty was unusually tight or widely scattered",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "super-light-blue",
+                "mode": "palette-classic-by-name"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.3,
+                "drawStyle": "bars",
+                "fillOpacity": 33,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 0,
+                "pointSize": 10,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "always",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text"
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "median"
+                },
+                "properties": [
+                  {
+                    "id": "custom.drawStyle",
+                    "value": "line"
+                  },
+                  {
+                    "id": "custom.fillOpacity",
+                    "value": 0
+                  },
+                  {
+                    "id": "custom.lineWidth",
+                    "value": 1
+                  },
+                  {
+                    "id": "custom.lineStyle",
+                    "value": {
+                      "dash": [
+                        10,
+                        10
+                      ],
+                      "fill": "dash"
+                    }
+                  },
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 18,
+            "x": 6,
+            "y": 93
+          },
+          "id": 16,
+          "options": {
+            "candleStyle": "candles",
+            "colorStrategy": "open-close",
+            "colors": {
+              "down": "text",
+              "up": "text"
+            },
+            "fields": {
+              "close": "close",
+              "high": "high",
+              "low": "low",
+              "open": "open"
+            },
+            "includeAllFields": true,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "mode": "candles+volume",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "WITH stats AS (\n  SELECT\n    $__timeGroup(time, '1d')                   AS bucket_time,          -- daily buckets\n    min(confidence)                             AS low,                 -- whisker bottom\n    percentile_cont(0.25) WITHIN GROUP (ORDER BY confidence) AS open,   -- Q1\n    percentile_cont(0.50) WITHIN GROUP (ORDER BY confidence) AS median, -- median\n    percentile_cont(0.75) WITHIN GROUP (ORDER BY confidence) AS close,  -- Q3\n    max(confidence)                             AS high,                -- whisker top\n    count(*)                                    AS volume               -- count of points\n  FROM sensor_data\n  WHERE $__timeFilter(time)\n  GROUP BY 1\n)\nSELECT\n  bucket_time   AS \"time\", \n  open, \n  high, \n  low, \n  close, \n  median, \n  volume\nFROM stats\nORDER BY bucket_time;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Daily Confidence Ranges (Box & Whisker)",
+          "type": "candlestick"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Each dot is one detection plotted by timestamp (x-axis) vs. confidence (y-axis), colour-coded by species. This allows to see both the spread of low vs high confidence calls and any temporal patterns per specie",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "points",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 126
+          },
+          "id": 61,
+          "interval": "1m",
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Name",
+              "sortDesc": false
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time AS time,\n  confidence AS \" \",\n  common_name AS species\nFROM sensor_data\nWHERE $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN(${exclude:sqlstring})\n  AND confidence >= $confidence \nORDER BY time ASC\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "parameters": [],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              }
+            }
+          ],
+          "title": "Detection Confidence Scatter (by Species)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "fehnkzh0nnegwf"
+          },
+          "description": "Plots the mean confidence per hour (0–1) as a time series. Helps track drift in overall model certainty throughout the day and time",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "fixedColor": "super-light-blue",
+                "mode": "shades"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 90,
+                "gradientMode": "opacity",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 126
+          },
+          "id": 117,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "11.6.0",
+          "targets": [
+            {
+              "editorMode": "code",
+              "format": "time_series",
+              "rawQuery": true,
+              "rawSql": "SELECT\n  time_bucket('1 hour', time)    AS \"time\",\n  round(avg(confidence)::numeric, 3) AS \"Mean confidence\"\nFROM sensor_data\nWHERE\n  $__timeFilter(time)\n  AND common_name IN ($specie)\n  AND common_name NOT IN (${exclude:sqlstring})\nGROUP BY 1\nORDER BY 1;\n",
+              "refId": "A",
+              "sql": {
+                "columns": [
+                  {
+                    "name": "$__timeGroup",
+                    "parameters": [
+                      {
+                        "name": "inserted_at",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "$__interval",
+                        "type": "functionParameter"
+                      },
+                      {
+                        "name": "previous",
+                        "type": "functionParameter"
+                      }
+                    ],
+                    "type": "function"
+                  }
+                ],
+                "groupBy": [
+                  {
+                    "property": {
+                      "type": "string"
+                    },
+                    "type": "groupBy"
+                  }
+                ],
+                "limit": 50
+              },
+              "table": "ingestion_metrics"
+            }
+          ],
+          "title": "Hourly Mean Confidence",
+          "type": "timeseries"
+        }
+      ],
+      "title": "ANALYTICAL 4 - Confidence Analysis",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 33
       },
       "id": 115,
       "panels": [
@@ -3211,7 +3216,7 @@
             "h": 15,
             "w": 24,
             "x": 0,
-            "y": 82
+            "y": 94
           },
           "id": 48,
           "options": {
@@ -3274,7 +3279,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 82
+        "y": 34
       },
       "id": 119,
       "panels": [],
@@ -3286,7 +3291,7 @@
         "type": "grafana-postgresql-datasource",
         "uid": "fehnkzh0nnegwf"
       },
-      "description": "Bar chart showing the change in weekly detection counts for each species compared to the previous week. Upward-facing green bars indicate more detections this week, while downward-facing red bars show declines",
+      "description": "Bar chart showing each species's change in weekly detection counts between the two most recent one-week periods in the selected time window. Upward-facing bars indicate increases, downward-facing bars indicate decreases",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3333,7 +3338,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 83
+        "y": 35
       },
       "id": 121,
       "options": {
@@ -3358,7 +3363,7 @@
         },
         "xField": "metric",
         "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 100
+        "xTickLabelSpacing": 200
       },
       "pluginVersion": "11.6.0",
       "targets": [
@@ -3391,12 +3396,122 @@
       "type": "barchart"
     },
     {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
+      },
+      "description": "Dual‐line chart comparing daily detection total counts this year versus the same dates last year, helps revealing spot seasonal shifts or unexpected anomalies in annual patterns",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 35
+      },
+      "id": 122,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH current_period AS (\n  SELECT\n    date_trunc('day', time) AS day,\n    count(*) AS cnt\n  FROM sensor_data\n  WHERE\n    time BETWEEN $__timeFrom()::timestamp\n    AND $__timeTo()::timestamp\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY 1\n),\nlast_year_period AS (\n  SELECT\n    -- shift last year date forward by 1 year so they line up with this year axis\n    date_trunc('day', time + INTERVAL '1 year') AS day,\n    count(*) AS cnt\n  FROM sensor_data\n  WHERE\n    time BETWEEN $__timeFrom()::timestamp - INTERVAL '1 year'\n    AND $__timeTo()::timestamp - INTERVAL '1 year'\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY 1\n)\nSELECT\n  day AS \"time\",\n  cnt AS \"Count\",\n  'This Year' AS series\nFROM current_period\nUNION ALL\nSELECT\n  day AS \"time\",\n  cnt AS \"Count\",\n  'Last Year' AS series\nFROM last_year_period\nORDER BY time, series;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Year‐over‐Year Daily Counts",
+      "type": "timeseries"
+    },
+    {
       "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 92
+        "y": 44
       },
       "id": 120,
       "panels": [],
@@ -3409,7 +3524,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 93
+        "y": 45
       },
       "id": 39,
       "panels": [
@@ -3558,7 +3673,7 @@
             "h": 9,
             "w": 16,
             "x": 0,
-            "y": 2691
+            "y": 3693
           },
           "id": 85,
           "options": {
@@ -3652,7 +3767,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 2691
+            "y": 3693
           },
           "id": 8,
           "options": {
@@ -3773,7 +3888,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 2700
+            "y": 3702
           },
           "id": 67,
           "options": {
@@ -3879,7 +3994,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 2709
+            "y": 3711
           },
           "id": 68,
           "options": {
@@ -4026,7 +4141,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 2718
+            "y": 3720
           },
           "id": 112,
           "options": {
@@ -4124,7 +4239,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 2729
+            "y": 3731
           },
           "id": 37,
           "options": {
@@ -4243,7 +4358,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 2738
+            "y": 3740
           },
           "id": 62,
           "options": {
@@ -4315,7 +4430,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 2749
+            "y": 3751
           },
           "id": 53,
           "options": {
@@ -4446,7 +4561,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 2752
+            "y": 3754
           },
           "id": 116,
           "options": {
@@ -4504,7 +4619,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 94
+        "y": 46
       },
       "id": 23,
       "panels": [
@@ -4534,7 +4649,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 6996
+            "y": 7998
           },
           "id": 11,
           "options": {
@@ -4611,7 +4726,7 @@
             "h": 3,
             "w": 4,
             "x": 4,
-            "y": 6996
+            "y": 7998
           },
           "id": 41,
           "options": {
@@ -4699,7 +4814,7 @@
             "h": 3,
             "w": 4,
             "x": 8,
-            "y": 6996
+            "y": 7998
           },
           "id": 42,
           "options": {
@@ -4775,7 +4890,7 @@
             "h": 3,
             "w": 4,
             "x": 12,
-            "y": 6996
+            "y": 7998
           },
           "id": 38,
           "options": {
@@ -4851,7 +4966,7 @@
             "h": 3,
             "w": 4,
             "x": 16,
-            "y": 6996
+            "y": 7998
           },
           "id": 52,
           "options": {
@@ -4927,7 +5042,7 @@
             "h": 3,
             "w": 4,
             "x": 20,
-            "y": 6996
+            "y": 7998
           },
           "id": 44,
           "options": {
@@ -5108,7 +5223,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 7083
+            "y": 8085
           },
           "id": 69,
           "options": {
@@ -5180,7 +5295,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 7097
+            "y": 8099
           },
           "id": 46,
           "options": {
@@ -5278,7 +5393,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 7097
+            "y": 8099
           },
           "id": 54,
           "options": {
@@ -5352,7 +5467,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 7106
+            "y": 8108
           },
           "id": 45,
           "options": {
@@ -5457,7 +5572,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 7109
+            "y": 8111
           },
           "id": 58,
           "options": {
@@ -5580,7 +5695,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 7120
+            "y": 8122
           },
           "id": 32,
           "options": {
@@ -5696,7 +5811,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 7130
+            "y": 8132
           },
           "id": 111,
           "options": {
@@ -5754,7 +5869,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 95
+        "y": 47
       },
       "id": 15,
       "panels": [
@@ -5784,7 +5899,7 @@
             "h": 4,
             "w": 4,
             "x": 0,
-            "y": 2831
+            "y": 3833
           },
           "id": 24,
           "options": {
@@ -5861,7 +5976,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 2831
+            "y": 3833
           },
           "id": 13,
           "options": {
@@ -5937,7 +6052,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 2831
+            "y": 3833
           },
           "id": 18,
           "options": {
@@ -6037,7 +6152,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 2831
+            "y": 3833
           },
           "id": 27,
           "options": {
@@ -6109,7 +6224,7 @@
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 2831
+            "y": 3833
           },
           "id": 105,
           "options": {
@@ -6235,7 +6350,7 @@
             "h": 11,
             "w": 16,
             "x": 0,
-            "y": 2835
+            "y": 3837
           },
           "id": 29,
           "options": {
@@ -6369,7 +6484,7 @@
             "h": 11,
             "w": 8,
             "x": 16,
-            "y": 2835
+            "y": 3837
           },
           "id": 30,
           "options": {
@@ -6449,7 +6564,7 @@
             "h": 11,
             "w": 8,
             "x": 0,
-            "y": 2846
+            "y": 3848
           },
           "id": 31,
           "options": {
@@ -6571,7 +6686,7 @@
             "h": 11,
             "w": 16,
             "x": 8,
-            "y": 2846
+            "y": 3848
           },
           "id": 34,
           "options": {
@@ -6701,7 +6816,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 2857
+            "y": 3859
           },
           "id": 6,
           "options": {
@@ -6764,7 +6879,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 96
+        "y": 48
       },
       "id": 9,
       "panels": [
@@ -6815,7 +6930,7 @@
             "h": 9,
             "w": 6,
             "x": 0,
-            "y": 6998
+            "y": 8000
           },
           "id": 109,
           "options": {
@@ -6898,7 +7013,7 @@
             "h": 9,
             "w": 6,
             "x": 6,
-            "y": 6998
+            "y": 8000
           },
           "id": 108,
           "options": {
@@ -6979,7 +7094,7 @@
             "h": 9,
             "w": 6,
             "x": 12,
-            "y": 6998
+            "y": 8000
           },
           "id": 106,
           "options": {
@@ -7061,7 +7176,7 @@
             "h": 9,
             "w": 6,
             "x": 18,
-            "y": 6998
+            "y": 8000
           },
           "id": 104,
           "options": {
@@ -7209,7 +7324,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 7007
+            "y": 8009
           },
           "id": 19,
           "options": {
@@ -7318,7 +7433,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 7015
+            "y": 8017
           },
           "id": 63,
           "options": {
@@ -7396,7 +7511,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 7026
+            "y": 8028
           },
           "id": 36,
           "options": {
@@ -7498,7 +7613,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 7038
+            "y": 8040
           },
           "id": 59,
           "options": {
@@ -7639,7 +7754,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 7050
+            "y": 8052
           },
           "id": 35,
           "options": {
@@ -7750,7 +7865,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 7061
+            "y": 8063
           },
           "id": 33,
           "options": {
@@ -7942,7 +8057,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 7072
+            "y": 8074
           },
           "id": 60,
           "options": {
@@ -8089,12 +8204,12 @@
     ]
   },
   "time": {
-    "from": "2023-11-27T05:12:55.827Z",
-    "to": "2023-12-14T09:22:09.693Z"
+    "from": "2023-11-18T15:08:18.894Z",
+    "to": "2023-12-05T19:17:32.760Z"
   },
   "timepicker": {},
   "timezone": "utc",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 568
+  "version": 577
 }
