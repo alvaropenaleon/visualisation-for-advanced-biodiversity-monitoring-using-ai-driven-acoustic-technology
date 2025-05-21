@@ -3269,12 +3269,147 @@
       "type": "row"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
         "y": 82
+      },
+      "id": 119,
+      "panels": [],
+      "title": "TACTICAL 1 - Comparative Analysis ",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fehnkzh0nnegwf"
+      },
+      "description": "Bar chart showing the change in weekly detection counts for each species compared to the previous week. Upward-facing green bars indicate more detections this week, while downward-facing red bars show declines",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": true,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 83
+      },
+      "id": 121,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "colorByField": "delta",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "vertical",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "metric",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 100
+      },
+      "pluginVersion": "11.6.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH wk AS (\n  SELECT\n    common_name,\n    time_bucket('1 week', time) AS wk,\n    count(*) AS cnt\n  FROM sensor_data\n  WHERE $__timeFilter(time)\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY 1,2\n),\nsorted_weeks AS (\n  SELECT DISTINCT wk\n  FROM wk\n  ORDER BY wk DESC\n  LIMIT 2\n),\ncurrent AS (\n  SELECT common_name, cnt\n  FROM wk\n  WHERE wk = (SELECT MIN(wk) FROM sorted_weeks)\n),\nprevious AS (\n  SELECT common_name, cnt AS prev_cnt\n  FROM wk\n  WHERE wk = (SELECT MAX(wk) FROM sorted_weeks)\n)\nSELECT\n  c.common_name   AS metric,\n  c.cnt - coalesce(p.prev_cnt,0) AS delta\nFROM current c\nLEFT JOIN previous p USING (common_name)\nORDER BY delta DESC;\n",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Week-over-Week Species Growth (Δ in Detections)",
+      "type": "barchart"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 92
+      },
+      "id": 120,
+      "panels": [],
+      "title": "TACTICAL 2 - Spatial Analysis",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 93
       },
       "id": 39,
       "panels": [
@@ -3423,7 +3558,7 @@
             "h": 9,
             "w": 16,
             "x": 0,
-            "y": 1161
+            "y": 2691
           },
           "id": 85,
           "options": {
@@ -3517,7 +3652,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 1161
+            "y": 2691
           },
           "id": 8,
           "options": {
@@ -3638,7 +3773,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 1170
+            "y": 2700
           },
           "id": 67,
           "options": {
@@ -3744,7 +3879,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 1179
+            "y": 2709
           },
           "id": 68,
           "options": {
@@ -3891,7 +4026,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1188
+            "y": 2718
           },
           "id": 112,
           "options": {
@@ -3989,7 +4124,7 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 1199
+            "y": 2729
           },
           "id": 37,
           "options": {
@@ -4108,7 +4243,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1208
+            "y": 2738
           },
           "id": 62,
           "options": {
@@ -4180,7 +4315,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 1219
+            "y": 2749
           },
           "id": 53,
           "options": {
@@ -4311,7 +4446,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 1222
+            "y": 2752
           },
           "id": 116,
           "options": {
@@ -4369,7 +4504,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 83
+        "y": 94
       },
       "id": 23,
       "panels": [
@@ -4399,7 +4534,7 @@
             "h": 3,
             "w": 4,
             "x": 0,
-            "y": 5466
+            "y": 6996
           },
           "id": 11,
           "options": {
@@ -4476,7 +4611,7 @@
             "h": 3,
             "w": 4,
             "x": 4,
-            "y": 5466
+            "y": 6996
           },
           "id": 41,
           "options": {
@@ -4564,7 +4699,7 @@
             "h": 3,
             "w": 4,
             "x": 8,
-            "y": 5466
+            "y": 6996
           },
           "id": 42,
           "options": {
@@ -4640,7 +4775,7 @@
             "h": 3,
             "w": 4,
             "x": 12,
-            "y": 5466
+            "y": 6996
           },
           "id": 38,
           "options": {
@@ -4716,7 +4851,7 @@
             "h": 3,
             "w": 4,
             "x": 16,
-            "y": 5466
+            "y": 6996
           },
           "id": 52,
           "options": {
@@ -4792,7 +4927,7 @@
             "h": 3,
             "w": 4,
             "x": 20,
-            "y": 5466
+            "y": 6996
           },
           "id": 44,
           "options": {
@@ -4973,7 +5108,7 @@
             "h": 14,
             "w": 24,
             "x": 0,
-            "y": 5553
+            "y": 7083
           },
           "id": 69,
           "options": {
@@ -5045,7 +5180,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 5567
+            "y": 7097
           },
           "id": 46,
           "options": {
@@ -5143,7 +5278,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 5567
+            "y": 7097
           },
           "id": 54,
           "options": {
@@ -5217,7 +5352,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 5576
+            "y": 7106
           },
           "id": 45,
           "options": {
@@ -5322,7 +5457,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 5579
+            "y": 7109
           },
           "id": 58,
           "options": {
@@ -5445,7 +5580,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 5590
+            "y": 7120
           },
           "id": 32,
           "options": {
@@ -5561,7 +5696,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 5600
+            "y": 7130
           },
           "id": 111,
           "options": {
@@ -5619,7 +5754,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 84
+        "y": 95
       },
       "id": 15,
       "panels": [
@@ -5649,7 +5784,7 @@
             "h": 4,
             "w": 4,
             "x": 0,
-            "y": 1301
+            "y": 2831
           },
           "id": 24,
           "options": {
@@ -5726,7 +5861,7 @@
             "h": 4,
             "w": 4,
             "x": 4,
-            "y": 1301
+            "y": 2831
           },
           "id": 13,
           "options": {
@@ -5802,7 +5937,7 @@
             "h": 4,
             "w": 4,
             "x": 8,
-            "y": 1301
+            "y": 2831
           },
           "id": 18,
           "options": {
@@ -5902,7 +6037,7 @@
             "h": 4,
             "w": 4,
             "x": 12,
-            "y": 1301
+            "y": 2831
           },
           "id": 27,
           "options": {
@@ -5974,7 +6109,7 @@
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 1301
+            "y": 2831
           },
           "id": 105,
           "options": {
@@ -6100,7 +6235,7 @@
             "h": 11,
             "w": 16,
             "x": 0,
-            "y": 1305
+            "y": 2835
           },
           "id": 29,
           "options": {
@@ -6234,7 +6369,7 @@
             "h": 11,
             "w": 8,
             "x": 16,
-            "y": 1305
+            "y": 2835
           },
           "id": 30,
           "options": {
@@ -6314,7 +6449,7 @@
             "h": 11,
             "w": 8,
             "x": 0,
-            "y": 1316
+            "y": 2846
           },
           "id": 31,
           "options": {
@@ -6436,7 +6571,7 @@
             "h": 11,
             "w": 16,
             "x": 8,
-            "y": 1316
+            "y": 2846
           },
           "id": 34,
           "options": {
@@ -6566,7 +6701,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 1327
+            "y": 2857
           },
           "id": 6,
           "options": {
@@ -6629,7 +6764,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 85
+        "y": 96
       },
       "id": 9,
       "panels": [
@@ -6680,7 +6815,7 @@
             "h": 9,
             "w": 6,
             "x": 0,
-            "y": 5468
+            "y": 6998
           },
           "id": 109,
           "options": {
@@ -6763,7 +6898,7 @@
             "h": 9,
             "w": 6,
             "x": 6,
-            "y": 5468
+            "y": 6998
           },
           "id": 108,
           "options": {
@@ -6844,7 +6979,7 @@
             "h": 9,
             "w": 6,
             "x": 12,
-            "y": 5468
+            "y": 6998
           },
           "id": 106,
           "options": {
@@ -6926,7 +7061,7 @@
             "h": 9,
             "w": 6,
             "x": 18,
-            "y": 5468
+            "y": 6998
           },
           "id": 104,
           "options": {
@@ -7074,7 +7209,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 5477
+            "y": 7007
           },
           "id": 19,
           "options": {
@@ -7183,7 +7318,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 5485
+            "y": 7015
           },
           "id": 63,
           "options": {
@@ -7261,7 +7396,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 5496
+            "y": 7026
           },
           "id": 36,
           "options": {
@@ -7363,7 +7498,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 5508
+            "y": 7038
           },
           "id": 59,
           "options": {
@@ -7504,7 +7639,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 5520
+            "y": 7050
           },
           "id": 35,
           "options": {
@@ -7615,7 +7750,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 5531
+            "y": 7061
           },
           "id": 33,
           "options": {
@@ -7807,7 +7942,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 5542
+            "y": 7072
           },
           "id": 60,
           "options": {
@@ -7954,12 +8089,12 @@
     ]
   },
   "time": {
-    "from": "2023-10-26T23:59:14.311Z",
-    "to": "2023-11-05T12:47:49.131Z"
+    "from": "2023-11-27T05:12:55.827Z",
+    "to": "2023-12-14T09:22:09.693Z"
   },
   "timepicker": {},
   "timezone": "utc",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 557
+  "version": 568
 }
