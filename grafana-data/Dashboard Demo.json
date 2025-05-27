@@ -667,7 +667,7 @@
         "defaults": {
           "color": {
             "fixedColor": "super-light-blue",
-            "mode": "thresholds"
+            "mode": "continuous-BlYlRd"
           },
           "custom": {
             "axisBorderShow": false,
@@ -720,15 +720,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "cnt"
-            },
-            "properties": []
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 6,
@@ -804,7 +796,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "continuous-BlYlRd"
           },
           "mappings": [],
           "max": 100,
@@ -2433,14 +2425,14 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "fillOpacity": 80,
+            "fillOpacity": 100,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "lineWidth": 1,
+            "lineWidth": 0,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -2504,8 +2496,8 @@
           "sort": "desc"
         },
         "xField": "Time",
-        "xTickLabelRotation": 0,
-        "xTickLabelSpacing": 100
+        "xTickLabelRotation": -40,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "11.6.0",
       "targets": [
@@ -2535,6 +2527,17 @@
         }
       ],
       "title": "Hourly Activity Detection Breakdown by Species",
+      "transformations": [
+        {
+          "id": "formatTime",
+          "options": {
+            "outputFormat": "HH:mm",
+            "timeField": "Time",
+            "timezone": "utc",
+            "useTimezone": true
+          }
+        }
+      ],
       "type": "barchart"
     },
     {
@@ -3331,6 +3334,7 @@
               "mode": "off"
             }
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -3523,14 +3527,14 @@
         "type": "grafana-postgresql-datasource",
         "uid": "fehnkzh0nnegwf"
       },
-      "description": "Pairwise Pearson correlation (–1 to +1) of daily detection counts for every species pair. Green cells indicate species that tend to co-occur, red cells indicate inverse patterns",
+      "description": "A square matrix of Pearson r coefficients comparing each pair of species’ daily detection counts over the selected time window. Cells range from –1 (perfect negative co-occurrence) through 0 (no linear relationship) to +1 (perfect positive co-occurrence). Under the hood, we build a complete grid of counts per species per day (zero-filling missing days) and then apply PostgreSQL’s built-in corr(x, y). Strong positive values (closer to +1, in red) indicate two species rise and fall together; strong negative values (closer to –1, in blue) indicate one peaks when the other dips.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "continuous-BlYlRd"
           },
           "custom": {
-            "align": "auto",
+            "align": "center",
             "cellOptions": {
               "applyToRow": false,
               "mode": "basic",
@@ -3555,11 +3559,35 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "species_b\\species_a"
+            },
+            "properties": [
+              {
+                "id": "custom.minWidth",
+                "value": 220
+              },
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "transparent",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 9,
-        "w": 12,
+        "w": 24,
         "x": 0,
         "y": 92
       },
@@ -3576,12 +3604,7 @@
           "show": false
         },
         "showHeader": true,
-        "sortBy": [
-          {
-            "desc": false,
-            "displayName": "species_b\\species_a"
-          }
-        ]
+        "sortBy": []
       },
       "pluginVersion": "11.6.0",
       "targets": [
@@ -3610,7 +3633,7 @@
           }
         }
       ],
-      "title": "Species Correlation Matrix",
+      "title": "Species Co-occurrence Correlation Matrix",
       "transformations": [
         {
           "id": "groupingToMatrix",
@@ -3622,126 +3645,6 @@
         }
       ],
       "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fehnkzh0nnegwf"
-      },
-      "description": " Pearson r for each species pair",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 50,
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "pointShape": "circle",
-            "pointSize": {
-              "fixed": 5
-            },
-            "pointStrokeWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "show": "points"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 92
-      },
-      "id": 123,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "mapping": "auto",
-        "series": [
-          {
-            "frame": {
-              "matcher": {
-                "id": "byIndex",
-                "options": 0
-              }
-            }
-          }
-        ],
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.6.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "WITH daily_counts AS (\n  SELECT\n    time_bucket('1 day', time) AS day,\n    common_name,\n    COUNT(*) AS cnt\n  FROM sensor_data\n  WHERE\n    $__timeFilter(time)\n    AND common_name IN ($specie)\n    AND common_name NOT IN (${exclude:sqlstring})\n    AND confidence >= $confidence\n  GROUP BY 1,2\n),\nfull_grid AS (\n  SELECT\n    d.day,\n    s.common_name,\n    COALESCE(dc.cnt,0) AS cnt\n  FROM (\n    SELECT generate_series(\n      date_trunc('day',$__timeFrom()::timestamptz),\n      date_trunc('day',$__timeTo()::timestamptz),\n      '1 day'::interval\n    ) AS day\n  ) d\n  CROSS JOIN (SELECT DISTINCT common_name\n              FROM sensor_data\n              WHERE $__timeFilter(time)\n                AND common_name IN ($specie)\n                AND common_name NOT IN (${exclude:sqlstring})\n             ) s\n  LEFT JOIN daily_counts dc\n    ON dc.day = d.day\n   AND dc.common_name = s.common_name\n)\nSELECT\n  g1.common_name AS species_a,\n  g2.common_name AS species_b,\n  corr(g1.cnt, g2.cnt) AS corr_value\nFROM full_grid g1\nJOIN full_grid g2\n  ON g1.day = g2.day\n WHERE g1.common_name < g2.common_name\nGROUP BY 1,2\nORDER BY 1,2;\n",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Panel Title",
-      "transformations": [
-        {
-          "id": "groupingToMatrix",
-          "options": {
-            "columnField": "species_a",
-            "rowField": "species_b",
-            "valueField": "corr_value"
-          }
-        }
-      ],
-      "type": "xychart"
     },
     {
       "collapsed": true,
@@ -8644,12 +8547,12 @@
     ]
   },
   "time": {
-    "from": "2023-12-12T14:43:39.262Z",
-    "to": "2024-01-06T16:26:48.481Z"
+    "from": "2023-12-29T10:52:58.876Z",
+    "to": "2024-01-19T03:10:22.835Z"
   },
   "timepicker": {},
   "timezone": "utc",
   "title": "Dashboard Demo",
   "uid": "ce9iy4q6qr474f",
-  "version": 634
+  "version": 663
 }
