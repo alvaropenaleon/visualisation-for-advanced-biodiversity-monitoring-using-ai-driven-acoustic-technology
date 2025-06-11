@@ -426,5 +426,63 @@
                 "file": "/usr/src/node-red/node_modules/@node-red/nodes/core/storage/23-watch.js"
             }
         }
+    },
+    "node-red-contrib-postgresql": {
+        "name": "node-red-contrib-postgresql",
+        "version": "0.14.2",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "postgresql": {
+                "name": "postgresql",
+                "types": [
+                    "postgreSQLConfig",
+                    "postgresql"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-postgresql",
+                "file": "/data/node_modules/node-red-contrib-postgresql/postgresql.js"
+            }
+        }
+    },
+    "node-red-contrib-chunks-to-lines": {
+        "name": "node-red-contrib-chunks-to-lines",
+        "version": "0.8.1",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "chunks-to-lines": {
+                "name": "chunks-to-lines",
+                "types": [
+                    "chunks-to-lines"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-chunks-to-lines",
+                "file": "/data/node_modules/node-red-contrib-chunks-to-lines/chunks-to-lines.js"
+            }
+        }
+    },
+    "node-red-contrib-ui-upload": {
+        "name": "node-red-contrib-ui-upload",
+        "version": "0.8.1",
+        "local": true,
+        "user": true,
+        "nodes": {
+            "ui_upload": {
+                "name": "ui_upload",
+                "types": [
+                    "ui_upload"
+                ],
+                "enabled": true,
+                "local": true,
+                "user": false,
+                "module": "node-red-contrib-ui-upload",
+                "file": "/data/node_modules/node-red-contrib-ui-upload/ui_upload.js"
+            }
+        }
     }
 }

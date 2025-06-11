@@ -1,0 +1,188 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@10.8.2
+2 info using node@v20.19.0
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/data/.npmrc
+5 silly config load:file:/usr/src/node-red/.npmrc
+6 silly config load:file:/usr/local/etc/npmrc
+7 verbose title npm install node-red-contrib-chunks-to-lines@0.8.1
+8 verbose argv "install" "--no-audit" "--no-update-notifier" "--no-fund" "--save" "--save-prefix" "~" "--omit" "dev" "--engine-strict" "node-red-contrib-chunks-to-lines@0.8.1"
+9 verbose logfile logs-max:10 dir:/data/.npm/_logs/2025-06-10T14_58_11_725Z-
+10 verbose logfile /data/.npm/_logs/2025-06-10T14_58_11_725Z-debug-0.log
+11 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+12 silly logfile done cleaning log files
+13 silly idealTree buildDeps
+14 silly fetch manifest node-red-contrib-chunks-to-lines@0.8.1
+15 silly packumentCache full:https://registry.npmjs.org/node-red-contrib-chunks-to-lines cache-miss
+16 verbose shrinkwrap failed to load node_modules/.package-lock.json missing from lockfile: node_modules/bytes
+17 http fetch GET 200 https://registry.npmjs.org/node-red-contrib-chunks-to-lines 893ms (cache miss)
+18 silly packumentCache full:https://registry.npmjs.org/node-red-contrib-chunks-to-lines set size:undefined disposed:false
+19 silly placeDep ROOT node-red-contrib-chunks-to-lines@0.8.1 OK for: node-red-project@0.0.1 want: 0.8.1
+20 silly reify mark retired [ '/data/node_modules/accepts' ]
+21 silly reify mark retired [ '/data/node_modules/base64id' ]
+22 silly reify mark retired [ '/data/node_modules/bytes' ]
+23 silly reify mark retired [ '/data/node_modules/compressible' ]
+24 silly reify mark retired [ '/data/node_modules/compression' ]
+25 silly reify mark retired [ '/data/node_modules/cookie' ]
+26 silly reify mark retired [ '/data/node_modules/debug' ]
+27 silly reify mark retired [ '/data/node_modules/cors' ]
+28 silly reify mark retired [ '/data/node_modules/depd' ]
+29 silly reify mark retired [ '/data/node_modules/destroy' ]
+30 silly reify mark retired [ '/data/node_modules/ee-first' ]
+31 silly reify mark retired [ '/data/node_modules/encodeurl' ]
+32 silly reify mark retired [ '/data/node_modules/engine.io' ]
+33 silly reify mark retired [ '/data/node_modules/escape-html' ]
+34 silly reify mark retired [ '/data/node_modules/engine.io-parser' ]
+35 silly reify mark retired [ '/data/node_modules/etag' ]
+36 silly reify mark retired [ '/data/node_modules/gridstack' ]
+37 silly reify mark retired [ '/data/node_modules/fresh' ]
+38 silly reify mark retired [ '/data/node_modules/http-errors' ]
+39 silly reify mark retired [ '/data/node_modules/jquery' ]
+40 silly reify mark retired [ '/data/node_modules/inherits' ]
+41 silly reify mark retired [ '/data/node_modules/mime' ]
+42 silly reify mark retired [ '/data/node_modules/mime-types' ]
+43 silly reify mark retired [ '/data/node_modules/ms' ]
+44 silly reify mark retired [ '/data/node_modules/negotiator' ]
+45 silly reify mark retired [ '/data/node_modules/node-red-dashboard' ]
+46 silly reify mark retired [ '/data/node_modules/mime-db' ]
+47 silly reify mark retired [ '/data/node_modules/on-finished' ]
+48 silly reify mark retired [ '/data/node_modules/node-red-contrib-ui-upload' ]
+49 silly reify mark retired [ '/data/node_modules/on-headers' ]
+50 silly reify mark retired [ '/data/node_modules/object-assign' ]
+51 silly reify mark retired [ '/data/node_modules/parseurl' ]
+52 silly reify mark retired [ '/data/node_modules/range-parser' ]
+53 silly reify mark retired [ '/data/node_modules/safe-buffer' ]
+54 silly reify mark retired [ '/data/node_modules/send' ]
+55 silly reify mark retired [ '/data/node_modules/setprototypeof' ]
+56 silly reify mark retired [ '/data/node_modules/serve-static' ]
+57 silly reify mark retired [ '/data/node_modules/socket.io' ]
+58 silly reify mark retired [ '/data/node_modules/socket.io-adapter' ]
+59 silly reify mark retired [ '/data/node_modules/socket.io-parser' ]
+60 silly reify mark retired [ '/data/node_modules/statuses' ]
+61 silly reify mark retired [ '/data/node_modules/toidentifier' ]
+62 silly reify mark retired [ '/data/node_modules/undici-types' ]
+63 silly reify mark retired [ '/data/node_modules/vary' ]
+64 silly reify mark retired [ '/data/node_modules/@types/cors' ]
+65 silly reify mark retired [ '/data/node_modules/ws' ]
+66 silly reify mark retired [ '/data/node_modules/@socket.io/component-emitter' ]
+67 silly reify mark retired [ '/data/node_modules/@types/node' ]
+68 silly reify moves {
+68 silly reify   '/data/node_modules/accepts': '/data/node_modules/.accepts-wBc4iRst',
+68 silly reify   '/data/node_modules/base64id': '/data/node_modules/.base64id-fDEbPIUd',
+68 silly reify   '/data/node_modules/bytes': '/data/node_modules/.bytes-M6S4GHrH',
+68 silly reify   '/data/node_modules/compressible': '/data/node_modules/.compressible-60RmNxZN',
+68 silly reify   '/data/node_modules/compression': '/data/node_modules/.compression-dOvaEpz8',
+68 silly reify   '/data/node_modules/cookie': '/data/node_modules/.cookie-w3IRwdDP',
+68 silly reify   '/data/node_modules/debug': '/data/node_modules/.debug-oMLg6EQG',
+68 silly reify   '/data/node_modules/cors': '/data/node_modules/.cors-e19gZQ79',
+68 silly reify   '/data/node_modules/depd': '/data/node_modules/.depd-zkDgBuSy',
+68 silly reify   '/data/node_modules/destroy': '/data/node_modules/.destroy-DaaHXRIJ',
+68 silly reify   '/data/node_modules/ee-first': '/data/node_modules/.ee-first-aF2jQpGN',
+68 silly reify   '/data/node_modules/encodeurl': '/data/node_modules/.encodeurl-TqVuQPlc',
+68 silly reify   '/data/node_modules/engine.io': '/data/node_modules/.engine.io-A0yD1XTu',
+68 silly reify   '/data/node_modules/escape-html': '/data/node_modules/.escape-html-bkh4Mzs5',
+68 silly reify   '/data/node_modules/engine.io-parser': '/data/node_modules/.engine.io-parser-FXeX7bsL',
+68 silly reify   '/data/node_modules/etag': '/data/node_modules/.etag-8npKUd2v',
+68 silly reify   '/data/node_modules/gridstack': '/data/node_modules/.gridstack-RXsWsjrW',
+68 silly reify   '/data/node_modules/fresh': '/data/node_modules/.fresh-RJOrLJey',
+68 silly reify   '/data/node_modules/http-errors': '/data/node_modules/.http-errors-bq0rSNtB',
+68 silly reify   '/data/node_modules/jquery': '/data/node_modules/.jquery-KXcqBnmR',
+68 silly reify   '/data/node_modules/inherits': '/data/node_modules/.inherits-IFktovJP',
+68 silly reify   '/data/node_modules/mime': '/data/node_modules/.mime-8INyOFlQ',
+68 silly reify   '/data/node_modules/mime-types': '/data/node_modules/.mime-types-Cid6PBHG',
+68 silly reify   '/data/node_modules/ms': '/data/node_modules/.ms-g1irmAFT',
+68 silly reify   '/data/node_modules/negotiator': '/data/node_modules/.negotiator-k7G8Mi8G',
+68 silly reify   '/data/node_modules/node-red-dashboard': '/data/node_modules/.node-red-dashboard-nLdcNL8A',
+68 silly reify   '/data/node_modules/mime-db': '/data/node_modules/.mime-db-Bc7q22S9',
+68 silly reify   '/data/node_modules/on-finished': '/data/node_modules/.on-finished-mlalqELa',
+68 silly reify   '/data/node_modules/node-red-contrib-ui-upload': '/data/node_modules/.node-red-contrib-ui-upload-ZDV3ibVr',
+68 silly reify   '/data/node_modules/on-headers': '/data/node_modules/.on-headers-RRm6SgPY',
+68 silly reify   '/data/node_modules/object-assign': '/data/node_modules/.object-assign-NdxoQHnr',
+68 silly reify   '/data/node_modules/parseurl': '/data/node_modules/.parseurl-GvgWE43y',
+68 silly reify   '/data/node_modules/range-parser': '/data/node_modules/.range-parser-aUXfT6TX',
+68 silly reify   '/data/node_modules/safe-buffer': '/data/node_modules/.safe-buffer-RhdIW9jy',
+68 silly reify   '/data/node_modules/send': '/data/node_modules/.send-kLk4ic9X',
+68 silly reify   '/data/node_modules/setprototypeof': '/data/node_modules/.setprototypeof-AMKn7p8t',
+68 silly reify   '/data/node_modules/serve-static': '/data/node_modules/.serve-static-e5j26kZG',
+68 silly reify   '/data/node_modules/socket.io': '/data/node_modules/.socket.io-BXSdiCZL',
+68 silly reify   '/data/node_modules/socket.io-adapter': '/data/node_modules/.socket.io-adapter-pXd1DJl7',
+68 silly reify   '/data/node_modules/socket.io-parser': '/data/node_modules/.socket.io-parser-fLCn01HF',
+68 silly reify   '/data/node_modules/statuses': '/data/node_modules/.statuses-LMf9VOPu',
+68 silly reify   '/data/node_modules/toidentifier': '/data/node_modules/.toidentifier-SvGyt6Rq',
+68 silly reify   '/data/node_modules/undici-types': '/data/node_modules/.undici-types-N38lcTrn',
+68 silly reify   '/data/node_modules/vary': '/data/node_modules/.vary-hU1J2ePp',
+68 silly reify   '/data/node_modules/@types/cors': '/data/node_modules/@types/.cors-c84k8yab',
+68 silly reify   '/data/node_modules/ws': '/data/node_modules/.ws-B5PabsSn',
+68 silly reify   '/data/node_modules/@socket.io/component-emitter': '/data/node_modules/@socket.io/.component-emitter-F8WSV040',
+68 silly reify   '/data/node_modules/@types/node': '/data/node_modules/@types/.node-hhfaj4BM'
+68 silly reify }
+69 silly tarball no local data for node-red-contrib-chunks-to-lines@https://registry.npmjs.org/node-red-contrib-chunks-to-lines/-/node-red-contrib-chunks-to-lines-0.8.1.tgz. Extracting by manifest.
+70 http fetch GET 200 https://registry.npmjs.org/node-red-contrib-chunks-to-lines/-/node-red-contrib-chunks-to-lines-0.8.1.tgz 73ms (cache miss)
+71 silly ADD node_modules/node-red-contrib-chunks-to-lines
+72 silly ADD node_modules/node-red-project
+73 silly REMOVE node_modules/@types/node
+74 silly REMOVE node_modules/@socket.io/component-emitter
+75 silly REMOVE node_modules/ws
+76 silly REMOVE node_modules/@types/cors
+77 silly REMOVE node_modules/vary
+78 silly REMOVE node_modules/undici-types
+79 silly REMOVE node_modules/toidentifier
+80 silly REMOVE node_modules/statuses
+81 silly REMOVE node_modules/socket.io-parser
+82 silly REMOVE node_modules/socket.io-parser/node_modules/debug
+83 silly REMOVE node_modules/socket.io-parser/node_modules/ms
+84 silly REMOVE node_modules/socket.io-adapter
+85 silly REMOVE node_modules/socket.io-adapter/node_modules/ms
+86 silly REMOVE node_modules/socket.io-adapter/node_modules/debug
+87 silly REMOVE node_modules/socket.io
+88 silly REMOVE node_modules/socket.io/node_modules/debug
+89 silly REMOVE node_modules/socket.io/node_modules/ms
+90 silly REMOVE node_modules/serve-static
+91 silly REMOVE node_modules/setprototypeof
+92 silly REMOVE node_modules/send
+93 silly REMOVE node_modules/send/node_modules/ms
+94 silly REMOVE node_modules/send/node_modules/encodeurl
+95 silly REMOVE node_modules/safe-buffer
+96 silly REMOVE node_modules/range-parser
+97 silly REMOVE node_modules/parseurl
+98 silly REMOVE node_modules/object-assign
+99 silly REMOVE node_modules/on-headers
+100 silly REMOVE node_modules/node-red-contrib-ui-upload
+101 silly REMOVE node_modules/on-finished
+102 silly REMOVE node_modules/mime-db
+103 silly REMOVE node_modules/node-red-dashboard
+104 silly REMOVE node_modules/negotiator
+105 silly REMOVE node_modules/ms
+106 silly REMOVE node_modules/mime-types
+107 silly REMOVE node_modules/mime-types/node_modules/mime-db
+108 silly REMOVE node_modules/mime
+109 silly REMOVE node_modules/inherits
+110 silly REMOVE node_modules/jquery
+111 silly REMOVE node_modules/http-errors
+112 silly REMOVE node_modules/fresh
+113 silly REMOVE node_modules/gridstack
+114 silly REMOVE node_modules/etag
+115 silly REMOVE node_modules/engine.io-parser
+116 silly REMOVE node_modules/escape-html
+117 silly REMOVE node_modules/engine.io
+118 silly REMOVE node_modules/engine.io/node_modules/ms
+119 silly REMOVE node_modules/engine.io/node_modules/debug
+120 silly REMOVE node_modules/encodeurl
+121 silly REMOVE node_modules/ee-first
+122 silly REMOVE node_modules/destroy
+123 silly REMOVE node_modules/depd
+124 silly REMOVE node_modules/cors
+125 silly REMOVE node_modules/debug
+126 silly REMOVE node_modules/cookie
+127 silly REMOVE node_modules/compression
+128 silly REMOVE node_modules/compressible
+129 silly REMOVE node_modules/bytes
+130 silly REMOVE node_modules/base64id
+131 silly REMOVE node_modules/accepts
+132 silly REMOVE node_modules/accepts/node_modules/negotiator
+133 verbose cwd /data
+134 verbose os Linux 6.10.14-linuxkit
+135 verbose node v20.19.0
+136 verbose npm  v10.8.2
+137 verbose exit 0
+138 info ok

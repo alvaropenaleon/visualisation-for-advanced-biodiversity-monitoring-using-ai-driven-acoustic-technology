@@ -4,7 +4,10 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
+        "node-red-contrib-chunks-to-lines": "~0.8.1",
         "node-red-contrib-postgresql": "~0.14.2",
+        "node-red-contrib-ui-upload": "~0.8.1",
+        "node-red-dashboard": "~3.6.5",
         "node-red-project": "file:"
     }
 }
