@@ -22,18 +22,18 @@
         "info": ""
     },
     {
-        "id": "apiTab",
-        "type": "tab",
-        "label": "API",
-        "disabled": false,
-        "info": "REST API and debug"
-    },
-    {
         "id": "a4845c405fa6605f",
         "type": "tab",
         "label": "DB Ingestion",
         "disabled": false,
         "info": "DB ingestion pipeline with metrics"
+    },
+    {
+        "id": "apiTab",
+        "type": "tab",
+        "label": "API",
+        "disabled": false,
+        "info": "REST API and debug"
     },
     {
         "id": "adminTab",
@@ -213,9 +213,9 @@
         "id": "comment_create_tables",
         "type": "comment",
         "z": "setupTab",
-        "name": "Step: Create Tables",
+        "name": "Step 1: Create Tables",
         "info": "Enable Timescale and create sensors, sensor_data, ingestion_metrics, sensor_errors",
-        "x": 150,
+        "x": 160,
         "y": 60,
         "wires": []
     },
@@ -271,7 +271,7 @@
         "id": "comment_hypertable",
         "type": "comment",
         "z": "setupTab",
-        "name": "Step: Create Hypertable",
+        "name": "Step 2: Create Hypertable",
         "info": "Convert sensor_data to TimescaleDB hypertable",
         "x": 170,
         "y": 200,
@@ -329,9 +329,9 @@
         "id": "comment_insert_sensors",
         "type": "comment",
         "z": "setupTab",
-        "name": "Step: Insert Sensors",
+        "name": "Step 3: Insert Sensors",
         "info": "Seed sensors table with initial devices",
-        "x": 150,
+        "x": 160,
         "y": 340,
         "wires": []
     },
@@ -785,6 +785,182 @@
         "wires": []
     },
     {
+        "id": "d12283e84cd705c9",
+        "type": "comment",
+        "z": "a4845c405fa6605f",
+        "name": "Link In Ingestion Pipeline",
+        "info": "Unified ingestion path for:\n- MQTT ingestion, \n- CSV batch upload,  \n- HTTP POST requests",
+        "x": 170,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "ad0dea488b9e2098",
+        "type": "function",
+        "z": "a4845c405fa6605f",
+        "name": "Normalize detection",
+        "func": "// Normalise detection: \n// extract timestamp from CSV file path, \n// or take row.time if present, \n// or now if real time ingestion\nconst row = msg.payload;\nlet timeVal;\n\n// CSV-style filename: /…/YYYYMMDD_HHMMSS.wav\nif (row.File) {\n  const parts = row.File.split(/[_\\/\\\\]/),\n        dateStr = parts[parts.length - 2] || \"\",\n        timeStr = (parts[parts.length - 1] || \"\").replace(/\\.wav$/i, \"\");\n  if (dateStr.length===8 && timeStr.length===6) {\n    const [y,M,d,h,m,s] = [\n      dateStr.slice(0,4),\n      dateStr.slice(4,6),\n      dateStr.slice(6,8),\n      timeStr.slice(0,2),\n      timeStr.slice(2,4),\n      timeStr.slice(4,6)\n    ];\n    timeVal = `${y}-${M}-${d}T${h}:${m}:${s}Z`;\n  }\n}\n\n// JSON/MQTT style:\nif (!timeVal && (row.time || row.Time || row.timestamp)) {\n  timeVal = row.time || row.Time || row.timestamp;\n}\n\n// Fallback:\nif (!timeVal) timeVal = new Date().toISOString();\n\n// Pull the rest of the fields\n// allows for both snake_case and Title Case headers:\nconst rec = {\n  time:            timeVal,\n  sensor_id:       row.sensor_id  || row.sensorId  || 1,\n  start_seconds:   parseInt(row.start_seconds || row[\"Start (s)\"] || 0),\n  end_seconds:     parseInt(row.end_seconds   || row[\"End (s)\"]   || 0),\n  scientific_name: row.scientific_name || row[\"Scientific name\"] || \"\",\n  common_name:     row.common_name     || row[\"Common name\"]     || \"\",\n  confidence:      parseFloat(row.confidence || row.Confidence)    || 0\n};\n\nmsg.params = [\n  rec.time,\n  rec.sensor_id,\n  rec.start_seconds,\n  rec.end_seconds,\n  rec.scientific_name,\n  rec.common_name,\n  rec.confidence\n];\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 120,
+        "wires": [
+            [
+                "4c4415142a097a2a"
+            ]
+        ]
+    },
+    {
+        "id": "4c4415142a097a2a",
+        "type": "function",
+        "z": "a4845c405fa6605f",
+        "name": "Stamp received_at",
+        "func": "msg.received_at=new Date().toISOString(); return msg;",
+        "outputs": 1,
+        "x": 390,
+        "y": 240,
+        "wires": [
+            [
+                "4defb9ee116ee672"
+            ]
+        ]
+    },
+    {
+        "id": "4defb9ee116ee672",
+        "type": "postgresql",
+        "z": "a4845c405fa6605f",
+        "name": "Insert detection row",
+        "query": "INSERT INTO sensor_data(time,sensor_id,start_seconds,end_seconds,scientific_name,common_name,confidence) VALUES($1,$2,$3,$4,$5,$6,$7);",
+        "postgreSQLConfig": "fbd14997310e037a",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 660,
+        "y": 240,
+        "wires": [
+            [
+                "0926741538b0917c",
+                "9c7497c7cc3a2c7b"
+            ]
+        ]
+    },
+    {
+        "id": "0926741538b0917c",
+        "type": "debug",
+        "z": "a4845c405fa6605f",
+        "name": "Debug Insert",
+        "active": true,
+        "tosidebar": true,
+        "complete": "true",
+        "x": 930,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "9c7497c7cc3a2c7b",
+        "type": "function",
+        "z": "a4845c405fa6605f",
+        "name": "Prepare latency params",
+        "func": "msg.params = [ msg.received_at ]; return msg;",
+        "outputs": 1,
+        "x": 410,
+        "y": 380,
+        "wires": [
+            [
+                "87a7dea47f518afe"
+            ]
+        ]
+    },
+    {
+        "id": "87a7dea47f518afe",
+        "type": "postgresql",
+        "z": "a4845c405fa6605f",
+        "name": "Log ingestion latency",
+        "query": "INSERT INTO ingestion_metrics(received_at, inserted_at) VALUES($1, NOW());",
+        "postgreSQLConfig": "fbd14997310e037a",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 660,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f4831e1612650e6d",
+        "type": "catch",
+        "z": "a4845c405fa6605f",
+        "name": "Catch errors",
+        "scope": [
+            "b31ccd36f7b95df5",
+            "ace7753ce95db664",
+            "ad0dea488b9e2098",
+            "4c4415142a097a2a",
+            "4defb9ee116ee672"
+        ],
+        "x": 170,
+        "y": 500,
+        "wires": [
+            [
+                "90966bc9719a08dd"
+            ]
+        ]
+    },
+    {
+        "id": "90966bc9719a08dd",
+        "type": "function",
+        "z": "a4845c405fa6605f",
+        "name": "Format error",
+        "func": "msg.error_msg=msg.error.message||String(msg.error); msg.raw_payload={row:msg.payload}; return msg;",
+        "outputs": 1,
+        "x": 370,
+        "y": 500,
+        "wires": [
+            [
+                "2ba0df6ab4980da8"
+            ]
+        ]
+    },
+    {
+        "id": "2ba0df6ab4980da8",
+        "type": "postgresql",
+        "z": "a4845c405fa6605f",
+        "name": "Log sensor_error",
+        "query": "INSERT INTO sensor_errors(time,error_msg,raw_payload) VALUES(NOW(), $1, $2);",
+        "postgreSQLConfig": "fbd14997310e037a",
+        "split": false,
+        "rowsPerMsg": "",
+        "outputs": 1,
+        "x": 650,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "af1f1c097dd12835",
+        "type": "link in",
+        "z": "a4845c405fa6605f",
+        "name": "FROM Uploads",
+        "links": [
+            "linkOutMqtt",
+            "96d0299c874c7765",
+            "linkOutHttp"
+        ],
+        "x": 185,
+        "y": 120,
+        "wires": [
+            [
+                "ad0dea488b9e2098"
+            ]
+        ]
+    },
+    {
         "id": "comment_api",
         "type": "comment",
         "z": "apiTab",
@@ -1052,182 +1228,6 @@
         "x": 950,
         "y": 560,
         "wires": []
-    },
-    {
-        "id": "d12283e84cd705c9",
-        "type": "comment",
-        "z": "a4845c405fa6605f",
-        "name": "Link In Ingestion Pipeline",
-        "info": "Unified ingestion path for:\n- MQTT ingestion, \n- CSV batch upload,  \n- HTTP POST requests",
-        "x": 170,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "ad0dea488b9e2098",
-        "type": "function",
-        "z": "a4845c405fa6605f",
-        "name": "Normalize detection",
-        "func": "// Normalise detection: \n// extract timestamp from CSV file path, \n// or take row.time if present, \n// or now if real time ingestion\nconst row = msg.payload;\nlet timeVal;\n\n// CSV-style filename: /…/YYYYMMDD_HHMMSS.wav\nif (row.File) {\n  const parts = row.File.split(/[_\\/\\\\]/),\n        dateStr = parts[parts.length - 2] || \"\",\n        timeStr = (parts[parts.length - 1] || \"\").replace(/\\.wav$/i, \"\");\n  if (dateStr.length===8 && timeStr.length===6) {\n    const [y,M,d,h,m,s] = [\n      dateStr.slice(0,4),\n      dateStr.slice(4,6),\n      dateStr.slice(6,8),\n      timeStr.slice(0,2),\n      timeStr.slice(2,4),\n      timeStr.slice(4,6)\n    ];\n    timeVal = `${y}-${M}-${d}T${h}:${m}:${s}Z`;\n  }\n}\n\n// JSON/MQTT style:\nif (!timeVal && (row.time || row.Time || row.timestamp)) {\n  timeVal = row.time || row.Time || row.timestamp;\n}\n\n// Fallback:\nif (!timeVal) timeVal = new Date().toISOString();\n\n// Pull the rest of the fields\n// allows for both snake_case and Title Case headers:\nconst rec = {\n  time:            timeVal,\n  sensor_id:       row.sensor_id  || row.sensorId  || 1,\n  start_seconds:   parseInt(row.start_seconds || row[\"Start (s)\"] || 0),\n  end_seconds:     parseInt(row.end_seconds   || row[\"End (s)\"]   || 0),\n  scientific_name: row.scientific_name || row[\"Scientific name\"] || \"\",\n  common_name:     row.common_name     || row[\"Common name\"]     || \"\",\n  confidence:      parseFloat(row.confidence || row.Confidence)    || 0\n};\n\nmsg.params = [\n  rec.time,\n  rec.sensor_id,\n  rec.start_seconds,\n  rec.end_seconds,\n  rec.scientific_name,\n  rec.common_name,\n  rec.confidence\n];\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 400,
-        "y": 120,
-        "wires": [
-            [
-                "4c4415142a097a2a"
-            ]
-        ]
-    },
-    {
-        "id": "4c4415142a097a2a",
-        "type": "function",
-        "z": "a4845c405fa6605f",
-        "name": "Stamp received_at",
-        "func": "msg.received_at=new Date().toISOString(); return msg;",
-        "outputs": 1,
-        "x": 390,
-        "y": 240,
-        "wires": [
-            [
-                "4defb9ee116ee672"
-            ]
-        ]
-    },
-    {
-        "id": "4defb9ee116ee672",
-        "type": "postgresql",
-        "z": "a4845c405fa6605f",
-        "name": "Insert detection row",
-        "query": "INSERT INTO sensor_data(time,sensor_id,start_seconds,end_seconds,scientific_name,common_name,confidence) VALUES($1,$2,$3,$4,$5,$6,$7);",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 660,
-        "y": 240,
-        "wires": [
-            [
-                "0926741538b0917c",
-                "9c7497c7cc3a2c7b"
-            ]
-        ]
-    },
-    {
-        "id": "0926741538b0917c",
-        "type": "debug",
-        "z": "a4845c405fa6605f",
-        "name": "Debug Insert",
-        "active": true,
-        "tosidebar": true,
-        "complete": "true",
-        "x": 930,
-        "y": 240,
-        "wires": []
-    },
-    {
-        "id": "9c7497c7cc3a2c7b",
-        "type": "function",
-        "z": "a4845c405fa6605f",
-        "name": "Prepare latency params",
-        "func": "msg.params = [ msg.received_at ]; return msg;",
-        "outputs": 1,
-        "x": 410,
-        "y": 380,
-        "wires": [
-            [
-                "87a7dea47f518afe"
-            ]
-        ]
-    },
-    {
-        "id": "87a7dea47f518afe",
-        "type": "postgresql",
-        "z": "a4845c405fa6605f",
-        "name": "Log ingestion latency",
-        "query": "INSERT INTO ingestion_metrics(received_at, inserted_at) VALUES($1, NOW());",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 660,
-        "y": 380,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "f4831e1612650e6d",
-        "type": "catch",
-        "z": "a4845c405fa6605f",
-        "name": "Catch errors",
-        "scope": [
-            "b31ccd36f7b95df5",
-            "ace7753ce95db664",
-            "ad0dea488b9e2098",
-            "4c4415142a097a2a",
-            "4defb9ee116ee672"
-        ],
-        "x": 170,
-        "y": 500,
-        "wires": [
-            [
-                "90966bc9719a08dd"
-            ]
-        ]
-    },
-    {
-        "id": "90966bc9719a08dd",
-        "type": "function",
-        "z": "a4845c405fa6605f",
-        "name": "Format error",
-        "func": "msg.error_msg=msg.error.message||String(msg.error); msg.raw_payload={row:msg.payload}; return msg;",
-        "outputs": 1,
-        "x": 370,
-        "y": 500,
-        "wires": [
-            [
-                "2ba0df6ab4980da8"
-            ]
-        ]
-    },
-    {
-        "id": "2ba0df6ab4980da8",
-        "type": "postgresql",
-        "z": "a4845c405fa6605f",
-        "name": "Log sensor_error",
-        "query": "INSERT INTO sensor_errors(time,error_msg,raw_payload) VALUES(NOW(), $1, $2);",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 650,
-        "y": 500,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "af1f1c097dd12835",
-        "type": "link in",
-        "z": "a4845c405fa6605f",
-        "name": "FROM Uploads",
-        "links": [
-            "linkOutMqtt",
-            "96d0299c874c7765",
-            "linkOutHttp"
-        ],
-        "x": 185,
-        "y": 120,
-        "wires": [
-            [
-                "ad0dea488b9e2098"
-            ]
-        ]
     },
     {
         "id": "comment_admin",
