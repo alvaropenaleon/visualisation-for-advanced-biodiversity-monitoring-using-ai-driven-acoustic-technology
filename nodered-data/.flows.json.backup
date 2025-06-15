@@ -1,1304 +1,1316 @@
 [
-    {
-        "id": "setupTab",
-        "type": "tab",
-        "label": "DB Setup",
-        "disabled": false,
-        "info": "One-time DB setup: tables, hypertable, sensors"
-    },
-    {
-        "id": "0b83af209e30eeda",
-        "type": "tab",
-        "label": "CSV Upload",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "mqttTab",
-        "type": "tab",
-        "label": "MQTT Input",
-        "disabled": false,
-        "info": ""
-    },
-    {
-        "id": "apiTab",
-        "type": "tab",
-        "label": "API",
-        "disabled": false,
-        "info": "REST API and debug"
-    },
-    {
-        "id": "a4845c405fa6605f",
-        "type": "tab",
-        "label": "DB Ingestion",
-        "disabled": false,
-        "info": "DB ingestion pipeline with metrics"
-    },
-    {
-        "id": "adminTab",
-        "type": "tab",
-        "label": "Clear DB",
-        "disabled": false,
-        "info": ""
-    },
-    {
-        "id": "052aec521515b111",
-        "type": "mqtt-broker",
-        "name": "",
-        "broker": "mosquitto",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "5",
-        "keepalive": "60",
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthRetain": "false",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closeRetain": "false",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willRetain": "false",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "fbd14997310e037a",
-        "type": "postgreSQLConfig",
-        "name": "",
-        "host": "postgres",
-        "hostFieldType": "str",
-        "port": "5432",
-        "portFieldType": "num",
-        "database": "postgres",
-        "databaseFieldType": "str",
-        "ssl": "false",
-        "sslFieldType": "bool",
-        "applicationName": "",
-        "applicationNameType": "str",
-        "max": "10",
-        "maxFieldType": "num",
-        "idle": "1000",
-        "idleFieldType": "num",
-        "connectionTimeout": "10000",
-        "connectionTimeoutFieldType": "num",
-        "user": "postgres",
-        "userFieldType": "str",
-        "password": "05JD£AEBW2'f",
-        "passwordFieldType": "str"
-    },
-    {
-        "id": "uiCsvTab",
-        "type": "ui_tab",
-        "name": "CSV Upload",
-        "icon": "cloud_upload",
-        "order": 1
-    },
-    {
-        "id": "uiCsvGrp",
-        "type": "ui_group",
-        "name": "Upload",
-        "tab": "uiCsvTab",
-        "order": 1,
-        "width": 6
-    },
-    {
-        "id": "36546cc4c60ff6f4",
-        "type": "ui_base",
-        "theme": {
-            "name": "theme-light",
-            "lightTheme": {
-                "default": "#0094CE",
-                "baseColor": "#0094CE",
-                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-                "edited": false
-            },
-            "darkTheme": {
-                "default": "#097479",
-                "baseColor": "#097479",
-                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-                "edited": false
-            },
-            "customTheme": {
-                "name": "Untitled Theme 1",
-                "default": "#4B7930",
-                "baseColor": "#4B7930",
-                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
-            },
-            "themeState": {
-                "base-color": {
-                    "default": "#0094CE",
-                    "value": "#0094CE",
-                    "edited": false
-                },
-                "page-titlebar-backgroundColor": {
-                    "value": "#0094CE",
-                    "edited": false
-                },
-                "page-backgroundColor": {
-                    "value": "#fafafa",
-                    "edited": false
-                },
-                "page-sidebar-backgroundColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "group-textColor": {
-                    "value": "#1bbfff",
-                    "edited": false
-                },
-                "group-borderColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "group-backgroundColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "widget-textColor": {
-                    "value": "#111111",
-                    "edited": false
-                },
-                "widget-backgroundColor": {
-                    "value": "#0094ce",
-                    "edited": false
-                },
-                "widget-borderColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "base-font": {
-                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
-                }
-            },
-            "angularTheme": {
-                "primary": "indigo",
-                "accents": "blue",
-                "warn": "red",
-                "background": "grey",
-                "palette": "light"
-            }
+  {
+    "id": "db-setup",
+    "type": "tab",
+    "label": "DB Setup",
+    "disabled": false,
+    "info": "One-time DB setup: tables, hypertable, sensors",
+    "z": null,
+    "tab": null
+  },
+  {
+    "id": "csv-upload",
+    "type": "tab",
+    "label": "CSV Upload",
+    "disabled": false,
+    "info": "",
+    "env": [],
+    "z": null,
+    "tab": null
+  },
+  {
+    "id": "mqtt-input",
+    "type": "tab",
+    "label": "MQTT Input",
+    "disabled": false,
+    "info": "",
+    "z": null,
+    "tab": null
+  },
+  {
+    "id": "db-ingestion",
+    "type": "tab",
+    "label": "DB Ingestion",
+    "disabled": false,
+    "info": "DB ingestion pipeline with metrics",
+    "z": null,
+    "tab": null
+  },
+  {
+    "id": "api",
+    "type": "tab",
+    "label": "API",
+    "disabled": false,
+    "info": "REST API and debug",
+    "z": null,
+    "tab": null
+  },
+  {
+    "id": "admin",
+    "type": "tab",
+    "label": "Clear DB",
+    "disabled": false,
+    "info": "",
+    "z": null,
+    "tab": null
+  },
+  {
+    "id": "052aec521515b111",
+    "type": "mqtt-broker",
+    "name": "",
+    "broker": "mosquitto",
+    "port": "1883",
+    "clientid": "",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "5",
+    "keepalive": "60",
+    "cleansession": true,
+    "autoUnsubscribe": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthRetain": "false",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closeRetain": "false",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willRetain": "false",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": ""
+  },
+  {
+    "id": "fbd14997310e037a",
+    "type": "postgreSQLConfig",
+    "name": "",
+    "host": "postgres",
+    "hostFieldType": "str",
+    "port": "5432",
+    "portFieldType": "num",
+    "database": "postgres",
+    "databaseFieldType": "str",
+    "ssl": "false",
+    "sslFieldType": "bool",
+    "applicationName": "",
+    "applicationNameType": "str",
+    "max": "10",
+    "maxFieldType": "num",
+    "idle": "1000",
+    "idleFieldType": "num",
+    "connectionTimeout": "10000",
+    "connectionTimeoutFieldType": "num",
+    "user": "postgres",
+    "userFieldType": "str",
+    "password": "05JD£AEBW2'f",
+    "passwordFieldType": "str"
+  },
+  {
+    "id": "uiCsvTab",
+    "type": "ui_tab",
+    "name": "CSV Upload",
+    "icon": "cloud_upload",
+    "order": 1
+  },
+  {
+    "id": "uiCsvGrp",
+    "type": "ui_group",
+    "name": "Upload",
+    "tab": "uiCsvTab",
+    "order": 1,
+    "width": 6
+  },
+  {
+    "id": "36546cc4c60ff6f4",
+    "type": "ui_base",
+    "theme": {
+      "name": "theme-light",
+      "lightTheme": {
+        "default": "#0094CE",
+        "baseColor": "#0094CE",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": false
+      },
+      "darkTheme": {
+        "default": "#097479",
+        "baseColor": "#097479",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+        "edited": false
+      },
+      "customTheme": {
+        "name": "Untitled Theme 1",
+        "default": "#4B7930",
+        "baseColor": "#4B7930",
+        "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+      },
+      "themeState": {
+        "base-color": {
+          "default": "#0094CE",
+          "value": "#0094CE",
+          "edited": false
         },
-        "site": {
-            "name": "Node-RED Dashboard",
-            "hideToolbar": "false",
-            "allowSwipe": "false",
-            "lockMenu": "false",
-            "allowTempTheme": "true",
-            "dateFormat": "DD/MM/YYYY",
-            "sizes": {
-                "sx": 48,
-                "sy": 48,
-                "gx": 6,
-                "gy": 6,
-                "cx": 6,
-                "cy": 6,
-                "px": 0,
-                "py": 0
-            }
+        "page-titlebar-backgroundColor": {
+          "value": "#0094CE",
+          "edited": false
+        },
+        "page-backgroundColor": {
+          "value": "#fafafa",
+          "edited": false
+        },
+        "page-sidebar-backgroundColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "group-textColor": {
+          "value": "#1bbfff",
+          "edited": false
+        },
+        "group-borderColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "group-backgroundColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "widget-textColor": {
+          "value": "#111111",
+          "edited": false
+        },
+        "widget-backgroundColor": {
+          "value": "#0094ce",
+          "edited": false
+        },
+        "widget-borderColor": {
+          "value": "#ffffff",
+          "edited": false
+        },
+        "base-font": {
+          "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
         }
-    },
-    {
-        "id": "comment_create_tables",
-        "type": "comment",
-        "z": "setupTab",
-        "name": "Step: Create Tables",
-        "info": "Enable Timescale and create sensors, sensor_data, ingestion_metrics, sensor_errors",
-        "x": 150,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "inject_create_tables",
-        "type": "inject",
-        "z": "setupTab",
-        "name": "Trigger: Create Tables",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 180,
-        "y": 120,
-        "wires": [
-            [
-                "create_tables_pg"
-            ]
-        ]
-    },
-    {
-        "id": "create_tables_pg",
-        "type": "postgresql",
-        "z": "setupTab",
-        "name": "Create tables",
-        "query": "-- Enable extension\nCREATE EXTENSION IF NOT EXISTS timescaledb;\n-- Dimension table\nCREATE TABLE IF NOT EXISTS sensors(id SERIAL PRIMARY KEY, type VARCHAR(50), location VARCHAR(50));\n-- Main data\nCREATE TABLE IF NOT EXISTS sensor_data(time TIMESTAMPTZ NOT NULL, sensor_id INTEGER, start_seconds INTEGER, end_seconds INTEGER, scientific_name VARCHAR(50), common_name VARCHAR(50), confidence DOUBLE PRECISION, FOREIGN KEY(sensor_id) REFERENCES sensors(id));\n-- Ingestion metrics\nCREATE TABLE IF NOT EXISTS ingestion_metrics(received_at timestamptz NOT NULL, inserted_at timestamptz NOT NULL);\n-- Error log\nCREATE TABLE IF NOT EXISTS sensor_errors(time timestamptz DEFAULT NOW(), error_msg text NOT NULL, raw_payload jsonb);",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 410,
-        "y": 120,
-        "wires": [
-            [
-                "debug_create_tables"
-            ]
-        ]
-    },
-    {
-        "id": "debug_create_tables",
-        "type": "debug",
-        "z": "setupTab",
-        "name": "Debug Create",
-        "active": true,
-        "tosidebar": true,
-        "complete": "true",
-        "x": 680,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "comment_hypertable",
-        "type": "comment",
-        "z": "setupTab",
-        "name": "Step: Create Hypertable",
-        "info": "Convert sensor_data to TimescaleDB hypertable",
-        "x": 170,
-        "y": 200,
-        "wires": []
-    },
-    {
-        "id": "inject_hypertable",
-        "type": "inject",
-        "z": "setupTab",
-        "name": "Trigger: Hypertable",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 170,
-        "y": 260,
-        "wires": [
-            [
-                "hypertable_pg"
-            ]
-        ]
-    },
-    {
-        "id": "hypertable_pg",
-        "type": "postgresql",
-        "z": "setupTab",
-        "name": "Create Hypertable",
-        "query": "SELECT create_hypertable('sensor_data','time', if_not_exists => TRUE);",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 430,
-        "y": 260,
-        "wires": [
-            [
-                "debug_hypertable"
-            ]
-        ]
-    },
-    {
-        "id": "debug_hypertable",
-        "type": "debug",
-        "z": "setupTab",
-        "name": "Debug Hypertable",
-        "active": true,
-        "tosidebar": true,
-        "complete": "true",
-        "x": 690,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "comment_insert_sensors",
-        "type": "comment",
-        "z": "setupTab",
-        "name": "Step: Insert Sensors",
-        "info": "Seed sensors table with initial devices",
-        "x": 150,
-        "y": 340,
-        "wires": []
-    },
-    {
-        "id": "inject_insert_sensors",
-        "type": "inject",
-        "z": "setupTab",
-        "name": "Trigger: Insert Sensors",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 180,
-        "y": 400,
-        "wires": [
-            [
-                "insert_sensors_pg"
-            ]
-        ]
-    },
-    {
-        "id": "insert_sensors_pg",
-        "type": "postgresql",
-        "z": "setupTab",
-        "name": "Insert Sensors",
-        "query": "INSERT INTO sensors(type, location) VALUES('frog-detector','AUVIC_Yirraba_11F'),('frog-detector','AUVIC_Yirraba_12A'),('frog-detector','FAKE_LOCATION_X'),('other-detector','FAKE_LOCATION_Y');",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 420,
-        "y": 400,
-        "wires": [
-            [
-                "debug_insert_sensors"
-            ]
-        ]
-    },
-    {
-        "id": "debug_insert_sensors",
-        "type": "debug",
-        "z": "setupTab",
-        "name": "Debug InsertSensors",
-        "active": true,
-        "tosidebar": true,
-        "complete": "true",
-        "x": 700,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "comment_drop",
-        "type": "comment",
-        "z": "setupTab",
-        "name": "Optional: Drop Tables",
-        "info": "Reset schema: drops tables",
-        "x": 160,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "inject_drop",
-        "type": "inject",
-        "z": "setupTab",
-        "name": "Trigger: Drop Tables",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 170,
-        "y": 540,
-        "wires": [
-            [
-                "drop_tables_pg"
-            ]
-        ]
-    },
-    {
-        "id": "drop_tables_pg",
-        "type": "postgresql",
-        "z": "setupTab",
-        "name": "Drop Tables",
-        "query": "DROP TABLE IF EXISTS sensor_data CASCADE; DROP TABLE IF EXISTS sensors, ingestion_metrics, sensor_errors;",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 410,
-        "y": 540,
-        "wires": [
-            [
-                "debug_drop_tables"
-            ]
-        ]
-    },
-    {
-        "id": "debug_drop_tables",
-        "type": "debug",
-        "z": "setupTab",
-        "name": "Debug Drop",
-        "active": true,
-        "tosidebar": true,
-        "complete": "true",
-        "x": 670,
-        "y": 540,
-        "wires": []
-    },
-    {
-        "id": "81ce24020caa50c7",
-        "type": "csv",
-        "z": "0b83af209e30eeda",
-        "name": "Parse CSV",
-        "sep": ",",
-        "hdrin": true,
-        "multi": "mult",
-        "temp": "",
-        "skip": 0,
-        "strings": true,
-        "include_empty_strings": false,
-        "include_null_values": false,
-        "x": 530,
-        "y": 140,
-        "wires": [
-            [
-                "ready_next"
-            ]
-        ]
-    },
-    {
-        "id": "96d0299c874c7765",
-        "type": "link out",
-        "z": "0b83af209e30eeda",
-        "name": "TO Ingest",
-        "links": [
-            "af1f1c097dd12835"
-        ],
-        "x": 1125,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "479631dcf031492d",
-        "type": "chunks-to-lines",
-        "z": "0b83af209e30eeda",
-        "name": "",
-        "nbLines": "4096",
-        "linesFormat": "csv",
-        "decoder": "UTF-8",
-        "x": 300,
-        "y": 140,
-        "wires": [
-            [
-                "81ce24020caa50c7",
-                "29a1a2d6eb0b2cac"
-            ]
-        ]
-    },
-    {
-        "id": "5bc67460d5eac237",
-        "type": "ui_upload",
-        "z": "0b83af209e30eeda",
-        "group": "uiCsvGrp",
-        "title": "Select CSV",
-        "accept": "",
-        "name": "",
-        "order": 1,
-        "width": 6,
-        "height": 6,
-        "chunk": "256",
-        "transfer": "binary",
-        "x": 110,
-        "y": 140,
-        "wires": [
-            [
-                "479631dcf031492d"
-            ]
-        ]
-    },
-    {
-        "id": "6046f530f062ceb2",
-        "type": "comment",
-        "z": "0b83af209e30eeda",
-        "name": "CSV Upload",
-        "info": "Unified ingestion path for edge devices",
-        "x": 130,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "debug_done",
-        "type": "debug",
-        "z": "0b83af209e30eeda",
-        "name": "Done",
-        "active": true,
-        "tosidebar": true,
-        "complete": "complete",
-        "x": 1010,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "29a1a2d6eb0b2cac",
-        "type": "ui_text",
-        "z": "0b83af209e30eeda",
-        "group": "uiCsvGrp",
-        "order": 2,
-        "width": "",
-        "height": "",
-        "name": "",
-        "label": "Lines uploaded:",
-        "format": "{{msg._parts.lines}}",
-        "layout": "row-spread",
-        "className": "",
-        "style": false,
-        "font": "",
-        "fontSize": "",
-        "color": "#000000",
-        "x": 560,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "ready_next",
-        "type": "function",
-        "z": "0b83af209e30eeda",
-        "name": "Ready for next lines",
-        "func": "// pass the whole chunk\n// always send tick to unlock next slice\n\nreturn [\n    msg,\n    { tick:true }\n];",
-        "outputs": 2,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 760,
-        "y": 140,
-        "wires": [
-            [
-                "debug_done",
-                "289077c16b977cb2"
-            ],
-            [
-                "479631dcf031492d"
-            ]
-        ]
-    },
-    {
-        "id": "289077c16b977cb2",
-        "type": "split",
-        "z": "0b83af209e30eeda",
-        "name": "",
-        "splt": "",
-        "spltType": "str",
-        "arraySplt": 1,
-        "arraySpltType": "len",
-        "stream": false,
-        "addname": "",
-        "property": "payload",
-        "x": 1010,
-        "y": 100,
-        "wires": [
-            [
-                "96d0299c874c7765"
-            ]
-        ]
-    },
-    {
-        "id": "linkOutMqtt",
-        "type": "link out",
-        "z": "mqttTab",
-        "name": "TO Ingest",
-        "links": [
-            "af1f1c097dd12835"
-        ],
-        "x": 315,
-        "y": 160,
-        "wires": []
-    },
-    {
-        "id": "d5bb258d82434820",
-        "type": "inject",
-        "z": "mqttTab",
-        "name": "Trigger MQTT Test",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "{ \"time\": \"2025-05-11T05:39:00Z\", \"sensor_id\": 1, \"start_seconds\":45, \"end_seconds\":48, \"scientific_name\": \"Geocrinia laevis\", \"common_name\": \"Southern Smooth Froglet\", \"confidence\": 0.9 }",
-        "payloadType": "json",
-        "x": 190,
-        "y": 460,
-        "wires": [
-            [
-                "9e7020e8f747eef0"
-            ]
-        ]
-    },
-    {
-        "id": "9e7020e8f747eef0",
-        "type": "mqtt out",
-        "z": "mqttTab",
-        "name": "MQTT Out",
-        "topic": "detector/data",
-        "qos": "2",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "052aec521515b111",
-        "x": 470,
-        "y": 460,
-        "wires": []
-    },
-    {
-        "id": "c63826d815db4a8a",
-        "type": "mqtt in",
-        "z": "mqttTab",
-        "name": "MQTT In",
-        "topic": "detector/data",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "052aec521515b111",
-        "nl": false,
-        "rap": false,
-        "rh": 0,
-        "inputs": 0,
-        "x": 140,
-        "y": 160,
-        "wires": [
-            [
-                "linkOutMqtt"
-            ]
-        ]
-    },
-    {
-        "id": "44aab02307cfb0f1",
-        "type": "comment",
-        "z": "mqttTab",
-        "name": "MQTT Input ",
-        "info": "Unified ingestion path for edge devices",
-        "x": 130,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "2523a18a83479b60",
-        "type": "http in",
-        "z": "mqttTab",
-        "name": "POST /config",
-        "url": "/config",
-        "method": "post",
-        "swaggerDoc": "",
-        "x": 150,
-        "y": 320,
-        "wires": [
-            [
-                "49cfe1ae8ce8560b"
-            ]
-        ]
-    },
-    {
-        "id": "49cfe1ae8ce8560b",
-        "type": "function",
-        "z": "mqttTab",
-        "name": "Validate payload",
-        "func": "const p = msg.req.body;\nif (!p.sensor_id || typeof p.settings !== 'object') {\n    msg.res = { statusCode: 400, payload: { error: 'sensor_id and settings required' }};\n    return [ null, msg ];\n}\nmsg.payload = p;\nreturn [ msg, null ];",
-        "outputs": 2,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 320,
-        "wires": [
-            [
-                "df592dcdf9db31fb"
-            ],
-            [
-                "fc162075efc4c2fa"
-            ]
-        ]
-    },
-    {
-        "id": "df592dcdf9db31fb",
-        "type": "function",
-        "z": "mqttTab",
-        "name": "Build MQTT msg",
-        "func": "msg.topic = `detector/config/${msg.payload.sensor_id}`;\nmsg.payload = msg.payload.settings;\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 580,
-        "y": 300,
-        "wires": [
-            [
-                "9bd91fdec99e7ea9",
-                "dad6f52ee708ad11"
-            ]
-        ]
-    },
-    {
-        "id": "9bd91fdec99e7ea9",
-        "type": "mqtt out",
-        "z": "mqttTab",
-        "name": "MQTT Config Out",
-        "topic": "",
-        "qos": "1",
-        "retain": "false",
-        "broker": "052aec521515b111",
-        "x": 820,
-        "y": 300,
-        "wires": []
-    },
-    {
-        "id": "dad6f52ee708ad11",
-        "type": "http response",
-        "z": "mqttTab",
-        "name": "200 OK",
-        "statusCode": "200",
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "x": 820,
-        "y": 360,
-        "wires": []
-    },
-    {
-        "id": "fc162075efc4c2fa",
-        "type": "http response",
-        "z": "mqttTab",
-        "name": "400 Bad Request",
-        "statusCode": "400",
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "x": 600,
-        "y": 360,
-        "wires": []
-    },
-    {
-        "id": "comment_api",
-        "type": "comment",
-        "z": "apiTab",
-        "name": "Expose /detections endpoint",
-        "info": "",
-        "x": 180,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "inject_api_test",
-        "type": "inject",
-        "z": "apiTab",
-        "name": "Trigger GET /detections Test",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "{\"start\":\"2023-10-19T00:00:00Z\",\"end\":\"2024-01-23T23:59:59Z\",\"species\":[\"Southern Smooth Froglet\"],\"exclude\":[],\"confidence_min\":0.6}",
-        "payloadType": "json",
-        "x": 200,
-        "y": 220,
-        "wires": [
-            [
-                "http_request"
-            ]
-        ]
-    },
-    {
-        "id": "http_request",
-        "type": "http request",
-        "z": "apiTab",
-        "name": "API Request",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://localhost:1880/detections?start={{payload.start}}&end={{payload.end}}&species={{payload.species}}&exclude={{payload.exclude}}&confidence_min={{payload.confidence_min}}",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 490,
-        "y": 220,
-        "wires": [
-            [
-                "debug_api"
-            ]
-        ]
-    },
-    {
-        "id": "http_in",
-        "type": "http in",
-        "z": "apiTab",
-        "name": "GET /detections",
-        "url": "/detections",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 140,
-        "y": 120,
-        "wires": [
-            [
-                "build_query"
-            ]
-        ]
-    },
-    {
-        "id": "build_query",
-        "type": "function",
-        "z": "apiTab",
-        "name": "Build SQL & Params",
-        "func": "// Build SQL & Params\nconst q = msg.req.query;\nconst toArray = v => Array.isArray(v) ? v : v ? [v] : [];\n\n// 1) Parse and normalise start/end in full ISO 8601 (with Z)\nconst startDt = new Date(q.start);\nconst startIso = startDt.toISOString();\n\nconst endDt = new Date(q.end);\nendDt.setUTCDate(endDt.getUTCDate() + 1);  // include the entire end-day\nconst endIso = endDt.toISOString();\n\n// 2) Prepare species/exclude as postgres arrays\nconst speciesArr = toArray(q.species);\nconst excludeArr = toArray(q.exclude);\nconst speciesParam = '{' + speciesArr.join(',') + '}';\nconst excludeParam = '{' + excludeArr.join(',') + '}';\n\n// 3) Confidence floor\nconst conf = parseFloat(q.confidence_min) || 0;\n\n// 4) Build params and query\nmsg.params = [\n  startIso,        // $1\n  endIso,          // $2\n  speciesParam,    // $3\n  excludeParam,    // $4\n  conf             // $5\n];\n\nmsg.query = `\nSELECT time, sensor_id, start_seconds, end_seconds,\n       scientific_name, common_name, confidence\nFROM sensor_data\nWHERE time BETWEEN $1::timestamptz AND $2::timestamptz\n  AND common_name = ANY($3::text[])\n  AND common_name <> ALL($4::text[])\n  AND confidence >= $5\nORDER BY time;\n`;\n\n// 5) DEBUG LOGGING — uncomment two lines below\n// node.warn(\"SQL → \" + msg.query);\n// node.warn(\"Params → \" + JSON.stringify(msg.params));\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 410,
-        "y": 120,
-        "wires": [
-            [
-                "api_pg"
-            ]
-        ]
-    },
-    {
-        "id": "api_pg",
-        "type": "postgresql",
-        "z": "apiTab",
-        "name": "Query detections",
-        "query": "msg.query",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 670,
-        "y": 120,
-        "wires": [
-            [
-                "http_response",
-                "debug_api"
-            ]
-        ]
-    },
-    {
-        "id": "http_response",
-        "type": "http response",
-        "z": "apiTab",
-        "name": "Response",
-        "statusCode": "",
-        "headers": {},
-        "x": 910,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "debug_api",
-        "type": "debug",
-        "z": "apiTab",
-        "name": "Debug GET Response",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 950,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "http_in_detections",
-        "type": "http in",
-        "z": "apiTab",
-        "name": "POST /detections",
-        "url": "/detections",
-        "method": "post",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 150,
-        "y": 420,
-        "wires": [
-            [
-                "07fc93251dd515c5"
-            ]
-        ]
-    },
-    {
-        "id": "linkOutHttp",
-        "type": "link out",
-        "z": "apiTab",
-        "name": "TO Ingest",
-        "links": [
-            "af1f1c097dd12835"
-        ],
-        "x": 625,
-        "y": 380,
-        "wires": []
-    },
-    {
-        "id": "http_response_ack",
-        "type": "http response",
-        "z": "apiTab",
-        "name": "",
-        "statusCode": "200",
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "x": 660,
-        "y": 460,
-        "wires": []
-    },
-    {
-        "id": "07fc93251dd515c5",
-        "type": "function",
-        "z": "apiTab",
-        "name": "Extract JSON body",
-        "func": "// Extract JSON body into msg.payload\nmsg.payload = msg.req.body;\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 410,
-        "y": 420,
-        "wires": [
-            [
-                "http_response_ack",
-                "linkOutHttp"
-            ]
-        ]
-    },
-    {
-        "id": "post_test_inject",
-        "type": "inject",
-        "z": "apiTab",
-        "name": "Trigger POST /detections",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "payload": "{\"time\":\"2025-06-14T13:53:49Z\",\"sensor_id\":1,\"start_seconds\":45,\"end_seconds\":48,\"scientific_name\":\"Geocrinia laevis\",\"common_name\":\"Southern Smooth Froglet\",\"confidence\":0.9}",
-        "payloadType": "json",
-        "x": 190,
-        "y": 560,
-        "wires": [
-            [
-                "post_http_request"
-            ]
-        ]
-    },
-    {
-        "id": "post_http_request",
-        "type": "http request",
-        "z": "apiTab",
-        "name": "HTTP POST /detections",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "http://localhost:1880/detections",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 490,
-        "y": 560,
-        "wires": [
-            [
-                "debug_post_response"
-            ]
-        ]
-    },
-    {
-        "id": "debug_post_response",
-        "type": "debug",
-        "z": "apiTab",
-        "name": "Debug POST Response",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "msg",
-        "x": 950,
-        "y": 560,
-        "wires": []
-    },
-    {
-        "id": "d12283e84cd705c9",
-        "type": "comment",
-        "z": "a4845c405fa6605f",
-        "name": "Link In Ingestion Pipeline",
-        "info": "Unified ingestion path for:\n- MQTT ingestion, \n- CSV batch upload,  \n- HTTP POST requests",
-        "x": 170,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "ad0dea488b9e2098",
-        "type": "function",
-        "z": "a4845c405fa6605f",
-        "name": "Normalize detection",
-        "func": "// Normalise detection: \n// extract timestamp from CSV file path, \n// or take row.time if present, \n// or now if real time ingestion\nconst row = msg.payload;\nlet timeVal;\n\n// CSV-style filename: /…/YYYYMMDD_HHMMSS.wav\nif (row.File) {\n  const parts = row.File.split(/[_\\/\\\\]/),\n        dateStr = parts[parts.length - 2] || \"\",\n        timeStr = (parts[parts.length - 1] || \"\").replace(/\\.wav$/i, \"\");\n  if (dateStr.length===8 && timeStr.length===6) {\n    const [y,M,d,h,m,s] = [\n      dateStr.slice(0,4),\n      dateStr.slice(4,6),\n      dateStr.slice(6,8),\n      timeStr.slice(0,2),\n      timeStr.slice(2,4),\n      timeStr.slice(4,6)\n    ];\n    timeVal = `${y}-${M}-${d}T${h}:${m}:${s}Z`;\n  }\n}\n\n// JSON/MQTT style:\nif (!timeVal && (row.time || row.Time || row.timestamp)) {\n  timeVal = row.time || row.Time || row.timestamp;\n}\n\n// Fallback:\nif (!timeVal) timeVal = new Date().toISOString();\n\n// Pull the rest of the fields\n// allows for both snake_case and Title Case headers:\nconst rec = {\n  time:            timeVal,\n  sensor_id:       row.sensor_id  || row.sensorId  || 1,\n  start_seconds:   parseInt(row.start_seconds || row[\"Start (s)\"] || 0),\n  end_seconds:     parseInt(row.end_seconds   || row[\"End (s)\"]   || 0),\n  scientific_name: row.scientific_name || row[\"Scientific name\"] || \"\",\n  common_name:     row.common_name     || row[\"Common name\"]     || \"\",\n  confidence:      parseFloat(row.confidence || row.Confidence)    || 0\n};\n\nmsg.params = [\n  rec.time,\n  rec.sensor_id,\n  rec.start_seconds,\n  rec.end_seconds,\n  rec.scientific_name,\n  rec.common_name,\n  rec.confidence\n];\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 400,
-        "y": 120,
-        "wires": [
-            [
-                "4c4415142a097a2a"
-            ]
-        ]
-    },
-    {
-        "id": "4c4415142a097a2a",
-        "type": "function",
-        "z": "a4845c405fa6605f",
-        "name": "Stamp received_at",
-        "func": "msg.received_at=new Date().toISOString(); return msg;",
-        "outputs": 1,
-        "x": 390,
-        "y": 240,
-        "wires": [
-            [
-                "4defb9ee116ee672"
-            ]
-        ]
-    },
-    {
-        "id": "4defb9ee116ee672",
-        "type": "postgresql",
-        "z": "a4845c405fa6605f",
-        "name": "Insert detection row",
-        "query": "INSERT INTO sensor_data(time,sensor_id,start_seconds,end_seconds,scientific_name,common_name,confidence) VALUES($1,$2,$3,$4,$5,$6,$7);",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 660,
-        "y": 240,
-        "wires": [
-            [
-                "0926741538b0917c",
-                "9c7497c7cc3a2c7b"
-            ]
-        ]
-    },
-    {
-        "id": "0926741538b0917c",
-        "type": "debug",
-        "z": "a4845c405fa6605f",
-        "name": "Debug Insert",
-        "active": true,
-        "tosidebar": true,
-        "complete": "true",
-        "x": 930,
-        "y": 240,
-        "wires": []
-    },
-    {
-        "id": "9c7497c7cc3a2c7b",
-        "type": "function",
-        "z": "a4845c405fa6605f",
-        "name": "Prepare latency params",
-        "func": "msg.params = [ msg.received_at ]; return msg;",
-        "outputs": 1,
-        "x": 410,
-        "y": 380,
-        "wires": [
-            [
-                "87a7dea47f518afe"
-            ]
-        ]
-    },
-    {
-        "id": "87a7dea47f518afe",
-        "type": "postgresql",
-        "z": "a4845c405fa6605f",
-        "name": "Log ingestion latency",
-        "query": "INSERT INTO ingestion_metrics(received_at, inserted_at) VALUES($1, NOW());",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 660,
-        "y": 380,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "f4831e1612650e6d",
-        "type": "catch",
-        "z": "a4845c405fa6605f",
-        "name": "Catch errors",
-        "scope": [
-            "b31ccd36f7b95df5",
-            "ace7753ce95db664",
-            "ad0dea488b9e2098",
-            "4c4415142a097a2a",
-            "4defb9ee116ee672"
-        ],
-        "x": 170,
-        "y": 500,
-        "wires": [
-            [
-                "90966bc9719a08dd"
-            ]
-        ]
-    },
-    {
-        "id": "90966bc9719a08dd",
-        "type": "function",
-        "z": "a4845c405fa6605f",
-        "name": "Format error",
-        "func": "msg.error_msg=msg.error.message||String(msg.error); msg.raw_payload={row:msg.payload}; return msg;",
-        "outputs": 1,
-        "x": 370,
-        "y": 500,
-        "wires": [
-            [
-                "2ba0df6ab4980da8"
-            ]
-        ]
-    },
-    {
-        "id": "2ba0df6ab4980da8",
-        "type": "postgresql",
-        "z": "a4845c405fa6605f",
-        "name": "Log sensor_error",
-        "query": "INSERT INTO sensor_errors(time,error_msg,raw_payload) VALUES(NOW(), $1, $2);",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "split": false,
-        "rowsPerMsg": "",
-        "outputs": 1,
-        "x": 650,
-        "y": 500,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "af1f1c097dd12835",
-        "type": "link in",
-        "z": "a4845c405fa6605f",
-        "name": "FROM Uploads",
-        "links": [
-            "linkOutMqtt",
-            "96d0299c874c7765",
-            "linkOutHttp"
-        ],
-        "x": 185,
-        "y": 120,
-        "wires": [
-            [
-                "ad0dea488b9e2098"
-            ]
-        ]
-    },
-    {
-        "id": "comment_admin",
-        "type": "comment",
-        "z": "adminTab",
-        "name": "Reset Data",
-        "info": "Clear all tables (TRUNCATE)",
-        "x": 120,
-        "y": 60,
-        "wires": []
-    },
-    {
-        "id": "4bc4f8e1a0317580",
-        "type": "postgresql",
-        "z": "adminTab",
-        "name": "Truncate",
-        "query": "TRUNCATE sensor_data, ingestion_metrics, sensor_errors RESTART IDENTITY;",
-        "postgreSQLConfig": "fbd14997310e037a",
-        "outputs": 1,
-        "x": 400,
-        "y": 120,
-        "wires": [
-            [
-                "debug_clear"
-            ]
-        ]
-    },
-    {
-        "id": "inject_clear",
-        "type": "inject",
-        "z": "adminTab",
-        "name": "Trigger: Clear Data",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "",
-        "topic": "",
-        "payload": "",
-        "payloadType": "str",
-        "x": 170,
-        "y": 120,
-        "wires": [
-            [
-                "4bc4f8e1a0317580"
-            ]
-        ]
-    },
-    {
-        "id": "debug_clear",
-        "type": "debug",
-        "z": "adminTab",
-        "name": "Debug Clear",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 670,
-        "y": 120,
-        "wires": []
+      },
+      "angularTheme": {
+        "primary": "indigo",
+        "accents": "blue",
+        "warn": "red",
+        "background": "grey",
+        "palette": "light"
+      }
+    },
+    "site": {
+      "name": "Node-RED Dashboard",
+      "hideToolbar": "false",
+      "allowSwipe": "false",
+      "lockMenu": "false",
+      "allowTempTheme": "true",
+      "dateFormat": "DD/MM/YYYY",
+      "sizes": {
+        "sx": 48,
+        "sy": 48,
+        "gx": 6,
+        "gy": 6,
+        "cx": 6,
+        "cy": 6,
+        "px": 0,
+        "py": 0
+      }
     }
+  },
+  {
+    "id": "comment_create_tables",
+    "type": "comment",
+    "z": "db-setup",
+    "name": "Step 1: Create Tables",
+    "info": "Enable Timescale and create sensors, sensor_data, ingestion_metrics, sensor_errors",
+    "x": 160,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "inject_create_tables",
+    "type": "inject",
+    "z": "db-setup",
+    "name": "Trigger: Create Tables",
+    "props": [],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 180,
+    "y": 120,
+    "wires": [
+      [
+        "create_tables_pg"
+      ]
+    ]
+  },
+  {
+    "id": "create_tables_pg",
+    "type": "postgresql",
+    "z": "db-setup",
+    "name": "Create tables",
+    "query": "-- Enable extension\nCREATE EXTENSION IF NOT EXISTS timescaledb;\n-- Dimension table\nCREATE TABLE IF NOT EXISTS sensors(id SERIAL PRIMARY KEY, type VARCHAR(50), location VARCHAR(50));\n-- Main data\nCREATE TABLE IF NOT EXISTS sensor_data(time TIMESTAMPTZ NOT NULL, sensor_id INTEGER, start_seconds INTEGER, end_seconds INTEGER, scientific_name VARCHAR(50), common_name VARCHAR(50), confidence DOUBLE PRECISION, FOREIGN KEY(sensor_id) REFERENCES sensors(id));\n-- Ingestion metrics\nCREATE TABLE IF NOT EXISTS ingestion_metrics(received_at timestamptz NOT NULL, inserted_at timestamptz NOT NULL);\n-- Error log\nCREATE TABLE IF NOT EXISTS sensor_errors(time timestamptz DEFAULT NOW(), error_msg text NOT NULL, raw_payload jsonb);",
+    "postgreSQLConfig": "fbd14997310e037a",
+    "split": false,
+    "rowsPerMsg": "",
+    "outputs": 1,
+    "x": 410,
+    "y": 120,
+    "wires": [
+      [
+        "debug_create_tables"
+      ]
+    ]
+  },
+  {
+    "id": "debug_create_tables",
+    "type": "debug",
+    "z": "db-setup",
+    "name": "Debug Create",
+    "active": true,
+    "tosidebar": true,
+    "complete": "true",
+    "x": 680,
+    "y": 120,
+    "wires": []
+  },
+  {
+    "id": "comment_hypertable",
+    "type": "comment",
+    "z": "db-setup",
+    "name": "Step 2: Create Hypertable",
+    "info": "Convert sensor_data to TimescaleDB hypertable",
+    "x": 170,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "inject_hypertable",
+    "type": "inject",
+    "z": "db-setup",
+    "name": "Trigger: Hypertable",
+    "props": [],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 170,
+    "y": 260,
+    "wires": [
+      [
+        "hypertable_pg"
+      ]
+    ]
+  },
+  {
+    "id": "hypertable_pg",
+    "type": "postgresql",
+    "z": "db-setup",
+    "name": "Create Hypertable",
+    "query": "SELECT create_hypertable('sensor_data','time', if_not_exists => TRUE);",
+    "postgreSQLConfig": "fbd14997310e037a",
+    "split": false,
+    "rowsPerMsg": "",
+    "outputs": 1,
+    "x": 430,
+    "y": 260,
+    "wires": [
+      [
+        "debug_hypertable"
+      ]
+    ]
+  },
+  {
+    "id": "debug_hypertable",
+    "type": "debug",
+    "z": "db-setup",
+    "name": "Debug Hypertable",
+    "active": true,
+    "tosidebar": true,
+    "complete": "true",
+    "x": 690,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "comment_insert_sensors",
+    "type": "comment",
+    "z": "db-setup",
+    "name": "Step 3: Insert Sensors",
+    "info": "Seed sensors table with initial devices",
+    "x": 160,
+    "y": 340,
+    "wires": []
+  },
+  {
+    "id": "inject_insert_sensors",
+    "type": "inject",
+    "z": "db-setup",
+    "name": "Trigger: Insert Sensors",
+    "props": [],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 180,
+    "y": 400,
+    "wires": [
+      [
+        "insert_sensors_pg"
+      ]
+    ]
+  },
+  {
+    "id": "insert_sensors_pg",
+    "type": "postgresql",
+    "z": "db-setup",
+    "name": "Insert Sensors",
+    "query": "INSERT INTO sensors(type, location) VALUES('frog-detector','AUVIC_Yirraba_11F'),('frog-detector','AUVIC_Yirraba_12A'),('frog-detector','FAKE_LOCATION_X'),('other-detector','FAKE_LOCATION_Y');",
+    "postgreSQLConfig": "fbd14997310e037a",
+    "split": false,
+    "rowsPerMsg": "",
+    "outputs": 1,
+    "x": 420,
+    "y": 400,
+    "wires": [
+      [
+        "debug_insert_sensors"
+      ]
+    ]
+  },
+  {
+    "id": "debug_insert_sensors",
+    "type": "debug",
+    "z": "db-setup",
+    "name": "Debug InsertSensors",
+    "active": true,
+    "tosidebar": true,
+    "complete": "true",
+    "x": 700,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "comment_drop",
+    "type": "comment",
+    "z": "db-setup",
+    "name": "Optional: Drop Tables",
+    "info": "Reset schema: drops tables",
+    "x": 160,
+    "y": 480,
+    "wires": []
+  },
+  {
+    "id": "inject_drop",
+    "type": "inject",
+    "z": "db-setup",
+    "name": "Trigger: Drop Tables",
+    "props": [],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "x": 170,
+    "y": 540,
+    "wires": [
+      [
+        "drop_tables_pg"
+      ]
+    ]
+  },
+  {
+    "id": "drop_tables_pg",
+    "type": "postgresql",
+    "z": "db-setup",
+    "name": "Drop Tables",
+    "query": "DROP TABLE IF EXISTS sensor_data CASCADE; DROP TABLE IF EXISTS sensors, ingestion_metrics, sensor_errors;",
+    "postgreSQLConfig": "fbd14997310e037a",
+    "split": false,
+    "rowsPerMsg": "",
+    "outputs": 1,
+    "x": 410,
+    "y": 540,
+    "wires": [
+      [
+        "debug_drop_tables"
+      ]
+    ]
+  },
+  {
+    "id": "debug_drop_tables",
+    "type": "debug",
+    "z": "db-setup",
+    "name": "Debug Drop",
+    "active": true,
+    "tosidebar": true,
+    "complete": "true",
+    "x": 670,
+    "y": 540,
+    "wires": []
+  },
+  {
+    "id": "81ce24020caa50c7",
+    "type": "csv",
+    "z": "csv-upload",
+    "name": "Parse CSV",
+    "sep": ",",
+    "hdrin": true,
+    "multi": "mult",
+    "temp": "",
+    "skip": 0,
+    "strings": true,
+    "include_empty_strings": false,
+    "include_null_values": false,
+    "x": 530,
+    "y": 140,
+    "wires": [
+      [
+        "ready_next"
+      ]
+    ]
+  },
+  {
+    "id": "96d0299c874c7765",
+    "type": "link out",
+    "z": "csv-upload",
+    "name": "TO Ingest",
+    "links": [
+      "af1f1c097dd12835"
+    ],
+    "x": 1125,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "479631dcf031492d",
+    "type": "chunks-to-lines",
+    "z": "csv-upload",
+    "name": "",
+    "nbLines": "4096",
+    "linesFormat": "csv",
+    "decoder": "UTF-8",
+    "x": 300,
+    "y": 140,
+    "wires": [
+      [
+        "81ce24020caa50c7",
+        "29a1a2d6eb0b2cac"
+      ]
+    ]
+  },
+  {
+    "id": "5bc67460d5eac237",
+    "type": "ui_upload",
+    "z": "csv-upload",
+    "group": "uiCsvGrp",
+    "title": "Select CSV",
+    "accept": "",
+    "name": "",
+    "order": 1,
+    "width": 6,
+    "height": 6,
+    "chunk": "256",
+    "transfer": "binary",
+    "x": 110,
+    "y": 140,
+    "wires": [
+      [
+        "479631dcf031492d"
+      ]
+    ]
+  },
+  {
+    "id": "6046f530f062ceb2",
+    "type": "comment",
+    "z": "csv-upload",
+    "name": "CSV Upload",
+    "info": "Unified ingestion path for edge devices",
+    "x": 130,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "debug_done",
+    "type": "debug",
+    "z": "csv-upload",
+    "name": "Done",
+    "active": true,
+    "tosidebar": true,
+    "complete": "complete",
+    "x": 1010,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "29a1a2d6eb0b2cac",
+    "type": "ui_text",
+    "z": "csv-upload",
+    "group": "uiCsvGrp",
+    "order": 2,
+    "width": "",
+    "height": "",
+    "name": "",
+    "label": "Lines uploaded:",
+    "format": "{{msg._parts.lines}}",
+    "layout": "row-spread",
+    "className": "",
+    "style": false,
+    "font": "",
+    "fontSize": "",
+    "color": "#000000",
+    "x": 560,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "ready_next",
+    "type": "function",
+    "z": "csv-upload",
+    "name": "Ready for next lines",
+    "func": "// pass the whole chunk\n// always send tick to unlock next slice\n\nreturn [\n    msg,\n    { tick:true }\n];",
+    "outputs": 2,
+    "timeout": "",
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 760,
+    "y": 140,
+    "wires": [
+      [
+        "debug_done",
+        "289077c16b977cb2"
+      ],
+      [
+        "479631dcf031492d"
+      ]
+    ]
+  },
+  {
+    "id": "289077c16b977cb2",
+    "type": "split",
+    "z": "csv-upload",
+    "name": "",
+    "splt": "",
+    "spltType": "str",
+    "arraySplt": 1,
+    "arraySpltType": "len",
+    "stream": false,
+    "addname": "",
+    "property": "payload",
+    "x": 1010,
+    "y": 100,
+    "wires": [
+      [
+        "96d0299c874c7765"
+      ]
+    ]
+  },
+  {
+    "id": "linkOutMqtt",
+    "type": "link out",
+    "z": "mqtt-input",
+    "name": "TO Ingest",
+    "links": [
+      "af1f1c097dd12835"
+    ],
+    "x": 315,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "d5bb258d82434820",
+    "type": "inject",
+    "z": "mqtt-input",
+    "name": "Trigger MQTT Test",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{ \"time\": \"2025-05-11T05:39:00Z\", \"sensor_id\": 1, \"start_seconds\":45, \"end_seconds\":48, \"scientific_name\": \"Geocrinia laevis\", \"common_name\": \"Southern Smooth Froglet\", \"confidence\": 0.9 }",
+    "payloadType": "json",
+    "x": 190,
+    "y": 460,
+    "wires": [
+      [
+        "9e7020e8f747eef0"
+      ]
+    ]
+  },
+  {
+    "id": "9e7020e8f747eef0",
+    "type": "mqtt out",
+    "z": "mqtt-input",
+    "name": "MQTT Out",
+    "topic": "detector/data",
+    "qos": "2",
+    "retain": "",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "052aec521515b111",
+    "x": 470,
+    "y": 460,
+    "wires": []
+  },
+  {
+    "id": "c63826d815db4a8a",
+    "type": "mqtt in",
+    "z": "mqtt-input",
+    "name": "MQTT In",
+    "topic": "detector/data",
+    "qos": "2",
+    "datatype": "auto-detect",
+    "broker": "052aec521515b111",
+    "nl": false,
+    "rap": false,
+    "rh": 0,
+    "inputs": 0,
+    "x": 140,
+    "y": 160,
+    "wires": [
+      [
+        "linkOutMqtt"
+      ]
+    ]
+  },
+  {
+    "id": "44aab02307cfb0f1",
+    "type": "comment",
+    "z": "mqtt-input",
+    "name": "MQTT Input ",
+    "info": "Unified ingestion path for edge devices",
+    "x": 130,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "2523a18a83479b60",
+    "type": "http in",
+    "z": "mqtt-input",
+    "name": "POST /config",
+    "url": "/config",
+    "method": "post",
+    "swaggerDoc": "",
+    "x": 150,
+    "y": 320,
+    "wires": [
+      [
+        "49cfe1ae8ce8560b"
+      ]
+    ]
+  },
+  {
+    "id": "49cfe1ae8ce8560b",
+    "type": "function",
+    "z": "mqtt-input",
+    "name": "Validate payload",
+    "func": "const p = msg.req.body;\nif (!p.sensor_id || typeof p.settings !== 'object') {\n    msg.res = { statusCode: 400, payload: { error: 'sensor_id and settings required' }};\n    return [ null, msg ];\n}\nmsg.payload = p;\nreturn [ msg, null ];",
+    "outputs": 2,
+    "timeout": "",
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 360,
+    "y": 320,
+    "wires": [
+      [
+        "df592dcdf9db31fb"
+      ],
+      [
+        "fc162075efc4c2fa"
+      ]
+    ]
+  },
+  {
+    "id": "df592dcdf9db31fb",
+    "type": "function",
+    "z": "mqtt-input",
+    "name": "Build MQTT msg",
+    "func": "msg.topic = `detector/config/${msg.payload.sensor_id}`;\nmsg.payload = msg.payload.settings;\nreturn msg;",
+    "outputs": 1,
+    "timeout": "",
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 580,
+    "y": 300,
+    "wires": [
+      [
+        "9bd91fdec99e7ea9",
+        "dad6f52ee708ad11"
+      ]
+    ]
+  },
+  {
+    "id": "9bd91fdec99e7ea9",
+    "type": "mqtt out",
+    "z": "mqtt-input",
+    "name": "MQTT Config Out",
+    "topic": "",
+    "qos": "1",
+    "retain": "false",
+    "broker": "052aec521515b111",
+    "x": 820,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "dad6f52ee708ad11",
+    "type": "http response",
+    "z": "mqtt-input",
+    "name": "200 OK",
+    "statusCode": "200",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "x": 820,
+    "y": 360,
+    "wires": []
+  },
+  {
+    "id": "fc162075efc4c2fa",
+    "type": "http response",
+    "z": "mqtt-input",
+    "name": "400 Bad Request",
+    "statusCode": "400",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "x": 600,
+    "y": 360,
+    "wires": []
+  },
+  {
+    "id": "d12283e84cd705c9",
+    "type": "comment",
+    "z": "db-ingestion",
+    "name": "Link In Ingestion Pipeline",
+    "info": "Unified ingestion path for:\n- MQTT ingestion, \n- CSV batch upload,  \n- HTTP POST requests",
+    "x": 170,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "ad0dea488b9e2098",
+    "type": "function",
+    "z": "db-ingestion",
+    "name": "Normalize detection",
+    "func": "// Normalise detection: \n// extract timestamp from CSV file path, \n// or take row.time if present, \n// or now if real time ingestion\nconst row = msg.payload;\nlet timeVal;\n\n// CSV-style filename: /…/YYYYMMDD_HHMMSS.wav\nif (row.File) {\n  const parts = row.File.split(/[_\\/\\\\]/),\n        dateStr = parts[parts.length - 2] || \"\",\n        timeStr = (parts[parts.length - 1] || \"\").replace(/\\.wav$/i, \"\");\n  if (dateStr.length===8 && timeStr.length===6) {\n    const [y,M,d,h,m,s] = [\n      dateStr.slice(0,4),\n      dateStr.slice(4,6),\n      dateStr.slice(6,8),\n      timeStr.slice(0,2),\n      timeStr.slice(2,4),\n      timeStr.slice(4,6)\n    ];\n    timeVal = `${y}-${M}-${d}T${h}:${m}:${s}Z`;\n  }\n}\n\n// JSON/MQTT style:\nif (!timeVal && (row.time || row.Time || row.timestamp)) {\n  timeVal = row.time || row.Time || row.timestamp;\n}\n\n// Fallback:\nif (!timeVal) timeVal = new Date().toISOString();\n\n// Pull the rest of the fields\n// allows for both snake_case and Title Case headers:\nconst rec = {\n  time:            timeVal,\n  sensor_id:       row.sensor_id  || row.sensorId  || 1,\n  start_seconds:   parseInt(row.start_seconds || row[\"Start (s)\"] || 0),\n  end_seconds:     parseInt(row.end_seconds   || row[\"End (s)\"]   || 0),\n  scientific_name: row.scientific_name || row[\"Scientific name\"] || \"\",\n  common_name:     row.common_name     || row[\"Common name\"]     || \"\",\n  confidence:      parseFloat(row.confidence || row.Confidence)    || 0\n};\n\nmsg.params = [\n  rec.time,\n  rec.sensor_id,\n  rec.start_seconds,\n  rec.end_seconds,\n  rec.scientific_name,\n  rec.common_name,\n  rec.confidence\n];\n\nreturn msg;\n",
+    "outputs": 1,
+    "timeout": "",
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 120,
+    "wires": [
+      [
+        "4c4415142a097a2a"
+      ]
+    ]
+  },
+  {
+    "id": "4c4415142a097a2a",
+    "type": "function",
+    "z": "db-ingestion",
+    "name": "Stamp received_at",
+    "func": "msg.received_at=new Date().toISOString(); return msg;",
+    "outputs": 1,
+    "x": 390,
+    "y": 240,
+    "wires": [
+      [
+        "4defb9ee116ee672"
+      ]
+    ]
+  },
+  {
+    "id": "4defb9ee116ee672",
+    "type": "postgresql",
+    "z": "db-ingestion",
+    "name": "Insert detection row",
+    "query": "INSERT INTO sensor_data(time,sensor_id,start_seconds,end_seconds,scientific_name,common_name,confidence) VALUES($1,$2,$3,$4,$5,$6,$7);",
+    "postgreSQLConfig": "fbd14997310e037a",
+    "split": false,
+    "rowsPerMsg": "",
+    "outputs": 1,
+    "x": 660,
+    "y": 240,
+    "wires": [
+      [
+        "0926741538b0917c",
+        "9c7497c7cc3a2c7b"
+      ]
+    ]
+  },
+  {
+    "id": "0926741538b0917c",
+    "type": "debug",
+    "z": "db-ingestion",
+    "name": "Debug Insert",
+    "active": true,
+    "tosidebar": true,
+    "complete": "true",
+    "x": 930,
+    "y": 240,
+    "wires": []
+  },
+  {
+    "id": "9c7497c7cc3a2c7b",
+    "type": "function",
+    "z": "db-ingestion",
+    "name": "Prepare latency params",
+    "func": "msg.params = [ msg.received_at ]; return msg;",
+    "outputs": 1,
+    "x": 410,
+    "y": 380,
+    "wires": [
+      [
+        "87a7dea47f518afe"
+      ]
+    ]
+  },
+  {
+    "id": "87a7dea47f518afe",
+    "type": "postgresql",
+    "z": "db-ingestion",
+    "name": "Log ingestion latency",
+    "query": "INSERT INTO ingestion_metrics(received_at, inserted_at) VALUES($1, NOW());",
+    "postgreSQLConfig": "fbd14997310e037a",
+    "split": false,
+    "rowsPerMsg": "",
+    "outputs": 1,
+    "x": 660,
+    "y": 380,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "f4831e1612650e6d",
+    "type": "catch",
+    "z": "db-ingestion",
+    "name": "Catch errors",
+    "scope": [
+      "b31ccd36f7b95df5",
+      "ace7753ce95db664",
+      "ad0dea488b9e2098",
+      "4c4415142a097a2a",
+      "4defb9ee116ee672"
+    ],
+    "x": 170,
+    "y": 500,
+    "wires": [
+      [
+        "90966bc9719a08dd"
+      ]
+    ]
+  },
+  {
+    "id": "90966bc9719a08dd",
+    "type": "function",
+    "z": "db-ingestion",
+    "name": "Format error",
+    "func": "msg.error_msg=msg.error.message||String(msg.error); msg.raw_payload={row:msg.payload}; return msg;",
+    "outputs": 1,
+    "x": 370,
+    "y": 500,
+    "wires": [
+      [
+        "2ba0df6ab4980da8"
+      ]
+    ]
+  },
+  {
+    "id": "2ba0df6ab4980da8",
+    "type": "postgresql",
+    "z": "db-ingestion",
+    "name": "Log sensor_error",
+    "query": "INSERT INTO sensor_errors(time,error_msg,raw_payload) VALUES(NOW(), $1, $2);",
+    "postgreSQLConfig": "fbd14997310e037a",
+    "split": false,
+    "rowsPerMsg": "",
+    "outputs": 1,
+    "x": 650,
+    "y": 500,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "af1f1c097dd12835",
+    "type": "link in",
+    "z": "db-ingestion",
+    "name": "FROM Uploads",
+    "links": [
+      "linkOutMqtt",
+      "96d0299c874c7765",
+      "linkOutHttp"
+    ],
+    "x": 185,
+    "y": 120,
+    "wires": [
+      [
+        "ad0dea488b9e2098"
+      ]
+    ]
+  },
+  {
+    "id": "comment_api",
+    "type": "comment",
+    "z": "api",
+    "name": "Expose /detections endpoint",
+    "info": "",
+    "x": 180,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "inject_api_test",
+    "type": "inject",
+    "z": "api",
+    "name": "Trigger GET /detections Test",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"start\":\"2023-10-19T00:00:00Z\",\"end\":\"2024-01-23T23:59:59Z\",\"species\":[\"Southern Smooth Froglet\"],\"exclude\":[],\"confidence_min\":0.6}",
+    "payloadType": "json",
+    "x": 200,
+    "y": 220,
+    "wires": [
+      [
+        "http_request"
+      ]
+    ]
+  },
+  {
+    "id": "http_request",
+    "type": "http request",
+    "z": "api",
+    "name": "API Request",
+    "method": "GET",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "http://localhost:1880/detections?start={{payload.start}}&end={{payload.end}}&species={{payload.species}}&exclude={{payload.exclude}}&confidence_min={{payload.confidence_min}}",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 490,
+    "y": 220,
+    "wires": [
+      [
+        "debug_api"
+      ]
+    ]
+  },
+  {
+    "id": "http_in",
+    "type": "http in",
+    "z": "api",
+    "name": "GET /detections",
+    "url": "/detections",
+    "method": "get",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 140,
+    "y": 120,
+    "wires": [
+      [
+        "build_query"
+      ]
+    ]
+  },
+  {
+    "id": "build_query",
+    "type": "function",
+    "z": "api",
+    "name": "Build SQL & Params",
+    "func": "// Build SQL & Params\nconst q = msg.req.query;\nconst toArray = v => Array.isArray(v) ? v : v ? [v] : [];\n\n// 1) Parse and normalise start/end in full ISO 8601 (with Z)\nconst startDt = new Date(q.start);\nconst startIso = startDt.toISOString();\n\nconst endDt = new Date(q.end);\nendDt.setUTCDate(endDt.getUTCDate() + 1);  // include the entire end-day\nconst endIso = endDt.toISOString();\n\n// 2) Prepare species/exclude as postgres arrays\nconst speciesArr = toArray(q.species);\nconst excludeArr = toArray(q.exclude);\nconst speciesParam = '{' + speciesArr.join(',') + '}';\nconst excludeParam = '{' + excludeArr.join(',') + '}';\n\n// 3) Confidence floor\nconst conf = parseFloat(q.confidence_min) || 0;\n\n// 4) Build params and query\nmsg.params = [\n  startIso,        // $1\n  endIso,          // $2\n  speciesParam,    // $3\n  excludeParam,    // $4\n  conf             // $5\n];\n\nmsg.query = `\nSELECT time, sensor_id, start_seconds, end_seconds,\n       scientific_name, common_name, confidence\nFROM sensor_data\nWHERE time BETWEEN $1::timestamptz AND $2::timestamptz\n  AND common_name = ANY($3::text[])\n  AND common_name <> ALL($4::text[])\n  AND confidence >= $5\nORDER BY time;\n`;\n\n// 5) DEBUG LOGGING — uncomment two lines below\n// node.warn(\"SQL → \" + msg.query);\n// node.warn(\"Params → \" + JSON.stringify(msg.params));\n\nreturn msg;\n",
+    "outputs": 1,
+    "timeout": "",
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 410,
+    "y": 120,
+    "wires": [
+      [
+        "api_pg"
+      ]
+    ]
+  },
+  {
+    "id": "api_pg",
+    "type": "postgresql",
+    "z": "api",
+    "name": "Query detections",
+    "query": "msg.query",
+    "postgreSQLConfig": "fbd14997310e037a",
+    "split": false,
+    "rowsPerMsg": "",
+    "outputs": 1,
+    "x": 670,
+    "y": 120,
+    "wires": [
+      [
+        "http_response",
+        "debug_api"
+      ]
+    ]
+  },
+  {
+    "id": "http_response",
+    "type": "http response",
+    "z": "api",
+    "name": "Response",
+    "statusCode": "",
+    "headers": {},
+    "x": 910,
+    "y": 120,
+    "wires": []
+  },
+  {
+    "id": "debug_api",
+    "type": "debug",
+    "z": "api",
+    "name": "Debug GET Response",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 950,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "http_in_detections",
+    "type": "http in",
+    "z": "api",
+    "name": "POST /detections",
+    "url": "/detections",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 150,
+    "y": 420,
+    "wires": [
+      [
+        "07fc93251dd515c5"
+      ]
+    ]
+  },
+  {
+    "id": "linkOutHttp",
+    "type": "link out",
+    "z": "api",
+    "name": "TO Ingest",
+    "links": [
+      "af1f1c097dd12835"
+    ],
+    "x": 625,
+    "y": 380,
+    "wires": []
+  },
+  {
+    "id": "http_response_ack",
+    "type": "http response",
+    "z": "api",
+    "name": "",
+    "statusCode": "200",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "x": 660,
+    "y": 460,
+    "wires": []
+  },
+  {
+    "id": "07fc93251dd515c5",
+    "type": "function",
+    "z": "api",
+    "name": "Extract JSON body",
+    "func": "// Extract JSON body into msg.payload\nmsg.payload = msg.req.body;\nreturn msg;\n",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 410,
+    "y": 420,
+    "wires": [
+      [
+        "http_response_ack",
+        "linkOutHttp"
+      ]
+    ]
+  },
+  {
+    "id": "post_test_inject",
+    "type": "inject",
+    "z": "api",
+    "name": "Trigger POST /detections",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "{\"time\":\"2025-06-14T13:53:49Z\",\"sensor_id\":1,\"start_seconds\":45,\"end_seconds\":48,\"scientific_name\":\"Geocrinia laevis\",\"common_name\":\"Southern Smooth Froglet\",\"confidence\":0.9}",
+    "payloadType": "json",
+    "x": 190,
+    "y": 560,
+    "wires": [
+      [
+        "post_http_request"
+      ]
+    ]
+  },
+  {
+    "id": "post_http_request",
+    "type": "http request",
+    "z": "api",
+    "name": "HTTP POST /detections",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "http://localhost:1880/detections",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "insecureHTTPParser": false,
+    "authType": "",
+    "senderr": false,
+    "headers": [],
+    "x": 490,
+    "y": 560,
+    "wires": [
+      [
+        "debug_post_response"
+      ]
+    ]
+  },
+  {
+    "id": "debug_post_response",
+    "type": "debug",
+    "z": "api",
+    "name": "Debug POST Response",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "msg",
+    "x": 950,
+    "y": 560,
+    "wires": []
+  },
+  {
+    "id": "comment_admin",
+    "type": "comment",
+    "z": "admin",
+    "name": "Reset Data",
+    "info": "Clear all tables (TRUNCATE)",
+    "x": 120,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "4bc4f8e1a0317580",
+    "type": "postgresql",
+    "z": "admin",
+    "name": "Truncate",
+    "query": "TRUNCATE sensor_data, ingestion_metrics, sensor_errors RESTART IDENTITY;",
+    "postgreSQLConfig": "fbd14997310e037a",
+    "outputs": 1,
+    "x": 400,
+    "y": 120,
+    "wires": [
+      [
+        "debug_clear"
+      ]
+    ]
+  },
+  {
+    "id": "inject_clear",
+    "type": "inject",
+    "z": "admin",
+    "name": "Trigger: Clear Data",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": "",
+    "topic": "",
+    "payload": "",
+    "payloadType": "str",
+    "x": 170,
+    "y": 120,
+    "wires": [
+      [
+        "4bc4f8e1a0317580"
+      ]
+    ]
+  },
+  {
+    "id": "debug_clear",
+    "type": "debug",
+    "z": "admin",
+    "name": "Debug Clear",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 670,
+    "y": 120,
+    "wires": []
+  }
 ]

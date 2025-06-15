@@ -1,13 +1,13 @@
 [
     {
-        "id": "setupTab",
+        "id": "db-setup",
         "type": "tab",
         "label": "DB Setup",
         "disabled": false,
         "info": "One-time DB setup: tables, hypertable, sensors"
     },
     {
-        "id": "0b83af209e30eeda",
+        "id": "csv-upload",
         "type": "tab",
         "label": "CSV Upload",
         "disabled": false,
@@ -15,28 +15,28 @@
         "env": []
     },
     {
-        "id": "mqttTab",
+        "id": "mqtt-input",
         "type": "tab",
         "label": "MQTT Input",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "a4845c405fa6605f",
+        "id": "db-ingestion",
         "type": "tab",
         "label": "DB Ingestion",
         "disabled": false,
         "info": "DB ingestion pipeline with metrics"
     },
     {
-        "id": "apiTab",
+        "id": "api",
         "type": "tab",
         "label": "API",
         "disabled": false,
         "info": "REST API and debug"
     },
     {
-        "id": "adminTab",
+        "id": "admin",
         "type": "tab",
         "label": "Clear DB",
         "disabled": false,
@@ -212,7 +212,7 @@
     {
         "id": "comment_create_tables",
         "type": "comment",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Step 1: Create Tables",
         "info": "Enable Timescale and create sensors, sensor_data, ingestion_metrics, sensor_errors",
         "x": 160,
@@ -222,7 +222,7 @@
     {
         "id": "inject_create_tables",
         "type": "inject",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Trigger: Create Tables",
         "props": [],
         "repeat": "",
@@ -240,7 +240,7 @@
     {
         "id": "create_tables_pg",
         "type": "postgresql",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Create tables",
         "query": "-- Enable extension\nCREATE EXTENSION IF NOT EXISTS timescaledb;\n-- Dimension table\nCREATE TABLE IF NOT EXISTS sensors(id SERIAL PRIMARY KEY, type VARCHAR(50), location VARCHAR(50));\n-- Main data\nCREATE TABLE IF NOT EXISTS sensor_data(time TIMESTAMPTZ NOT NULL, sensor_id INTEGER, start_seconds INTEGER, end_seconds INTEGER, scientific_name VARCHAR(50), common_name VARCHAR(50), confidence DOUBLE PRECISION, FOREIGN KEY(sensor_id) REFERENCES sensors(id));\n-- Ingestion metrics\nCREATE TABLE IF NOT EXISTS ingestion_metrics(received_at timestamptz NOT NULL, inserted_at timestamptz NOT NULL);\n-- Error log\nCREATE TABLE IF NOT EXISTS sensor_errors(time timestamptz DEFAULT NOW(), error_msg text NOT NULL, raw_payload jsonb);",
         "postgreSQLConfig": "fbd14997310e037a",
@@ -258,7 +258,7 @@
     {
         "id": "debug_create_tables",
         "type": "debug",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Debug Create",
         "active": true,
         "tosidebar": true,
@@ -270,7 +270,7 @@
     {
         "id": "comment_hypertable",
         "type": "comment",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Step 2: Create Hypertable",
         "info": "Convert sensor_data to TimescaleDB hypertable",
         "x": 170,
@@ -280,7 +280,7 @@
     {
         "id": "inject_hypertable",
         "type": "inject",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Trigger: Hypertable",
         "props": [],
         "repeat": "",
@@ -298,7 +298,7 @@
     {
         "id": "hypertable_pg",
         "type": "postgresql",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Create Hypertable",
         "query": "SELECT create_hypertable('sensor_data','time', if_not_exists => TRUE);",
         "postgreSQLConfig": "fbd14997310e037a",
@@ -316,7 +316,7 @@
     {
         "id": "debug_hypertable",
         "type": "debug",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Debug Hypertable",
         "active": true,
         "tosidebar": true,
@@ -328,7 +328,7 @@
     {
         "id": "comment_insert_sensors",
         "type": "comment",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Step 3: Insert Sensors",
         "info": "Seed sensors table with initial devices",
         "x": 160,
@@ -338,7 +338,7 @@
     {
         "id": "inject_insert_sensors",
         "type": "inject",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Trigger: Insert Sensors",
         "props": [],
         "repeat": "",
@@ -356,7 +356,7 @@
     {
         "id": "insert_sensors_pg",
         "type": "postgresql",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Insert Sensors",
         "query": "INSERT INTO sensors(type, location) VALUES('frog-detector','AUVIC_Yirraba_11F'),('frog-detector','AUVIC_Yirraba_12A'),('frog-detector','FAKE_LOCATION_X'),('other-detector','FAKE_LOCATION_Y');",
         "postgreSQLConfig": "fbd14997310e037a",
@@ -374,7 +374,7 @@
     {
         "id": "debug_insert_sensors",
         "type": "debug",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Debug InsertSensors",
         "active": true,
         "tosidebar": true,
@@ -386,7 +386,7 @@
     {
         "id": "comment_drop",
         "type": "comment",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Optional: Drop Tables",
         "info": "Reset schema: drops tables",
         "x": 160,
@@ -396,7 +396,7 @@
     {
         "id": "inject_drop",
         "type": "inject",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Trigger: Drop Tables",
         "props": [],
         "repeat": "",
@@ -414,7 +414,7 @@
     {
         "id": "drop_tables_pg",
         "type": "postgresql",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Drop Tables",
         "query": "DROP TABLE IF EXISTS sensor_data CASCADE; DROP TABLE IF EXISTS sensors, ingestion_metrics, sensor_errors;",
         "postgreSQLConfig": "fbd14997310e037a",
@@ -432,7 +432,7 @@
     {
         "id": "debug_drop_tables",
         "type": "debug",
-        "z": "setupTab",
+        "z": "db-setup",
         "name": "Debug Drop",
         "active": true,
         "tosidebar": true,
@@ -444,7 +444,7 @@
     {
         "id": "81ce24020caa50c7",
         "type": "csv",
-        "z": "0b83af209e30eeda",
+        "z": "csv-upload",
         "name": "Parse CSV",
         "sep": ",",
         "hdrin": true,
@@ -465,7 +465,7 @@
     {
         "id": "96d0299c874c7765",
         "type": "link out",
-        "z": "0b83af209e30eeda",
+        "z": "csv-upload",
         "name": "TO Ingest",
         "links": [
             "af1f1c097dd12835"
@@ -477,7 +477,7 @@
     {
         "id": "479631dcf031492d",
         "type": "chunks-to-lines",
-        "z": "0b83af209e30eeda",
+        "z": "csv-upload",
         "name": "",
         "nbLines": "4096",
         "linesFormat": "csv",
@@ -494,7 +494,7 @@
     {
         "id": "5bc67460d5eac237",
         "type": "ui_upload",
-        "z": "0b83af209e30eeda",
+        "z": "csv-upload",
         "group": "uiCsvGrp",
         "title": "Select CSV",
         "accept": "",
@@ -515,7 +515,7 @@
     {
         "id": "6046f530f062ceb2",
         "type": "comment",
-        "z": "0b83af209e30eeda",
+        "z": "csv-upload",
         "name": "CSV Upload",
         "info": "Unified ingestion path for edge devices",
         "x": 130,
@@ -525,7 +525,7 @@
     {
         "id": "debug_done",
         "type": "debug",
-        "z": "0b83af209e30eeda",
+        "z": "csv-upload",
         "name": "Done",
         "active": true,
         "tosidebar": true,
@@ -537,7 +537,7 @@
     {
         "id": "29a1a2d6eb0b2cac",
         "type": "ui_text",
-        "z": "0b83af209e30eeda",
+        "z": "csv-upload",
         "group": "uiCsvGrp",
         "order": 2,
         "width": "",
@@ -558,7 +558,7 @@
     {
         "id": "ready_next",
         "type": "function",
-        "z": "0b83af209e30eeda",
+        "z": "csv-upload",
         "name": "Ready for next lines",
         "func": "// pass the whole chunk\n// always send tick to unlock next slice\n\nreturn [\n    msg,\n    { tick:true }\n];",
         "outputs": 2,
@@ -582,7 +582,7 @@
     {
         "id": "289077c16b977cb2",
         "type": "split",
-        "z": "0b83af209e30eeda",
+        "z": "csv-upload",
         "name": "",
         "splt": "",
         "spltType": "str",
@@ -602,7 +602,7 @@
     {
         "id": "linkOutMqtt",
         "type": "link out",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "TO Ingest",
         "links": [
             "af1f1c097dd12835"
@@ -614,7 +614,7 @@
     {
         "id": "d5bb258d82434820",
         "type": "inject",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "Trigger MQTT Test",
         "props": [
             {
@@ -639,7 +639,7 @@
     {
         "id": "9e7020e8f747eef0",
         "type": "mqtt out",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "MQTT Out",
         "topic": "detector/data",
         "qos": "2",
@@ -657,7 +657,7 @@
     {
         "id": "c63826d815db4a8a",
         "type": "mqtt in",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "MQTT In",
         "topic": "detector/data",
         "qos": "2",
@@ -678,7 +678,7 @@
     {
         "id": "44aab02307cfb0f1",
         "type": "comment",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "MQTT Input ",
         "info": "Unified ingestion path for edge devices",
         "x": 130,
@@ -688,7 +688,7 @@
     {
         "id": "2523a18a83479b60",
         "type": "http in",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "POST /config",
         "url": "/config",
         "method": "post",
@@ -704,7 +704,7 @@
     {
         "id": "49cfe1ae8ce8560b",
         "type": "function",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "Validate payload",
         "func": "const p = msg.req.body;\nif (!p.sensor_id || typeof p.settings !== 'object') {\n    msg.res = { statusCode: 400, payload: { error: 'sensor_id and settings required' }};\n    return [ null, msg ];\n}\nmsg.payload = p;\nreturn [ msg, null ];",
         "outputs": 2,
@@ -727,7 +727,7 @@
     {
         "id": "df592dcdf9db31fb",
         "type": "function",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "Build MQTT msg",
         "func": "msg.topic = `detector/config/${msg.payload.sensor_id}`;\nmsg.payload = msg.payload.settings;\nreturn msg;",
         "outputs": 1,
@@ -748,7 +748,7 @@
     {
         "id": "9bd91fdec99e7ea9",
         "type": "mqtt out",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "MQTT Config Out",
         "topic": "",
         "qos": "1",
@@ -761,7 +761,7 @@
     {
         "id": "dad6f52ee708ad11",
         "type": "http response",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "200 OK",
         "statusCode": "200",
         "headers": {
@@ -774,7 +774,7 @@
     {
         "id": "fc162075efc4c2fa",
         "type": "http response",
-        "z": "mqttTab",
+        "z": "mqtt-input",
         "name": "400 Bad Request",
         "statusCode": "400",
         "headers": {
@@ -787,7 +787,7 @@
     {
         "id": "d12283e84cd705c9",
         "type": "comment",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "Link In Ingestion Pipeline",
         "info": "Unified ingestion path for:\n- MQTT ingestion, \n- CSV batch upload,  \n- HTTP POST requests",
         "x": 170,
@@ -797,7 +797,7 @@
     {
         "id": "ad0dea488b9e2098",
         "type": "function",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "Normalize detection",
         "func": "// Normalise detection: \n// extract timestamp from CSV file path, \n// or take row.time if present, \n// or now if real time ingestion\nconst row = msg.payload;\nlet timeVal;\n\n// CSV-style filename: /…/YYYYMMDD_HHMMSS.wav\nif (row.File) {\n  const parts = row.File.split(/[_\\/\\\\]/),\n        dateStr = parts[parts.length - 2] || \"\",\n        timeStr = (parts[parts.length - 1] || \"\").replace(/\\.wav$/i, \"\");\n  if (dateStr.length===8 && timeStr.length===6) {\n    const [y,M,d,h,m,s] = [\n      dateStr.slice(0,4),\n      dateStr.slice(4,6),\n      dateStr.slice(6,8),\n      timeStr.slice(0,2),\n      timeStr.slice(2,4),\n      timeStr.slice(4,6)\n    ];\n    timeVal = `${y}-${M}-${d}T${h}:${m}:${s}Z`;\n  }\n}\n\n// JSON/MQTT style:\nif (!timeVal && (row.time || row.Time || row.timestamp)) {\n  timeVal = row.time || row.Time || row.timestamp;\n}\n\n// Fallback:\nif (!timeVal) timeVal = new Date().toISOString();\n\n// Pull the rest of the fields\n// allows for both snake_case and Title Case headers:\nconst rec = {\n  time:            timeVal,\n  sensor_id:       row.sensor_id  || row.sensorId  || 1,\n  start_seconds:   parseInt(row.start_seconds || row[\"Start (s)\"] || 0),\n  end_seconds:     parseInt(row.end_seconds   || row[\"End (s)\"]   || 0),\n  scientific_name: row.scientific_name || row[\"Scientific name\"] || \"\",\n  common_name:     row.common_name     || row[\"Common name\"]     || \"\",\n  confidence:      parseFloat(row.confidence || row.Confidence)    || 0\n};\n\nmsg.params = [\n  rec.time,\n  rec.sensor_id,\n  rec.start_seconds,\n  rec.end_seconds,\n  rec.scientific_name,\n  rec.common_name,\n  rec.confidence\n];\n\nreturn msg;\n",
         "outputs": 1,
@@ -817,7 +817,7 @@
     {
         "id": "4c4415142a097a2a",
         "type": "function",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "Stamp received_at",
         "func": "msg.received_at=new Date().toISOString(); return msg;",
         "outputs": 1,
@@ -832,7 +832,7 @@
     {
         "id": "4defb9ee116ee672",
         "type": "postgresql",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "Insert detection row",
         "query": "INSERT INTO sensor_data(time,sensor_id,start_seconds,end_seconds,scientific_name,common_name,confidence) VALUES($1,$2,$3,$4,$5,$6,$7);",
         "postgreSQLConfig": "fbd14997310e037a",
@@ -851,7 +851,7 @@
     {
         "id": "0926741538b0917c",
         "type": "debug",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "Debug Insert",
         "active": true,
         "tosidebar": true,
@@ -863,7 +863,7 @@
     {
         "id": "9c7497c7cc3a2c7b",
         "type": "function",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "Prepare latency params",
         "func": "msg.params = [ msg.received_at ]; return msg;",
         "outputs": 1,
@@ -878,7 +878,7 @@
     {
         "id": "87a7dea47f518afe",
         "type": "postgresql",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "Log ingestion latency",
         "query": "INSERT INTO ingestion_metrics(received_at, inserted_at) VALUES($1, NOW());",
         "postgreSQLConfig": "fbd14997310e037a",
@@ -894,7 +894,7 @@
     {
         "id": "f4831e1612650e6d",
         "type": "catch",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "Catch errors",
         "scope": [
             "b31ccd36f7b95df5",
@@ -914,7 +914,7 @@
     {
         "id": "90966bc9719a08dd",
         "type": "function",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "Format error",
         "func": "msg.error_msg=msg.error.message||String(msg.error); msg.raw_payload={row:msg.payload}; return msg;",
         "outputs": 1,
@@ -929,7 +929,7 @@
     {
         "id": "2ba0df6ab4980da8",
         "type": "postgresql",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "Log sensor_error",
         "query": "INSERT INTO sensor_errors(time,error_msg,raw_payload) VALUES(NOW(), $1, $2);",
         "postgreSQLConfig": "fbd14997310e037a",
@@ -945,7 +945,7 @@
     {
         "id": "af1f1c097dd12835",
         "type": "link in",
-        "z": "a4845c405fa6605f",
+        "z": "db-ingestion",
         "name": "FROM Uploads",
         "links": [
             "linkOutMqtt",
@@ -963,7 +963,7 @@
     {
         "id": "comment_api",
         "type": "comment",
-        "z": "apiTab",
+        "z": "api",
         "name": "Expose /detections endpoint",
         "info": "",
         "x": 180,
@@ -973,7 +973,7 @@
     {
         "id": "inject_api_test",
         "type": "inject",
-        "z": "apiTab",
+        "z": "api",
         "name": "Trigger GET /detections Test",
         "props": [
             {
@@ -998,7 +998,7 @@
     {
         "id": "http_request",
         "type": "http request",
-        "z": "apiTab",
+        "z": "api",
         "name": "API Request",
         "method": "GET",
         "ret": "obj",
@@ -1022,7 +1022,7 @@
     {
         "id": "http_in",
         "type": "http in",
-        "z": "apiTab",
+        "z": "api",
         "name": "GET /detections",
         "url": "/detections",
         "method": "get",
@@ -1039,7 +1039,7 @@
     {
         "id": "build_query",
         "type": "function",
-        "z": "apiTab",
+        "z": "api",
         "name": "Build SQL & Params",
         "func": "// Build SQL & Params\nconst q = msg.req.query;\nconst toArray = v => Array.isArray(v) ? v : v ? [v] : [];\n\n// 1) Parse and normalise start/end in full ISO 8601 (with Z)\nconst startDt = new Date(q.start);\nconst startIso = startDt.toISOString();\n\nconst endDt = new Date(q.end);\nendDt.setUTCDate(endDt.getUTCDate() + 1);  // include the entire end-day\nconst endIso = endDt.toISOString();\n\n// 2) Prepare species/exclude as postgres arrays\nconst speciesArr = toArray(q.species);\nconst excludeArr = toArray(q.exclude);\nconst speciesParam = '{' + speciesArr.join(',') + '}';\nconst excludeParam = '{' + excludeArr.join(',') + '}';\n\n// 3) Confidence floor\nconst conf = parseFloat(q.confidence_min) || 0;\n\n// 4) Build params and query\nmsg.params = [\n  startIso,        // $1\n  endIso,          // $2\n  speciesParam,    // $3\n  excludeParam,    // $4\n  conf             // $5\n];\n\nmsg.query = `\nSELECT time, sensor_id, start_seconds, end_seconds,\n       scientific_name, common_name, confidence\nFROM sensor_data\nWHERE time BETWEEN $1::timestamptz AND $2::timestamptz\n  AND common_name = ANY($3::text[])\n  AND common_name <> ALL($4::text[])\n  AND confidence >= $5\nORDER BY time;\n`;\n\n// 5) DEBUG LOGGING — uncomment two lines below\n// node.warn(\"SQL → \" + msg.query);\n// node.warn(\"Params → \" + JSON.stringify(msg.params));\n\nreturn msg;\n",
         "outputs": 1,
@@ -1059,7 +1059,7 @@
     {
         "id": "api_pg",
         "type": "postgresql",
-        "z": "apiTab",
+        "z": "api",
         "name": "Query detections",
         "query": "msg.query",
         "postgreSQLConfig": "fbd14997310e037a",
@@ -1078,7 +1078,7 @@
     {
         "id": "http_response",
         "type": "http response",
-        "z": "apiTab",
+        "z": "api",
         "name": "Response",
         "statusCode": "",
         "headers": {},
@@ -1089,7 +1089,7 @@
     {
         "id": "debug_api",
         "type": "debug",
-        "z": "apiTab",
+        "z": "api",
         "name": "Debug GET Response",
         "active": true,
         "tosidebar": true,
@@ -1106,7 +1106,7 @@
     {
         "id": "http_in_detections",
         "type": "http in",
-        "z": "apiTab",
+        "z": "api",
         "name": "POST /detections",
         "url": "/detections",
         "method": "post",
@@ -1123,7 +1123,7 @@
     {
         "id": "linkOutHttp",
         "type": "link out",
-        "z": "apiTab",
+        "z": "api",
         "name": "TO Ingest",
         "links": [
             "af1f1c097dd12835"
@@ -1135,7 +1135,7 @@
     {
         "id": "http_response_ack",
         "type": "http response",
-        "z": "apiTab",
+        "z": "api",
         "name": "",
         "statusCode": "200",
         "headers": {
@@ -1148,7 +1148,7 @@
     {
         "id": "07fc93251dd515c5",
         "type": "function",
-        "z": "apiTab",
+        "z": "api",
         "name": "Extract JSON body",
         "func": "// Extract JSON body into msg.payload\nmsg.payload = msg.req.body;\nreturn msg;\n",
         "outputs": 1,
@@ -1169,7 +1169,7 @@
     {
         "id": "post_test_inject",
         "type": "inject",
-        "z": "apiTab",
+        "z": "api",
         "name": "Trigger POST /detections",
         "props": [
             {
@@ -1180,7 +1180,8 @@
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "payload": "{\"time\":\"2025-06-14T13:53:49Z\",\"sensor_id\":1,\"start_seconds\":45,\"end_seconds\":48,\"scientific_name\":\"Geocrinia laevis\",\"common_name\":\"Southern Smooth Froglet\",\"confidence\":0.9}",
+        "topic": "",
+        "payload": "{\"time\":\"2025-06-14T13:53:49Z\",\"sensor_id\":1,\"start_seconds\":5,\"end_seconds\":8,\"scientific_name\":\"Geocrinia laevis\",\"common_name\":\"Southern Smooth Froglet\",\"confidence\":0.8}",
         "payloadType": "json",
         "x": 190,
         "y": 560,
@@ -1193,7 +1194,7 @@
     {
         "id": "post_http_request",
         "type": "http request",
-        "z": "apiTab",
+        "z": "api",
         "name": "HTTP POST /detections",
         "method": "POST",
         "ret": "obj",
@@ -1217,7 +1218,7 @@
     {
         "id": "debug_post_response",
         "type": "debug",
-        "z": "apiTab",
+        "z": "api",
         "name": "Debug POST Response",
         "active": true,
         "tosidebar": true,
@@ -1232,7 +1233,7 @@
     {
         "id": "comment_admin",
         "type": "comment",
-        "z": "adminTab",
+        "z": "admin",
         "name": "Reset Data",
         "info": "Clear all tables (TRUNCATE)",
         "x": 120,
@@ -1242,7 +1243,7 @@
     {
         "id": "4bc4f8e1a0317580",
         "type": "postgresql",
-        "z": "adminTab",
+        "z": "admin",
         "name": "Truncate",
         "query": "TRUNCATE sensor_data, ingestion_metrics, sensor_errors RESTART IDENTITY;",
         "postgreSQLConfig": "fbd14997310e037a",
@@ -1258,7 +1259,7 @@
     {
         "id": "inject_clear",
         "type": "inject",
-        "z": "adminTab",
+        "z": "admin",
         "name": "Trigger: Clear Data",
         "props": [
             {
@@ -1287,7 +1288,7 @@
     {
         "id": "debug_clear",
         "type": "debug",
-        "z": "adminTab",
+        "z": "admin",
         "name": "Debug Clear",
         "active": true,
         "tosidebar": true,
