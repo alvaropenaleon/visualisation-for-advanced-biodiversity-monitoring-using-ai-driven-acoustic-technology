@@ -1,98 +1,232 @@
-# Digitalisation AIO Package
+# Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Technology
 
-The **Digitalisation AIO (All-In-One) Package** is a comprehensive Docker-based stack that integrates tools for automation, data management, and visualisation. It is designed to facilitate efficient workflows, seamless communication, and insightful analysis.
+*A containerised GUI for exploring BirdNET detection CSVs in passive acoustic monitoring.*
 
-## Components
-- **Node-RED**: Automates workflows and orchestrates communication.
-- **PostgreSQL**: Manages and stores time-series data.
-- **Mosquitto**: Enables MQTT-based messaging between services.
-- **Grafana**: Provides data visualisation and analytics.
+Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Technology lets ecologists, students, land managers, and citizen scientists explore large batches of BirdNET-style CSV outputs without writing code. With **one Docker command**, you get a local stack with:
 
----
+- **Node‑RED** — CSV upload + normalisation (optional HTTP & MQTT ingestion)
+- **TimescaleDB (PostgreSQL 16)** — time-series storage (hypertable)
+- **Grafana OSS** — pre-provisioned dashboards (overview → compare → drill‑down)
 
-## Key Features
-- Pre-configured Mosquitto broker with secure authentication.
-- Node-RED flows demonstrating:
-  - MQTT communication.
-  - PostgreSQL integration for database creation and data management.
-- Ready-to-use Grafana dashboard template for visualising time-series data.
+> **Why?** It focuses on the *post‑classification* gap: turning CSVs into canonical, auditable records; visualising both **ecological signals** and **ingestion health** (latency, throughput, errors); and enabling **period comparisons** (WoW/MoM/YoY) with a non‑technical UI.
 
 ---
 
-## Quick Start
+## Contents
 
-### Prerequisites
-1. **Docker Desktop** with WSL2 (Ubuntu).
-2. Docker Desktop should be linked to your WSL2 instance.
+- [Quickstart](#quickstart)
+- [Verify the stack](#verify-the-stack)
+- [Upload & explore](#upload--explore)
+- [Example data](#example-data)
+- [Configuration](#configuration)
+- [Data model](#data-model)
+- [Optional ingestion paths](#optional-ingestion-paths)
+- [Backups & persistence](#backups--persistence)
+- [Troubleshooting](#troubleshooting)
+- [Security notes](#security-notes)
+- [Cite this project](#cite-this-project)
+- [License](#license)
 
-### Setup Steps
-1. Clone this repository, and update ownership.
-```bash
-git clone https://github.com/ctch3ng/Digitalisation-AIO-Package.git
-```
-```bash
-sudo chown -R 1000:1000 Digitalisation-AIO-Package/
-```
+---
 
-Note: for Mac users, use the following command instead
+## Quickstart
+
+**Requirements**: Docker & Docker Compose on Linux/macOS/Windows.
 
 ```bash
-sudo chown -R 501:501 Digitalisation-AIO-Package/
-```
+# 1) Clone the repo
+git clone https://github.com/alvaropenaleon/visualisation-for-advanced-biodiversity-monitoring-using-ai-driven-acoustic-technology.git
+cd visualisation-for-advanced-biodiversity-monitoring-using-ai-driven-acoustic-technology
 
-2. Configure the `.env` file with your preferred credentials. (You can skip this if you just want to give it a test drive)
-- Set your PostgreSQL password. The default password is `05JD£AEBW2'f`.
-- Define Grafana admin credentials. The default username and password are `admin` and `0m{-}>7nP8)C`, respectively. 
-3. Launch the stack:
-```bash
-cd Digitalisation-AIO-Package/
-```
-```bash
+# 2) (Optional) Copy .env template and tweak ports/creds
+cp .env.example .env
+
+# 3) Launch services
 docker compose up -d
-```
-4. Access the services:
-- Node-RED: [http://localhost:1880](http://localhost:1880)
-- Grafana: [http://localhost:3000](http://localhost:3000)
 
-# Node-RED Demo
-Under `Manage palette`, Install `node-red-contrib-postgresql`.
-Under `Configuration nodes`, expand `digitalisation-aio-package-mosquitto-1`. enter the following information under `Security`
-- Username: `mqtt_user1`
-- Password: `P71X95tQ!]tm`
+# 4) Check containers
+docker compose ps
+```
 
-# Grafana Dashboard Demo
- - Under `Data sources`, add PostgreSQL with the following information.
-   - Host URL: `digitalisation-aio-package-postgres-1:5432`
-   - Database name: `postgres`
-   - Username: `postgres`
-   - Password: `05JD£AEBW2'f`
-   - TLS/SSL Mode: `disable`
-   - TimescaleDB: `enable`
- - Import the `Dashboard Demo.json` from the `grafana-data/` directory into Grafana via Dashboards -> Import. 
- - Edit `Sensor 1` and `Sensor 2` panels. Select `grafana-postgresql-datasource` as the source.
+**Default ports** (override in `.env`):
+- Node‑RED: `http://localhost:1880` (dashboard UI at `/ui`)
+- Grafana: `http://localhost:3000`
+- PostgreSQL: `localhost:5432`
+- MQTT (Mosquitto, optional): `localhost:1883`
 
-# [Optional] Updating Mosquitto's credentials (Again, you can skip this if you just want to give it a test drive)
-- Enter the Mosquitto container:
-```bash
-docker exec -it digitalisation-aio-mosquitto sh
-```
-  - (Use `docker ps` to confirm the container name. Here, the name in the example is `digitalisation-aio-mosquitto`)
+> Grafana default creds are typically `admin` / `admin` unless overridden in `.env`. Change on first login.
 
-- Navigate to the password file directory:
+---
+
+## Verify the stack
+
+Run these quick checks after `docker compose up -d`:
+
 ```bash
-cd /mosquitto/config
+# 1) Database is reachable
+docker compose exec db pg_isready -U ${POSTGRES_USER:-postgres}
+
+# 2) Tables exist (after first upload or migration step)
+docker compose exec db psql -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-chirpcheck} -c "\dt"
+
+# 3) Grafana has provisioned dashboards
+# (Look for 'Provisioned' in Grafana > Dashboards or call the HTTP API if you enabled it)
 ```
-- Update the password file (Here, the default username and password are `mqtt_user1` and `P71X95tQ!]tm`, respectively):
+
+If dashboards or flows fail to provision, restart those services:
+
 ```bash
-rm passwordfile
-echo "mqtt_user1:P71X95tQ!]tm" > passwordfile
-chmod 0700 passwordfile
+docker compose restart grafana nodered
 ```
-- Hash the password file:
+
+---
+
+## Upload & explore
+
+1. Open **Node‑RED dashboard** → `http://localhost:1880/ui` → *CSV Upload* panel.  
+   - Drag‑and‑drop one or more BirdNET CSVs.  
+   - The flow validates rows, records `received_at` and `inserted_at`, batches, and writes to the hypertable.
+2. Open **Grafana** → `http://localhost:3000` and select the **ChirpCheck** dashboards.  
+   - Use the templated variables (**species**, **site**, **confidence**) to filter views.  
+   - Explore **Overview → Comparative → Data‑quality** rows.  
+   - Export tables via **Panel → Inspect → Data → Download CSV**.
+
+---
+
+## Example data
+
+The repository includes small CSVs under `examples/` so you can verify the full path quickly.  
+Upload an example file through the Node‑RED dashboard and confirm charts populate in Grafana.
+
+> If your deployment does **not** include `examples/`, use any BirdNET‑style CSV that includes timestamp, species label, confidence, and (optionally) site/device metadata.
+
+---
+
+## Configuration
+
+Configuration is **declarative** and versioned in-repo:
+
+- **Node‑RED** flows under `nodered/` (auto‑loaded at startup)
+- **Grafana** provisioning under `grafana/provisioning/`
+- **SQL** migrations and helper views under `sql/`
+
+Key `.env` entries (example):
+
+```dotenv
+# Postgres / TimescaleDB
+POSTGRES_DB=chirpcheck
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_PORT=5432
+
+# Grafana
+GF_SECURITY_ADMIN_USER=admin
+GF_SECURITY_ADMIN_PASSWORD=admin
+GRAFANA_PORT=3000
+
+# Node-RED
+NODERED_PORT=1880
+
+# MQTT (optional)
+ENABLE_MQTT=true
+MQTT_PORT=1883
+```
+
+> Change passwords for non‑local deployments. For remote use, also set `GF_SERVER_ROOT_URL`, TLS, and proper firewalling.
+
+---
+
+## Data model
+
+Detections are stored in a TimescaleDB **hypertable** (example schema shown for reference):
+
+```sql
+-- Base table (created & converted to hypertable by migrations/flows)
+CREATE TABLE IF NOT EXISTS detections (
+  time           TIMESTAMPTZ NOT NULL,
+  site           TEXT,
+  species        TEXT NOT NULL,
+  confidence     DOUBLE PRECISION,
+  source         TEXT DEFAULT 'csv',
+  meta           JSONB,
+  received_at    TIMESTAMPTZ,
+  inserted_at    TIMESTAMPTZ DEFAULT now()
+);
+
+-- Metrics & errors (optional tables)
+CREATE TABLE IF NOT EXISTS ingestion_metrics (
+  window_start   TIMESTAMPTZ,
+  window_end     TIMESTAMPTZ,
+  rows_ingested  BIGINT,
+  p50_latency_ms DOUBLE PRECISION,
+  p95_latency_ms DOUBLE PRECISION
+);
+
+CREATE TABLE IF NOT EXISTS sensor_errors (
+  time           TIMESTAMPTZ,
+  source         TEXT,
+  raw_line       TEXT,
+  error          TEXT
+);
+```
+
+> Some deployments enable **continuous aggregates** for heavy rollups (e.g., daily site×species counts).
+
+---
+
+## Optional ingestion paths
+
+Besides CSV upload via dashboard, you can ingest via **HTTP** or **MQTT** (if enabled):
+
+### HTTP (developer/testing)
 ```bash
-mosquitto_passwd -U passwordfile
+curl -X POST http://localhost:1880/detections \  -H 'Content-Type: application/json' \  -d '[{"time":"2025-01-01T12:00:00Z","site":"S1","species":"Carduelis carduelis","confidence":0.92}]'
 ```
-- Exit the container:
+
+### MQTT (pilot/streaming)
 ```bash
-exit
+mosquitto_pub -h localhost -p 1883 -t sensors/detections -m '{"time":"2025-01-01T12:00:00Z","site":"S1","species":"Carduelis carduelis","confidence":0.92}'
 ```
+
+Node‑RED flows parse, validate and normalise these payloads before insert.
+
+---
+
+## Backups & persistence
+
+Docker volumes persist data and configuration:
+
+- `db-data/` — PostgreSQL/TimescaleDB
+- `grafana-data/` — Grafana SQLite & plugins
+- `nodered-data/` — Node‑RED flows & runtime
+
+Back up by stopping the stack and archiving named volumes or binding directories.
+
+---
+
+## Troubleshooting
+
+- **Nothing shows in Grafana**: confirm CSV upload succeeded (Node‑RED debug tab), and that `detections` has rows.
+- **Provisioning loop**: check `grafana` logs for JSON errors; ensure dashboard UIDs are unique.
+- **DB rejects CSV**: a malformed row will be recorded in `sensor_errors`; export and inspect a few sample lines.
+- **High latency**: check Docker resource limits; batch sizes in Node‑RED can be tuned for your hardware.
+- **Port conflicts**: adjust ports in `.env` and re‑`docker compose up -d`.
+
+View logs:
+```bash
+docker compose logs -f nodered
+docker compose logs -f grafana
+docker compose logs -f db
+```
+
+---
+
+## Security notes
+
+Ships with local‑dev defaults. For any network‑exposed deployment:
+- Change all default passwords and enable TLS where applicable.
+- Restrict inbound ports to trusted hosts.
+- Do not upload sensitive data without appropriate governance.
+
+---
+
