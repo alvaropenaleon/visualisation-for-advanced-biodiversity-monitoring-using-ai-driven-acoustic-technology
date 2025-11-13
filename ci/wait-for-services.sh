@@ -26,9 +26,13 @@ for i in {1..60}; do
         exit 0
     fi
 
-    echo "Waiting ($i/60)"
+    echo "Waiting ($i/60) - NR:${NR_OK} GF:${GF_OK} PG:${PG_OK}"
     sleep 2
 done
 
-echo "Services did not become ready in time" >&2
+echo "Services did not become ready in time"
+echo "Docker compose status:"
+docker compose -f compose.yml ps || true
+echo "Recent logs:"
+docker compose -f compose.yml logs --tail=50 || true
 exit 1
