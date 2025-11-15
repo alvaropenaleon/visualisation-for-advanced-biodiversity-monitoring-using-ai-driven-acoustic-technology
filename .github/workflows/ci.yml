@@ -1,35 +1,47 @@
 name: CI smoke test
 
 on:
-  push:
-  pull_request:
+    push:
+    pull_request:
 
 jobs:
-  smoke:
-    runs-on: ubuntu-latest
+    smoke:
+        runs-on: ubuntu-latest
+        
+        env:
+            POSTGRES_PASSWORD: postgrespassword
+            GRAFANA_USER: admin
+            GRAFANA_PASSWORD: admin
+        
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            
+            - name: Show Docker Compose version
+              run: docker compose version
 
-    env:
-      POSTGRES_PASSWORD: postgrespassword
-      GRAFANA_USER: admin
-      GRAFANA_PASSWORD: admin
+            - name: Prepare data directories for CI
+              run: |
+                mkdir -p grafana-data nodered-data mosquitto-data postgres-16-data
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+                # Give Node-RED (uid 1000) ownership of its data dir
+                sudo chown -R 1000:1000 nodered-data
+                sudo chmod -R u+rwX nodered-data
 
-      - name: Show Docker Compose version
-        run: docker compose version
-
-      - name: Start stack
-        run: |
-          docker compose -f compose.yml up -d
-
-      - name: Wait for services to be ready
-        run: bash ci/wait-for-services.sh
-
-      - name: Assert Postgres is responding
-        run: bash ci/assert-postgres.sh
-
-      - name: Tear down stack
-        if: always()
-        run: docker compose -f compose.yml down -v
+                # Give Grafana (uid 472) ownership of its data dir
+                sudo chown -R 472:472 grafana-data
+                sudo chmod -R u+rwX grafana-data
+            
+            - name: Start stack
+              run: |
+                docker compose -f compose.yml up -d
+            
+            - name: Wait for services to be ready
+              run: bash ci/wait-for-services.sh
+            
+            - name: Assert Postgres is responding
+              run: bash ci/assert-postgres.sh
+            
+            - name: Tear down stack
+              if: always()
+              run: docker compose -f compose.yml down -v
