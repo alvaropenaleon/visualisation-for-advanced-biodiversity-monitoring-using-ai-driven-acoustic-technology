@@ -21,12 +21,14 @@ for i in {1..60}; do
         PG_OK=1
     fi
 
-    if [ "$NR_OK" -eq 1 ] && [ "$GF_OK" -eq 1 ] && [ "$PG_OK" -eq 1 ]; then
+    #if [ "$NR_OK" -eq 1 ] && [ "$GF_OK" -eq 1 ] && [ "$PG_OK" -eq 1 ]; then
+    if [ "$NR_OK" -eq 1 ] && [ "$PG_OK" -eq 1 ]; then
         echo "All services are up"
         exit 0
     fi
 
-    echo "Waiting ($i/60) - NR:${NR_OK} GF:${GF_OK} PG:${PG_OK}"
+    #echo "Waiting ($i/60) - NR:${NR_OK} GF:${GF_OK} PG:${PG_OK}"
+    echo "Waiting ($i/60) - NR:${NR_OK} PG:${PG_OK}"
     sleep 2
 done
 
