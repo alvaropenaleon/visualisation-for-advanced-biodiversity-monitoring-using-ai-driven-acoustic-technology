@@ -6,16 +6,16 @@ echo "Waiting for services to become ready"
 
 for i in {1..60}; do
     NR_OK=0
-    GF_OK=0
+    #GF_OK=0
     PG_OK=0
 
     if curl -fsS http://localhost:1880/ >/dev/null 2>&1; then
         NR_OK=1
     fi
 
-    if curl -fsS http://localhost:3000/ >/dev/null 2>&1; then
-        GF_OK=1
-    fi
+    #if curl -fsS http://localhost:3000/ >/dev/null 2>&1; then
+    #    GF_OK=1
+    #fi
 
     if nc -z localhost 5432 >/dev/null 2>&1; then
         PG_OK=1
