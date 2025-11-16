@@ -1,0 +1,24 @@
+# compose.ci.yml
+services:
+  postgres:
+    volumes:
+      - postgres-16-data-ci:/var/lib/postgresql/data
+
+  mosquitto:
+    volumes:
+      - mosquitto-data-ci:/mosquitto
+
+  nodered:
+    volumes:
+      - nodered-data-ci:/data
+
+  grafana:
+    # override the volume here, user stays same as in compose.yml
+    volumes:
+      - grafana-data-ci:/var/lib/grafana
+
+volumes:
+  postgres-16-data-ci:
+  mosquitto-data-ci:
+  nodered-data-ci:
+  grafana-data-ci:
