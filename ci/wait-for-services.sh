@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+COMPOSE="docker compose -f compose.yml -f compose.ci.yml"
+
 # wait loop for Node-RED (1880), Postgres (5432), Grafana (3000)
 echo "Waiting for services to become ready"
 
@@ -34,7 +36,7 @@ done
 
 echo "Services did not become ready in time"
 echo "Docker compose status:"
-docker compose -f compose.yml ps || true
+$COMPOSE ps || true
 echo "Recent logs:"
-docker compose -f compose.yml logs --tail=50 || true
+$COMPOSE logs --tail=50 || true
 exit 1
