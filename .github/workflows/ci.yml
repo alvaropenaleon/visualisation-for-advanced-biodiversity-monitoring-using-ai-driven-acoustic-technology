@@ -19,18 +19,6 @@ jobs:
             
             - name: Show Docker Compose version
               run: docker compose version
-
-            # - name: Prepare data directories for CI
-            #  run: |
-            #    mkdir -p grafana-data nodered-data mosquitto-data postgres-16-data
-
-                # Give Node-RED (uid 1000) ownership of its data dir
-            #    sudo chown -R 1000:1000 nodered-data
-            #    sudo chmod -R u+rwX nodered-data
-
-            #    # Give Grafana (uid 472) ownership of its data dir
-            #    sudo chown -R 472:472 grafana-data
-            #    sudo chmod -R u+rwX grafana-data
             
             - name: Start stack
               run: |
