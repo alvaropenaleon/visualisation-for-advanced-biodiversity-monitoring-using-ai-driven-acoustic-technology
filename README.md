@@ -104,9 +104,9 @@ Upload an example file through the Node‑RED dashboard and confirm charts popul
 
 Configuration is **declarative** and versioned in-repo:
 
-- **Node‑RED** flows under `nodered/` (auto‑loaded at startup)
+- **Node-RED** flows under `nodered-data/` (auto-loaded at startup)
 - **Grafana** provisioning under `grafana/provisioning/`
-- **SQL** migrations and helper views under `sql/`
+- **SQL migrations** under `db/migrations/` (applied automatically by `db-bootstrap`)
 
 Key `.env` entries (example):
 
@@ -212,9 +212,10 @@ Back up by stopping the stack and archiving named volumes or binding directories
 
 View logs:
 ```bash
+docker compose logs -f postgres
+docker compose logs -f db-bootstrap
 docker compose logs -f nodered
 docker compose logs -f grafana
-docker compose logs -f db
 ```
 
 ---
