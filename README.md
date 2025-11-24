@@ -71,8 +71,9 @@ docker compose exec postgres \
   psql -U postgres -d postgres -c '\dt'
 ```
 
-You should see:
+The below should show:
 
+```text
                List of relations
  Schema |       Name        | Type  |  Owner
 --------+-------------------+-------+----------
