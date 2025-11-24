@@ -6,7 +6,7 @@ COMPOSE="docker compose -f compose.yml -f compose.ci.yml"
 # wait loop for Node-RED (1880), Postgres (5432), Grafana (3000)
 echo "Waiting for services to become ready"
 
-for i in {1..60}; do
+for i in {1..30}; do
     NR_OK=0
     #GF_OK=0
     PG_OK=0
