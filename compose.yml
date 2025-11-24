@@ -24,18 +24,23 @@ services:
     volumes:
       - "./db/migrations:/migrations:ro"
     command: >
-      bash -c "
-        echo 'Waiting for postgres...' &&
+      bash -lc '
+        set -e
+        echo "Waiting for postgres"
         until pg_isready -h postgres -U postgres -d postgres; do
           sleep 1
-        done &&
-        echo 'Running migrations from /migrations' &&
+        done
+        echo "Running migrations from /migrations"
         for f in /migrations/*.sql; do
-          echo 'Applying' \"${f}\" '...'
-          psql -h postgres -U postgres -d postgres -v ON_ERROR_STOP=1 -f \"${f}\"
-        done &&
-        echo 'Migrations completed successfully.'
-      "
+          if [ ! -e "$$f" ]; then
+            echo "No migration files found in /migrations, skipping."
+            break
+          fi
+          echo "Applying $$f"
+          psql -h postgres -U postgres -d postgres -v ON_ERROR_STOP=1 -f "$$f"
+        done
+        echo "Migrations completed successfully."
+      '
     restart: "no"
     networks:
       - digi_pkg
@@ -60,6 +65,9 @@ services:
       - "./nodered-data:/data"
     environment:
       NODE_RED_ENABLE_SAFE_MODE: false
+    depends_on:
+      - postgres
+      - db-bootstrap
     networks:
       - digi_pkg
    
