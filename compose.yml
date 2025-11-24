@@ -14,6 +14,32 @@ services:
 #      - "./postgres-home:/home"
     networks:
       - digi_pkg
+
+      # NEW: one-shot migration/bootstrap container
+  db-bootstrap:
+    image: postgres:16
+    depends_on:
+      - postgres
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - "./db/migrations:/migrations:ro"
+    command: >
+      bash -c "
+        echo 'Waiting for postgres...' &&
+        until pg_isready -h postgres -U postgres -d postgres; do
+          sleep 1
+        done &&
+        echo 'Running migrations from /migrations' &&
+        for f in /migrations/*.sql; do
+          echo 'Applying' \"${f}\" '...'
+          psql -h postgres -U postgres -d postgres -v ON_ERROR_STOP=1 -f \"${f}\"
+        done &&
+        echo 'Migrations completed successfully.'
+      "
+    restart: "no"
+    networks:
+      - digi_pkg
   
   mosquitto:
     image: eclipse-mosquitto:latest
