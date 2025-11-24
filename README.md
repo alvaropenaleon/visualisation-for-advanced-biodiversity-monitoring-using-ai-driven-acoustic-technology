@@ -69,6 +69,18 @@ docker compose exec postgres pg_isready -U postgres -d postgres
 # 2) Confirm that migrations ran and tables exist
 docker compose exec postgres \
   psql -U postgres -d postgres -c '\dt'
+```
+
+You should see:
+
+               List of relations
+ Schema |       Name        | Type  |  Owner
+--------+-------------------+-------+----------
+ public | ingestion_metrics | table | postgres
+ public | sensor_data       | table | postgres
+ public | sensor_errors     | table | postgres
+ public | sensors           | table | postgres
+(4 rows)
 
 
 If dashboards or flows fail to provision, restart those services:
@@ -84,7 +96,7 @@ docker compose restart grafana nodered
 1. Open **Node‑RED dashboard** → `http://localhost:1880/ui` → *CSV Upload* panel.  
    - Drag‑and‑drop one or more BirdNET CSVs.  
    - The flow validates rows, records `received_at` and `inserted_at`, batches, and writes to the hypertable.
-2. Open **Grafana** → `http://localhost:3000` and select the **ChirpCheck** dashboards.  
+2. Open **Grafana** → `http://localhost:3000` and select the **Demo Dashboard** dashboard.  
    - Use the templated variables (**species**, **site**, **confidence**) to filter views.  
    - Explore **Overview → Comparative → Data‑quality** rows.  
    - Export tables via **Panel → Inspect → Data → Download CSV**.
@@ -94,7 +106,7 @@ docker compose restart grafana nodered
 ## Example data
 
 The repository includes small CSVs under `examples/` so you can verify the full path quickly.  
-Upload an example file through the Node‑RED dashboard and confirm charts populate in Grafana.
+Upload an example file through the Node‑RED dashboard and confirm charts populate in Grafana. Any BirdNET-style CSV that includes timestamp, species label, and confidence.
 
 > If your deployment does **not** include `examples/`, use any BirdNET‑style CSV that includes timestamp, species label, confidence, and (optionally) site/device metadata.
 
@@ -112,21 +124,18 @@ Key `.env` entries (example):
 
 ```dotenv
 # Postgres / TimescaleDB
-POSTGRES_DB=chirpcheck
+POSTGRES_DB=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
-DB_PORT=5432
 
 # Grafana
-GF_SECURITY_ADMIN_USER=admin
-GF_SECURITY_ADMIN_PASSWORD=admin
-GRAFANA_PORT=3000
+GRAFANA_USER=admin
+GRAFANA_PASSWORD=admin
 
 # Node-RED
 NODERED_PORT=1880
 
 # MQTT (optional)
-ENABLE_MQTT=true
 MQTT_PORT=1883
 ```
 
@@ -136,35 +145,51 @@ MQTT_PORT=1883
 
 ## Data model
 
-Detections are stored in a TimescaleDB **hypertable** (example schema shown for reference):
+The stack uses a small, explicit schema designed for time-series analysis and ingestion tracking.
 
 ```sql
--- Base table (created & converted to hypertable by migrations/flows)
-CREATE TABLE IF NOT EXISTS detections (
-  time           TIMESTAMPTZ NOT NULL,
-  site           TEXT,
-  species        TEXT NOT NULL,
-  confidence     DOUBLE PRECISION,
-  source         TEXT DEFAULT 'csv',
-  meta           JSONB,
-  received_at    TIMESTAMPTZ,
-  inserted_at    TIMESTAMPTZ DEFAULT now()
+-- Dimension table sensor metadata
+CREATE TABLE IF NOT EXISTS sensors (
+    id       SERIAL PRIMARY KEY,
+    type     VARCHAR(50),
+    location VARCHAR(50)
 );
 
--- Metrics & errors (optional tables)
+-- Avoid duplicated sensor seeds
+ALTER TABLE sensors
+ADD CONSTRAINT IF NOT EXISTS sensors_type_location_uniq
+UNIQUE (type, location);
+
+-- Main detections table converted to hypertable on "time"
+CREATE TABLE IF NOT EXISTS sensor_data (
+    time            TIMESTAMPTZ NOT NULL,
+    sensor_id       INTEGER,
+    start_seconds   INTEGER,
+    end_seconds     INTEGER,
+    scientific_name VARCHAR(50),
+    common_name     VARCHAR(50),
+    confidence      DOUBLE PRECISION,
+    FOREIGN KEY (sensor_id) REFERENCES sensors (id)
+);
+
+-- Per-row timestamps ingestion latency metrics
 CREATE TABLE IF NOT EXISTS ingestion_metrics (
-  window_start   TIMESTAMPTZ,
-  window_end     TIMESTAMPTZ,
-  rows_ingested  BIGINT,
-  p50_latency_ms DOUBLE PRECISION,
-  p95_latency_ms DOUBLE PRECISION
+    received_at TIMESTAMPTZ NOT NULL,
+    inserted_at TIMESTAMPTZ NOT NULL
 );
 
+-- Error log for rejected rows / failures
 CREATE TABLE IF NOT EXISTS sensor_errors (
-  time           TIMESTAMPTZ,
-  source         TEXT,
-  raw_line       TEXT,
-  error          TEXT
+    time        TIMESTAMPTZ DEFAULT NOW(),
+    error_msg   TEXT NOT NULL,
+    raw_payload JSONB
+);
+
+-- Convert sensor_data into a TimescaleDB hypertable
+SELECT create_hypertable(
+    'sensor_data',
+    'time',
+    if_not_exists => TRUE
 );
 ```
 
