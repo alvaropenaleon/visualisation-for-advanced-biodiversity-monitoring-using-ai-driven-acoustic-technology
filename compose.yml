@@ -15,7 +15,6 @@ services:
     networks:
       - digi_pkg
 
-      # NEW: one-shot migration/bootstrap container
   db-bootstrap:
     image: postgres:16
     depends_on:
