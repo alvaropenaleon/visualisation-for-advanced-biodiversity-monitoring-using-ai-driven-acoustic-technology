@@ -60,18 +60,16 @@ docker compose ps
 
 ## Verify the stack
 
-Run these quick checks after `docker compose up -d`:
+After `docker compose up -d`, run a couple of quick checks:
 
 ```bash
-# 1) Database is reachable
-docker compose exec db pg_isready -U ${POSTGRES_USER:-postgres}
+# 1) Check that Postgres is reachable
+docker compose exec postgres pg_isready -U postgres -d postgres
 
-# 2) Tables exist (after first upload or migration step)
-docker compose exec db psql -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-chirpcheck} -c "\dt"
+# 2) Confirm that migrations ran and tables exist
+docker compose exec postgres \
+  psql -U postgres -d postgres -c '\dt'
 
-# 3) Grafana has provisioned dashboards
-# (Look for 'Provisioned' in Grafana > Dashboards or call the HTTP API if you enabled it)
-```
 
 If dashboards or flows fail to provision, restart those services:
 
