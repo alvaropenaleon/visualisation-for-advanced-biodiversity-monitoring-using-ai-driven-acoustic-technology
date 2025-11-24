@@ -230,3 +230,7 @@ Ships with local‑dev defaults. For any network‑exposed deployment:
 
 ---
 
+### Tests
+
+For local usage, the stack bind-mounts service data directories so users can inspect and back up configuration files directly. For continuous integration, we provide a compose.ci.yml override that replaces these bind mounts with Docker-managed named volumes, avoiding host-specific permission issues on CI runners while preserving identical container configuration across environments.
+
