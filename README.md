@@ -82,7 +82,7 @@ The below should show:
  public | sensor_errors     | table | postgres
  public | sensors           | table | postgres
 (4 rows)
-
+```
 
 If dashboards or flows fail to provision, restart those services:
 
