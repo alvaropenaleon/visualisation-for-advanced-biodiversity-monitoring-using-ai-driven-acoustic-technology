@@ -34,18 +34,27 @@ Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Tech
 
 **Requirements**: Docker & Docker Compose on Linux/macOS/Windows.
 
+
+1. Clone the repo
 ```bash
-# 1) Clone the repo
 git clone https://github.com/alvaropenaleon/visualisation-for-advanced-biodiversity-monitoring-using-ai-driven-acoustic-technology.git
+````
+```bash
 cd visualisation-for-advanced-biodiversity-monitoring-using-ai-driven-acoustic-technology
+```
 
-# 2) (Optional) Copy .env template and tweak ports/creds
+2. (Optional) Copy .env template and tweak ports/creds
+```bash
 cp .env.example .env
+```
 
-# 3) Launch services (includes automatic DB migrations)
+3. Launch services (includes automatic DB migrations)
+```bash
 docker compose up -d
+```
 
-# 4) Check containers
+4. Check containers
+```bash
 docker compose ps
 ```
 
@@ -65,11 +74,13 @@ On first start, a one-shot `db-bootstrap` container runs the SQL migrations in `
 
 After `docker compose up -d`, run:
 
+1. Check that Postgres is reachable
 ```bash
-# 1) Check that Postgres is reachable
 docker compose exec postgres pg_isready -U postgres -d postgres
+```
 
-# 2) Confirm that migrations ran and tables exist
+2. Confirm that migrations ran and tables exist
+```bash
 docker compose exec postgres \
   psql -U postgres -d postgres -c '\dt'
 ```
