@@ -309,38 +309,46 @@ In CI, these are replaced by Docker-managed named volumes via `compose.ci.yml` t
 ## Troubleshooting
 
 - **Nothing shows in Grafana**: 
-    - Check Node-RED debug tab for CSV parsing/insert errors.
-    - Confirm sensor_data has rows:
-    ```bash
-    docker compose exec postgres \
-    psql -U postgres -d postgres -c "SELECT COUNT(*) FROM sensor_data;"
-    ```
+1. Check Node-RED debug tab for CSV parsing/insert errors.
+2. Confirm sensor_data has rows:
+
+```bash
+docker compose exec postgres \
+psql -U postgres -d postgres -c "SELECT COUNT(*) FROM sensor_data;"
+```
 
 - **Errors during ingestion**
-    - Failed rows are logged into sensor_errors with error_msg and raw_payload.
-    ```bash
-    docker compose exec postgres \
-    psql -U postgres -d postgres -c "SELECT * FROM sensor_errors LIMIT 20;"
-    ```
+
+Failed rows are logged into sensor_errors with error_msg and raw_payload.
+
+```bash
+docker compose exec postgres \
+psql -U postgres -d postgres -c "SELECT * FROM sensor_errors LIMIT 20;"
+```
 
 - **Services not starting / timing out**
-    - Check migration logs:
-    ```bash
-    docker compose logs db-bootstrap
-    ```
-    - Check individual services:
-    ```bash
-    docker compose logs -f postgres
-    docker compose logs -f nodered
-    docker compose logs -f grafana
-    ```
+
+Check migration logs:
+
+```bash
+docker compose logs db-bootstrap
+```
+Check individual services:
+
+```bash
+docker compose logs -f postgres
+docker compose logs -f nodered
+docker compose logs -f grafana
+```
 
 - **Port conflicts**
-    - Adjust ports in .env and restart:
-    ```bash
-    docker compose down
-    docker compose up -d
-    ```
+
+Adjust ports in .env and restart:
+
+```bash
+docker compose down
+docker compose up -d
+```
 
 ---
 
