@@ -257,5 +257,5 @@ Ships with local‑dev defaults. For any network‑exposed deployment:
 
 ### Tests
 
-For local usage, the stack bind-mounts service data directories so users can inspect and back up configuration files directly. For continuous integration, we provide a compose.ci.yml override that replaces these bind mounts with Docker-managed named volumes, avoiding host-specific permission issues on CI runners while preserving identical container configuration across environments.
+We provide a GitHub Actions CI workflow that launches the full stack using Docker Compose, applies SQL migrations via a one-shot db-bootstrap container, and runs an integration smoke test inside the Postgres service. The test asserts that all core tables (sensors, sensor_data, ingestion_metrics, sensor_errors) exist and that initial sensor metadata has been seeded. This guarantees that the published Compose files, migrations, and Node-RED flows remain deployable and consistent across local machines, CI runners, and future demo deployments.
 
