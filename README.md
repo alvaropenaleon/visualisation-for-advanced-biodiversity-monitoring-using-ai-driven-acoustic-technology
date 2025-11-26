@@ -8,7 +8,7 @@ Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Tech
 - **TimescaleDB (PostgreSQL 16)** — time-series storage (hypertable)
 - **Grafana OSS** — pre-provisioned dashboards (overview → compare → drill‑down)
 
-> **Why?** It focuses on the *post‑classification* gap: turning CSVs into canonical, auditable records; visualising both **ecological signals** and **ingestion health** (latency, throughput, errors); and enabling **period comparisons** (WoW/MoM/YoY) with a non‑technical UI.
+> **Why?** It focuses on the *post‑classification* gap: turning CSVs into canonical, auditable records; visualising both **ecological signals** and **ingestion health** (latency, throughput, errors); and enabling **period comparisons** with a non‑technical UI.
 
 ---
 
