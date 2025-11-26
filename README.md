@@ -386,5 +386,6 @@ This project is licensed under the MIT License – see the [LICENSE](./LICENSE) 
 
 ## Acknowledgements
 
-An early version of this stack was inspired by the [Digitalisation AIO Package](https://github.com/ctch3ng/Digitalisation-AIO-Package), which provided an initial scaffold for combining Node-RED, PostgreSQL, Mosquitto, and Grafana. The current architecture, including the BirdNET focused schema, SQL migrations, Node-RED ingestion flows, ingestion metrics, Grafana dashboards, and CI smoke tests has been engineered specifically for this project.
+This project was initially informed by the [Digitalisation AIO Package](https://github.com/ctch3ng/Digitalisation-AIO-Package).
+The present architecture including BirdNET focused schema, SQL migrations, Node-RED flows, ingestion metrics, Grafana dashboards, and CI smoke tests  has been engineered specifically for this project.
 
