@@ -27,6 +27,7 @@ Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Tech
 - [Tests](#tests)
 - [Cite this project](#cite-this-project)
 - [License](#license)
+- [Acknowledgements](#acknowledgements)
 
 ---
 
