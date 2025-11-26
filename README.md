@@ -299,7 +299,7 @@ docker compose down
 2. Archive the relevant directories:
 
 ```bash
-tar czf vabmat-backup.tgz postgres-16-data grafana-data nodered-data mosquitto-data
+tar czf backup.tgz postgres-16-data grafana-data nodered-data mosquitto-data
 ```
 
 In CI, these are replaced by Docker-managed named volumes via `compose.ci.yml` to avoid host-specific permissions while keeping the same container configuration.
@@ -308,32 +308,67 @@ In CI, these are replaced by Docker-managed named volumes via `compose.ci.yml` t
 
 ## Troubleshooting
 
-- **Nothing shows in Grafana**: confirm CSV upload succeeded (Node‑RED debug tab), and that `detections` has rows.
-- **Provisioning loop**: check `grafana` logs for JSON errors; ensure dashboard UIDs are unique.
-- **DB rejects CSV**: a malformed row will be recorded in `sensor_errors`; export and inspect a few sample lines.
-- **High latency**: check Docker resource limits; batch sizes in Node‑RED can be tuned for your hardware.
-- **Port conflicts**: adjust ports in `.env` and re‑`docker compose up -d`.
+- **Nothing shows in Grafana**: 
+    - Check Node-RED debug tab for CSV parsing/insert errors.
+    - Confirm sensor_data has rows:
+    ```bash
+    docker compose exec postgres \
+    psql -U postgres -d postgres -c "SELECT COUNT(*) FROM sensor_data;"
+    ```
 
-View logs:
-```bash
-docker compose logs -f postgres
-docker compose logs -f db-bootstrap
-docker compose logs -f nodered
-docker compose logs -f grafana
-```
+- **Errors during ingestion**
+    - Failed rows are logged into sensor_errors with error_msg and raw_payload.
+    ```bash
+    docker compose exec postgres \
+    psql -U postgres -d postgres -c "SELECT * FROM sensor_errors LIMIT 20;"
+    ```
+
+- **Services not starting / timing out**
+    - Check migration logs:
+    ```bash
+    docker compose logs db-bootstrap
+    ```
+    - Check individual services:
+    ```bash
+    docker compose logs -f postgres
+    docker compose logs -f nodered
+    docker compose logs -f grafana
+    ```
+
+- **Port conflicts**
+    - Adjust ports in .env and restart:
+    ```bash
+    docker compose down
+    docker compose up -d
+    ```
 
 ---
 
 ## Security notes
 
-Ships with local‑dev defaults. For any network‑exposed deployment:
-- Change all default passwords and enable TLS where applicable.
-- Restrict inbound ports to trusted hosts.
-- Do not upload sensitive data without appropriate governance.
+The default configuration is for **local development**:
+
+- Default passwords are simple and stored in .env.example.
+- HTTP endpoints are unencrypted and unauthenticated.
+- MQTT has no auth.
+
+For any network-exposed deployment:
+
+- Change all default passwords and rotate them regularly.
+- Enable TLS where supported (Grafana, reverse proxies, etc.).
+- Restrict inbound ports to trusted IPs (firewall, security groups).
+- Ensure CSVs and logs do not contain sensitive information without proper governance.
 
 ---
 
 ### Tests
 
-We provide a GitHub Actions CI workflow that launches the full stack using Docker Compose, applies SQL migrations via a one-shot db-bootstrap container, and runs an integration smoke test inside the Postgres service. The test asserts that all core tables (sensors, sensor_data, ingestion_metrics, sensor_errors) exist and that initial sensor metadata has been seeded. This guarantees that the published Compose files, migrations, and Node-RED flows remain deployable and consistent across local machines, CI runners, and future demo deployments.
+We provide a GitHub Actions **CI smoke test** workflow that:
+1. Launches the full stack using `docker compose` with `compose.yml` and `compose.ci.yml`.
+2. Applies SQL migrations via a one-shot `db-bootstrap` container.
+3. Runs an integration smoke test inside the `postgres` service, asserting that:
+    - all core tables (`sensors`, `sensor_data`, `ingestion_metrics`, `sensor_errors`) exist, and
+    - initial sensor metadata has been seeded.
+
+This guarantees that the published Compose files, migrations, and Node-RED flows remain deployable and consistent across local machines, CI runners, and future demo deployments.
 
