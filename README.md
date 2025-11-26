@@ -380,3 +380,8 @@ We provide a GitHub Actions **CI smoke test** workflow that:
 
 This guarantees that the published Compose files, migrations, and Node-RED flows remain deployable and consistent across local machines, CI runners, and future demo deployments.
 
+## License
+
+This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
+
+
