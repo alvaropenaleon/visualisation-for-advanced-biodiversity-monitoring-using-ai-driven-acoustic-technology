@@ -10,7 +10,6 @@ Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Tech
 
 > **Why?** It focuses on the *post‑classification* gap: turning CSVs into canonical, auditable records; visualising both **ecological signals** and **ingestion health** (latency, throughput, errors); and enabling **period comparisons** with a non‑technical UI.
 
----
 
 ## Contents
 
@@ -30,7 +29,6 @@ Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Tech
 - [Cite this project](#cite-this-project)
 - [License](#license)
 
----
 
 ## Quickstart
 
@@ -68,7 +66,6 @@ docker compose ps
 
 > Grafana default creds are typically `admin` / `admin` unless overridden in `.env`. Change on first login.
 
----
 
 ## Verify the stack
 
@@ -106,7 +103,6 @@ If dashboards or flows fail to provision, restart those services:
 docker compose restart grafana nodered
 ```
 
----
 
 ## Upload & explore
 
@@ -125,7 +121,6 @@ docker compose restart grafana nodered
         - **Data-quality / ingestion health**: latency, throughput, missing-data gaps, errors
 3. Export data for downstream analysis via **Panel → Inspect → Data → Download CSV**.
 
----
 
 ## Example data
 
@@ -143,7 +138,6 @@ Typical headers supported by the normalisation flow include:
 - `File`, `Start (s)`, `End (s)`, `Scientific name`, `Common name`, `Confidence`
 - or JSON fields like `time`, `sensor_id`, `scientific_name`, `common_name`, `confidence`.
 
----
 
 ## Configuration
 
@@ -174,7 +168,6 @@ MQTT_PORT=1883
 
 > Change passwords for non‑local deployments. For remote use, also set `GF_SERVER_ROOT_URL`, TLS, and proper firewalling.
 
----
 
 ## Data model
 
@@ -228,7 +221,6 @@ SELECT create_hypertable(
 
 > Some deployments enable **continuous aggregates** for heavy rollups such as daily species counts.
 
----
 
 ## Optional ingestion paths
 
@@ -279,7 +271,6 @@ mosquitto_pub -h localhost -p 1883 \
 
 There is also a `POST /config` endpoint in Node-RED that publishes config messages to `detector/config/<sensor_id>` over MQTT, for edge device configuration pilots.
 
----
 
 ## Backups & persistence
 
@@ -306,7 +297,6 @@ tar czf backup.tgz postgres-16-data grafana-data nodered-data mosquitto-data
 
 In CI, these are replaced by Docker-managed named volumes via `compose.ci.yml` to avoid host-specific permissions while keeping the same container configuration.
 
----
 
 ## Troubleshooting
 
@@ -352,7 +342,6 @@ docker compose down
 docker compose up -d
 ```
 
----
 
 ## Security notes
 
@@ -369,7 +358,6 @@ For any network-exposed deployment:
 - Restrict inbound ports to trusted IPs (firewall, security groups).
 - Ensure CSVs and logs do not contain sensitive information without proper governance.
 
----
 
 ## Tests
 
@@ -382,6 +370,7 @@ We provide a GitHub Actions **CI smoke test** workflow that:
 
 This guarantees that the published Compose files, migrations, and Node-RED flows remain deployable and consistent across local machines, CI runners, and future demo deployments.
 
+
 ## ChirpCheck local app
 
 A standalone **ChirpCheck** desktop-style app, built on top of this project’s data model and visualisation approach, is also available for users who prefer a self-contained local GUI:
@@ -390,10 +379,12 @@ A standalone **ChirpCheck** desktop-style app, built on top of this project’s 
 
 This repository remains the **canonical stack** (Node-RED flows, TimescaleDB schema, Grafana dashboards, and CI setup). The ChirpCheck app is a companion tool that packages the same ideas into a single installable application for end users.
 
+
 ## Acknowledgements
 
 This project was initially informed by the [Digitalisation AIO Package](https://github.com/ctch3ng/Digitalisation-AIO-Package).
 The present architecture including BirdNET focused schema, SQL migrations, Node-RED flows, ingestion metrics, Grafana dashboards, and CI smoke tests  has been engineered specifically for this project.
+
 
 ## License
 
