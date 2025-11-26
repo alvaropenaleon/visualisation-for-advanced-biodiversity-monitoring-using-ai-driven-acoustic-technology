@@ -28,6 +28,7 @@ Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Tech
 - [Acknowledgements](#acknowledgements)
 - [Cite this project](#cite-this-project)
 - [License](#license)
+- [UI preview](#ui-preview)
 
 
 ## Quickstart
@@ -389,3 +390,10 @@ The present architecture including BirdNET focused schema, SQL migrations, Node-
 ## License
 
 This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
+
+
+## UI preview
+
+The stack ships with a pre-built Grafana dashboard and a CSV upload panel in Node-RED so users can go from raw BirdNET CSVs to exploratory plots in   minutes.
+
+![Screenshot: ChirpCheck dashboard](docs/img/dashboard.png)
