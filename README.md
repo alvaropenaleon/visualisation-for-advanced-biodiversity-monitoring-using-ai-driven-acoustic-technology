@@ -25,9 +25,10 @@ Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Tech
 - [Troubleshooting](#troubleshooting)
 - [Security notes](#security-notes)
 - [Tests](#tests)
+- [ChirpCheck local app](#chirpcheck-local-app)
+- [Acknowledgements](#acknowledgements)
 - [Cite this project](#cite-this-project)
 - [License](#license)
-- [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -381,12 +382,19 @@ We provide a GitHub Actions **CI smoke test** workflow that:
 
 This guarantees that the published Compose files, migrations, and Node-RED flows remain deployable and consistent across local machines, CI runners, and future demo deployments.
 
-## License
+## ChirpCheck local app
 
-This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
+A standalone **ChirpCheck** desktop-style app, built on top of this project’s data model and visualisation approach, is also available for users who prefer a self-contained local GUI:
+
+- Project page: https://bit.ly/48eLaPT
+
+This repository remains the **canonical stack** (Node-RED flows, TimescaleDB schema, Grafana dashboards, and CI setup). The ChirpCheck app is a companion tool that packages the same ideas into a single installable application for end users.
 
 ## Acknowledgements
 
 This project was initially informed by the [Digitalisation AIO Package](https://github.com/ctch3ng/Digitalisation-AIO-Package).
 The present architecture including BirdNET focused schema, SQL migrations, Node-RED flows, ingestion metrics, Grafana dashboards, and CI smoke tests  has been engineered specifically for this project.
 
+## License
+
+This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
