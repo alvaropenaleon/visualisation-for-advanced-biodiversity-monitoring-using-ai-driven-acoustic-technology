@@ -24,6 +24,7 @@ Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Tech
 - [Backups & persistence](#backups--persistence)
 - [Troubleshooting](#troubleshooting)
 - [Security notes](#security-notes)
+- [Tests](#tests)
 - [Cite this project](#cite-this-project)
 - [License](#license)
 
@@ -41,7 +42,7 @@ cd visualisation-for-advanced-biodiversity-monitoring-using-ai-driven-acoustic-t
 # 2) (Optional) Copy .env template and tweak ports/creds
 cp .env.example .env
 
-# 3) Launch services
+# 3) Launch services (includes automatic DB migrations)
 docker compose up -d
 
 # 4) Check containers
@@ -60,7 +61,9 @@ docker compose ps
 
 ## Verify the stack
 
-After `docker compose up -d`, run a couple of quick checks:
+On first start, a one-shot `db-bootstrap` container runs the SQL migrations in `db/migrations/` against the `postgres` service and then exits.
+
+After `docker compose up -d`, run:
 
 ```bash
 # 1) Check that Postgres is reachable
@@ -71,7 +74,7 @@ docker compose exec postgres \
   psql -U postgres -d postgres -c '\dt'
 ```
 
-The below should show:
+Expected output:
 
 ```text
                List of relations
