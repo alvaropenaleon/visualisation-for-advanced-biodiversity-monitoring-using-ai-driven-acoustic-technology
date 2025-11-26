@@ -369,7 +369,7 @@ For any network-exposed deployment:
 
 ---
 
-### Tests
+## Tests
 
 We provide a GitHub Actions **CI smoke test** workflow that:
 1. Launches the full stack using `docker compose` with `compose.yml` and `compose.ci.yml`.
@@ -384,4 +384,7 @@ This guarantees that the published Compose files, migrations, and Node-RED flows
 
 This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
 
+## Acknowledgements
+
+An early version of this stack was inspired by the [Digitalisation AIO Package](https://github.com/ctch3ng/Digitalisation-AIO-Package), which provided an initial scaffold for combining Node-RED, PostgreSQL, Mosquitto, and Grafana. The current architecture, including the BirdNET focused schema, SQL migrations, Node-RED ingestion flows, ingestion metrics, Grafana dashboards, and CI smoke tests has been engineered specifically for this project.
 
