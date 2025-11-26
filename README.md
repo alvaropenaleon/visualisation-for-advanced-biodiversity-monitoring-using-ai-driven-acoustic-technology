@@ -97,22 +97,38 @@ docker compose restart grafana nodered
 
 ## Upload & explore
 
-1. Open **Node‑RED dashboard** → `http://localhost:1880/ui` → *CSV Upload* panel.  
-   - Drag‑and‑drop one or more BirdNET CSVs.  
-   - The flow validates rows, records `received_at` and `inserted_at`, batches, and writes to the hypertable.
-2. Open **Grafana** → `http://localhost:3000` and select the **Demo Dashboard** dashboard.  
-   - Use the templated variables (**species**, **site**, **confidence**) to filter views.  
-   - Explore **Overview → Comparative → Data‑quality** rows.  
-   - Export tables via **Panel → Inspect → Data → Download CSV**.
+1. Open **Node‑RED dashboard** at `http://localhost:1880/ui` to access the *CSV Upload* panel.  
+   - Select one or more BirdNET CSVs.  
+   - The flow:
+        - parses CSV in chunks,
+        - normalises fields (timestamps, species names, confidence, sensor IDs),
+        - stamps `received_at` / `inserted_at`,
+        - writes rows into the `sensor_data` hypertable and `ingestion_metrics`.
+2. Open **Grafana** at `http://localhost:3000` and select the **demo dashboard**.  
+   - Use the templated variables (**species**, **confidence**) to filter views.  
+   - Explore:
+        - **Overview**: total detections, species composition, basic time series
+        - **Comparative**: period comparisons between species or time windows
+        - **Data-quality / ingestion health**: latency, throughput, missing-data gaps, errors
+3. Export data for downstream analysis via **Panel → Inspect → Data → Download CSV**.
 
 ---
 
 ## Example data
 
-The repository includes small CSVs under `examples/` so you can verify the full path quickly.  
-Upload an example file through the Node‑RED dashboard and confirm charts populate in Grafana. Any BirdNET-style CSV that includes timestamp, species label, and confidence.
+The repository includes small CSVs under examples/ so you can verify the full path quickly.
 
-> If your deployment does **not** include `examples/`, use any BirdNET‑style CSV that includes timestamp, species label, confidence, and (optionally) site/device metadata.
+1. Upload one of the example files through the **CSV Upload** dashboard.
+2. Confirm that charts and tables populate in Grafana (time series, species breakdown, etc.).
+
+Note: Any BirdNET-style CSV will work as long as it provides:
+- a timestamp (directly or derivable from the file path),
+- a species label (scientific and/or common name),
+- a confidence score,
+
+Typical headers supported by the normalisation flow include:
+- `File`, `Start (s)`, `End (s)`, `Scientific name`, `Common name`, `Confidence`
+- or JSON fields like `time`, `sensor_id`, `scientific_name`, `common_name`, `confidence`.
 
 ---
 
@@ -120,9 +136,9 @@ Upload an example file through the Node‑RED dashboard and confirm charts popul
 
 Configuration is **declarative** and versioned in-repo:
 
-- **Node-RED** flows under `nodered-data/` (auto-loaded at startup)
-- **Grafana** provisioning under `grafana/provisioning/`
-- **SQL migrations** under `db/migrations/` (applied automatically by `db-bootstrap`)
+- **Node-RED** flows and dashboard stored under `nodered-data/` (mounted to /data and auto-loaded at startup).
+- **Grafana** data and dashboards under `grafana-data/` (mounted to `/var/lib/grafana`, includes pre-provisioned dashboards).
+- **SQL migrations** under `db/migrations/`, applied automatically at startup by the one-shot `db-bootstrap` service.
 
 Key `.env` entries (example):
 
@@ -197,37 +213,85 @@ SELECT create_hypertable(
 );
 ```
 
-> Some deployments enable **continuous aggregates** for heavy rollups (e.g., daily site×species counts).
+> Some deployments enable **continuous aggregates** for heavy rollups such as daily species counts.
 
 ---
 
 ## Optional ingestion paths
 
-Besides CSV upload via dashboard, you can ingest via **HTTP** or **MQTT** (if enabled):
+Besides CSV upload via the dashboard, you can ingest detections via **HTTP** or **MQTT** using the unified ingestion pipeline in Node-RED.
 
 ### HTTP (developer/testing)
+
+The stack exposes:
+
+- `POST /detections` on Node-RED (`http://localhost:1880/detections`)
+
+Example:
+
 ```bash
-curl -X POST http://localhost:1880/detections \  -H 'Content-Type: application/json' \  -d '[{"time":"2025-01-01T12:00:00Z","site":"S1","species":"Carduelis carduelis","confidence":0.92}]'
+curl -X POST http://localhost:1880/detections \
+  -H "Content-Type: application/json" \
+  -d '[
+    {
+      "time": "2025-01-01T12:00:00Z",
+      "sensor_id": 1,
+      "start_seconds": 5,
+      "end_seconds": 8,
+      "scientific_name": "Geocrinia laevis",
+      "common_name": "Southern Smooth Froglet",
+      "confidence": 0.92
+    }
+  ]'
 ```
+The Node-RED flow validates and normalises this payload and writes to `sensor_data` and `ingestion_metrics`. For debugging there is also a `GET /detections` API that queries `sensor_data` with time/species filters.
 
 ### MQTT (pilot/streaming)
+
+MQTT ingestion listens on the `detector/data` topic:
+
 ```bash
-mosquitto_pub -h localhost -p 1883 -t sensors/detections -m '{"time":"2025-01-01T12:00:00Z","site":"S1","species":"Carduelis carduelis","confidence":0.92}'
+mosquitto_pub -h localhost -p 1883 \
+  -t detector/data \
+  -m '{
+    "time": "2025-01-01T12:00:00Z",
+    "sensor_id": 1,
+    "start_seconds": 5,
+    "end_seconds": 8,
+    "scientific_name": "Geocrinia laevis",
+    "common_name": "Southern Smooth Froglet",
+    "confidence": 0.92
+  }'
 ```
 
-Node‑RED flows parse, validate and normalise these payloads before insert.
+There is also a `POST /config` endpoint in Node-RED that publishes config messages to `detector/config/<sensor_id>` over MQTT, for edge device configuration pilots.
 
 ---
 
 ## Backups & persistence
 
-Docker volumes persist data and configuration:
+Service data and configuration are persisted via bind mounts:
 
-- `db-data/` — PostgreSQL/TimescaleDB
-- `grafana-data/` — Grafana SQLite & plugins
-- `nodered-data/` — Node‑RED flows & runtime
+- `./postgres-16-data`: TimescaleDB / PostgreSQL data
+- `./grafana-data`: Grafana data (SQLite, dashboards, plugins)
+- `./nodered-data`: Node-RED project (flows, dashboard, settings)
+- `./mosquitto-data`: Mosquitto broker configuration and persistence
 
-Back up by stopping the stack and archiving named volumes or binding directories.
+To back up a local deployment:
+
+1. Stop the stack:
+
+```bash
+docker compose down
+```
+
+2. Archive the relevant directories:
+
+```bash
+tar czf vabmat-backup.tgz postgres-16-data grafana-data nodered-data mosquitto-data
+```
+
+In CI, these are replaced by Docker-managed named volumes via `compose.ci.yml` to avoid host-specific permissions while keeping the same container configuration.
 
 ---
 
