@@ -8,7 +8,13 @@ echo "Checking Postgres responds to a simple query inside the container"
 # try up to 30 times to connect and run a simple query
 for i in {1..30}; do
     if $COMPOSE exec -T postgres \
-        psql -U postgres -d postgres -c "SELECT 1;" >/dev/null 2>&1; then
+        psql -U postgres -d postgres -v ON_ERROR_STOP=1 <<'SQL' >/dev/null 2>&1; then
+\dt sensors
+\dt sensor_data
+\dt ingestion_metrics
+\dt sensor_errors
+SELECT COUNT(*) FROM sensors;
+SQL
         echo "Postgres responded correctly on attempt $i"
         exit 0
     fi
