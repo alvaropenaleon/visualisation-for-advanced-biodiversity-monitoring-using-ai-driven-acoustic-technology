@@ -10,6 +10,7 @@ Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Tech
 
 > **Why?** It focuses on the *post‑classification* gap: turning CSVs into canonical, auditable records; visualising both **ecological signals** and **ingestion health** (latency, throughput, errors); and enabling **period comparisons** with a non‑technical UI.
 
+![Image: Software architecture](paper/fig1-architecture.png)
 
 ## Contents
 
