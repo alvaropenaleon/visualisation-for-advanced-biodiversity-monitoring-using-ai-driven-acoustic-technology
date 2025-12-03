@@ -16,8 +16,8 @@ authors:
     affiliation: 2
   - name: Timothy Wiley
     affiliation: 1
-  - name: Ian Peake
-    affiliation: 1
+  - name: Ian D. Peake
+    affiliation: 3
   - name: Chi-Tsun Cheng
     affiliation: 1
   - name: Martino E. Malerba
@@ -27,6 +27,8 @@ affiliations:
     index: 1
   - name: Centre for Nature Positive Solutions, School of Science, RMIT University, Melbourne, Australia
     index: 2
+  - name: STEM Hub for Digital Innovation, RMIT University
+    index: 3
 date: 2025-02-XX
 bibliography: paper.bib
 ---
