@@ -29,7 +29,7 @@ affiliations:
     index: 2
   - name: STEM Hub for Digital Innovation, RMIT University
     index: 3
-date: 2025-02-XX
+date: 2025-12-03
 bibliography: paper.bib
 ---
 
@@ -49,21 +49,15 @@ Commercial workbenches such as Wildlife Acoustics Kaleidoscope [@kaleidoscope] a
 
 These local, GUI-first deployments are valuable where data governance, offline use, or teaching contexts preclude cloud services. ChirpCheck specifically targets CSV-first, local, reproducible exploration by packaging ingestion, automated normalisation, diagnostics, and curated dashboards into a single, versioned stack. It provides low-friction detections analysis for non-programmers, and operational, analytical, and tactical observability to contextualise ecological patterns. This complements existing analysers and workbenches by emphasising local reproducibility and pipeline health rather than replacing specialist modelling tools.
 
-# Implementation
+# Architecture
 
 ChirpCheck comprises a three-tier architecture for post-classification time-series analysis.
 
-## Ingestion (Node-RED)
+**Ingestion (Node-RED)**: Node-RED flows parse CSV rows, normalise fields (timestamps, species, confidence, site), batch inserts for throughput, and stamp each record with `received_at` / `inserted_at` to expose latency and backpressure. Optional MQTT and REST endpoints support continuous data streaming or programme-controlled data ingest and retrieval.
 
-Node-RED flows parse CSV rows, normalise fields (timestamps, species, confidence, site), batch inserts for throughput, and stamp each record with `received_at` / `inserted_at` to expose latency and backpressure. Optional MQTT and REST endpoints support continuous data streaming or programme-controlled data ingest and retrieval.
+**Storage (PostgreSQL / TimescaleDB)**: Detections are stored in a time-partitioned hypertable indexed on timestamp; auxiliary tables capture metrics and structured errors. Indexes on common predicates support interactive queries; optional continuous aggregates power heavy roll-ups [@freedmanBlackwoodTimescaleArch].
 
-## Storage (PostgreSQL / TimescaleDB)
-
-Detections are stored in a time-partitioned hypertable indexed on timestamp; auxiliary tables capture metrics and structured errors. Indexes on common predicates support interactive queries; optional continuous aggregates power heavy roll-ups [@freedmanBlackwoodTimescaleArch].
-
-## Visualisation (Grafana)
-
-Dashboards are JSON-provisioned and use templated variables (for example species and confidence) for consistent drill-down workflows. Panel queries are exportable as CSV for downstream analyses.
+**Visualisation (Grafana)**: Dashboards are JSON-provisioned and use templated variables (for example species and confidence) for consistent drill-down workflows. Panel queries are exportable as CSV for downstream analyses.
 
 ![Architecture diagram showing ingestion, storage, and visualisation tiers with optional MQTT/REST inputs, a detections hypertable, and provisioned dashboards.](fig1-architecture.png)
 
@@ -79,19 +73,6 @@ ChirpCheck's functionality is designed to match the practical needs of ecologica
 - Reproducible and extensible deployment through Docker Compose with versioned flows and JSON-provisioned dashboards, with optional MQTT streaming.
 
 ![Overview dashboard (Grafana). Pre-provisioned panels summarise hourly activity, daily composition, and weekly composition by species. The templated controls along the top (site, species, confidence, date range) filter all panels; each panel's query is exportable as CSV. This view supports fast exploratory analysis while keeping ingestion health visible via time-windowed selectors.](fig2-dashboard.png)
-
-# Quality control
-
-The repository includes a continuous integration (CI) smoke test that exercises the deployed stack. A GitHub Actions workflow:
-
-1. launches the full Docker Compose stack (with CI-specific volumes),
-2. waits for Node-RED and PostgreSQL to become reachable, and
-3. executes a small integration script inside the PostgreSQL container that:
-
-   - verifies that the core tables (`sensors`, `sensor_data`, `ingestion_metrics`, `sensor_errors`) exist, and  
-   - confirms that initial sensor metadata has been seeded as defined by the SQL migrations.
-
-This test asserts that the Compose files, migrations, and database bootstrap remain consistent over time and that new changes do not silently break provisioning of the back-end schema. In addition, we validate the Node-RED ingestion flows and Grafana dashboards manually using example BirdNET-style CSV files included with the repository.
 
 # Availability
 
