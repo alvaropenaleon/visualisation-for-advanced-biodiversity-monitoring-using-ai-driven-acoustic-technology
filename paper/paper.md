@@ -11,17 +11,18 @@ tags:
   - TimescaleDB
 authors:
   - name: Alvaro Peña Leon
-    affiliation: 1
+    affiliation: '1'
+    orcid: '0000-0000-0000-0000'
   - name: Paul Phan
-    affiliation: 2
+    affiliation: '2'
   - name: Timothy Wiley
-    affiliation: 1
+    affiliation: '1'
   - name: Ian D. Peake
-    affiliation: 3
+    affiliation: '3'
   - name: Chi-Tsun Cheng
-    affiliation: 1
+    affiliation: '1'
   - name: Martino E. Malerba
-    affiliation: 2
+    affiliation: '2'
 affiliations:
   - name: School of Computing Technologies, RMIT University, Melbourne, Australia
     index: 1
@@ -29,7 +30,7 @@ affiliations:
     index: 2
   - name: STEM Hub for Digital Innovation, RMIT University
     index: 3
-date: 2025-12-03
+date: 3 December 2025
 bibliography: paper.bib
 ---
 
@@ -76,11 +77,7 @@ ChirpCheck's functionality is designed to match the practical needs of ecologica
 
 # Availability
 
-ChirpCheck is open source under the MIT licence in a public GitHub repository:
-
-> <https://github.com/alvaropenaleon/visualisation-for-advanced-biodiversity-monitoring-using-ai-driven-acoustic-technology>
-
-It is available in two forms:
+ChirpCheck is open source under the MIT licence in a public [GitHub repository](https://github.com/alvaropenaleon/visualisation-for-advanced-biodiversity-monitoring-using-ai-driven-acoustic-technology) and is available in two forms:
 
 - **Packaged (CSV-first, recommended).** Download the bundle, run with Docker Compose, open the upload user interface, and upload BirdNET-style CSVs. It runs fully offline without code changes on Windows, macOS, and Linux.
 - **Source (for extensibility).** A Docker Compose stack with Node-RED flows, TimescaleDB schema, and JSON-provisioned Grafana dashboards. This supports programme-controlled ingest via REST and MQTT, and is intended for enabling streaming, custom panels, or schema tweaks.
