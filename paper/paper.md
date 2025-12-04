@@ -70,11 +70,10 @@ ChirpCheck’s functionality is built around the practical needs of ecological m
 - **Consistent, standardised data**. All records are normalised (timestamps, species names, and confidence scores) so that queries, filters, and exports behave predictably across datasets.
 - **Built-in observability and error tracking**. Each row is tagged with the time it was received and stored, enabling latency and throughput metrics to be monitored directly in the dashboard. A dedicated `sensor_errors` table retains raw problematic entries and diagnostic details, supporting detection of gaps or ingestion issues.
 - **Accessible dashboards for fast exploration**. The interface includes preconfigured heatmaps, time-series plots, data-quality panels, and summary views. Users can apply species and confidence filters, compare different time periods, view helpful tooltips, and export any panel’s underlying query as a CSV file.
-- **Optional API endpoints**. Simple POST/GET endpoints (`/detections`) allow programmatic data ingestion or retrieval for users who want to integrate ChirpCheck with external tools or devices.
-- **Reproducible, extensible deployment**. The entire system runs through a Docker Compose setup with versioned flows and JSON-provisioned dashboards. Optional MQTT streaming can be enabled for real-time data from field devices.
+- **Reproducible, extensible deployment and APIs**. The entire system runs through a Docker Compose setup with versioned flows and JSON-provisioned dashboards. Optional MQTT streaming and simple POST/GET endpoints (`/detections`) support real-time data from field devices and programmatic ingestion or retrieval.
 
 
-![Overview dashboard (Grafana). Pre-provisioned panels summarise hourly activity, daily composition, and weekly composition by species. The templated controls along the top (site, species, confidence, date range) filter all panels; each panel's query is exportable as CSV. This view supports fast exploratory analysis while keeping ingestion health visible via time-windowed selectors.](fig2-dashboard.png)
+![Overview dashboard (Grafana). Pre-provisioned hourly, daily, and weekly panels for activity, composition, and data quality, filtered by species, confidence, and date range.](fig2-dashboard.png)
 
 # Availability
 
