@@ -66,7 +66,7 @@ docker compose ps
 - PostgreSQL: `localhost:5432`
 - MQTT (Mosquitto, optional): `localhost:1883`
 
-> Grafana default creds are typically `admin` / `admin` unless overridden in `.env`. Change on first login.
+> Grafana default creds are typically `admin` / `admin` but overridden in `.env`. Change on first login.
 
 
 ## Verify the stack
