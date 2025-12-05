@@ -4,9 +4,9 @@
 
 Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Technology lets ecologists, students, land managers, and citizen scientists explore large batches of BirdNET-style CSV outputs without writing code. With **one Docker command**, you get a local stack with:
 
-- **Node‑RED** — CSV upload + normalisation (optional HTTP & MQTT ingestion)
-- **TimescaleDB (PostgreSQL 16)** — time-series storage (hypertable)
-- **Grafana OSS** — pre-provisioned dashboards (overview → compare → drill‑down)
+- **Node‑RED**: CSV upload + normalisation (optional HTTP & MQTT ingestion)
+- **TimescaleDB (PostgreSQL 16)**: Time-series storage (hypertable)
+- **Grafana OSS**: Pre-provisioned dashboards (overview → compare → drill‑down)
 
 > **Why?** It focuses on the *post‑classification* gap: turning CSVs into canonical, auditable records; visualising both **ecological signals** and **ingestion health** (latency, throughput, errors); and enabling **period comparisons** with a non‑technical UI.
 
@@ -221,7 +221,7 @@ SELECT create_hypertable(
 );
 ```
 
-> Some deployments enable **continuous aggregates** for heavy rollups such as daily species counts.
+> Deployments enable **continuous aggregates** for heavy rollups such as daily species counts.
 
 
 ## Optional ingestion paths
@@ -386,6 +386,12 @@ This repository remains the **canonical stack** (Node-RED flows, TimescaleDB sch
 
 This project was initially informed by the [Digitalisation AIO Package](https://github.com/ctch3ng/Digitalisation-AIO-Package).
 The present architecture including BirdNET focused schema, SQL migrations, Node-RED flows, ingestion metrics, Grafana dashboards, and CI smoke tests  has been engineered specifically for this project.
+
+## Cite this project
+
+If you use ChirpCheck in academic work, please cite:
+
+> Peña Leon, A., Phan, P., Wiley, T., Peake, I. D., Cheng, C.-T., & Malerba, M. E. *ChirpCheck: A GUI tool to visualise and explore BirdNET output files for passive acoustic monitoring*. Journal of Open Source Software (in review).
 
 
 ## License
