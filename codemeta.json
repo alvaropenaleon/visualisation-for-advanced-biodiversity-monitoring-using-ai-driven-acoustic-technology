@@ -1,0 +1,46 @@
+{
+    "@context": "https://raw.githubusercontent.com/codemeta/codemeta/master/codemeta.jsonld",
+    "@type": "Code",
+    "author": [
+        {
+            "@id": "https://orcid.org/0009-0007-9994-1909",
+            "@type": "Person",
+            "email": "alvleon@hotmail.com",
+            "name": "Alvaro Peña Leon",
+            "affiliation": "School of Computing Technologies, RMIT University, Melbourne, Australia"
+        },
+        {
+            "@type": "Person",
+            "name": "Paul Phan",
+            "affiliation": "Centre for Nature Positive Solutions, School of Science, RMIT University, Melbourne, Australia"
+        },
+        {
+            "@type": "Person",
+            "name": "Timothy Wiley",
+            "affiliation": "School of Computing Technologies, RMIT University, Melbourne, Australia"
+        },
+        {
+            "@type": "Person",
+            "name": "Ian D. Peake",
+            "affiliation": "STEM Hub for Digital Innovation, RMIT University"
+        },
+        {
+            "@type": "Person",
+            "name": "Chi-Tsun Cheng",
+            "affiliation": "School of Computing Technologies, RMIT University, Melbourne, Australia"
+        },
+        {
+            "@type": "Person",
+            "name": "Martino E. Malerba",
+            "affiliation": "Centre for Nature Positive Solutions, School of Science, RMIT University, Melbourne, Australia"
+        }
+    ],
+    "codeRepository": "https://github.com/alvaropenaleon/visualisation-for-advanced-biodiversity-monitoring-using-ai-driven-acoustic-technology",
+    "dateCreated": "2025-12-05",
+    "dateModified": "2025-12-05",
+    "description": "A GUI tool to visualise and explore BirdNET output files for passive acoustic monitoring",
+    "keywords": "biodiversity monitoring, ecoacoustics, AI classification, BirdNET, time-series database, Grafana, Node-RED, MQTT, TimescaleDB",
+    "license": "MIT",
+    "title": "ChirpCheck",
+    "version": "v1.0.1"
+}
