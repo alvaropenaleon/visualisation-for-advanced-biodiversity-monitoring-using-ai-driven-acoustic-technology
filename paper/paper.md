@@ -58,7 +58,7 @@ Other commercial platforms such as Wildlife Acoustics Kaleidoscope [@kaleidoscop
 
 ChirpCheck was built to target this gap, a self-contained workflow that ingests BirdNET-style CSVs into a consistent time-series schema and provides preconfigured dashboards for rapid, reproducible inspection, including checks that surface ingestion issues that can affect interpretation without requiring custom scripting.
 
-# Software Design
+# Software design
 
 ChirpCheck adopts a three-tier architecture (ingestion, storage, visualisation) that keeps the system understandable to non-specialists while remaining scalable and maintainable. This workflow prioritises CSV as the primary input format, enabling reproducible re-ingestion and straightforward comparison across datasets, with MQTT/ REST inputs following the same ingestion pathway so batch and streaming deployments share an identical storage and dashboard model.
 
@@ -68,11 +68,11 @@ At the **storage** layer, PostgreSQL with TimescaleDB stores detections in a tim
 
 ![Architecture diagram showing ingestion, storage, and visualisation tiers.](fig1-architecture.png)
 
-# Research Impact statement
+# Research impact statement
 
-ChirpCheck has been developed to support biodiversity monitoring teams at RMIT University and has been used to validate ingestion and explore BirdNET-style detection outputs. Developed within an interdisciplinary collaboration spanning the Schools of Computing Technologies, Engineering, and Science, the tool has supported routine checks that would otherwise be implemented as project-specific scripts: confirming that detections are being received and stored as expected, identifying gaps or ingestion errors, and producing consistent exploratory plots for reporting and internal discussion.
+ChirpCheck was developed within an interdisciplinary collaboration across the Schools of Computing Technologies, Engineering, and Science at RMIT University to support biodiversity monitoring teams with daily validation of BirdNET detection outputs. It has provided a consistent way to confirm uploads and streams are being ingested as expected across sensors and time ranges, display missing intervals and ingestion interruptions before they bias summaries, and produce consistent figures for internal reporting and project discussions.
 
-Beyond this internal use, ChirpCheck is released as a public, reproducible reference implementation, enabling third parties to reproduce the same workflow. Together, these materials reduce setup effort for monitoring deployments that start from BirdNET-style CSV outputs and provide a baseline that can be extended with additional panels, ingestion sources, or schema changes.
+Its significance is in making CSV files reproducible outside a single project, allowing others to use the same ingestion and visualisation workflow, audit the pipeline configuration, and extend it with new panels or ingestion paths without re-building the system from scratch. This supports reliable interpretation of AI detections by making data ready for exploratory inspection straightforward across users and deployments.
 
 # Key features
 
