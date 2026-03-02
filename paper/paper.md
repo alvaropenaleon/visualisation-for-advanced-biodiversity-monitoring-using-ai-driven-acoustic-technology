@@ -70,7 +70,7 @@ At the **storage** layer, PostgreSQL with TimescaleDB stores detections in a tim
 
 # Research impact statement
 
-ChirpCheck was developed within an interdisciplinary collaboration across the Schools of Computing Technologies, Engineering, and Science at RMIT University to support biodiversity monitoring teams with daily validation of BirdNET detection outputs. It has provided a consistent way to confirm uploads and streams are being ingested as expected across sensors and time ranges, display missing intervals and ingestion interruptions before they bias summaries, and produce consistent figures for internal reporting and project discussions.
+ChirpCheck was developed in an interdisciplinary collaboration across the Schools of Computing Technologies, Engineering, and Science at RMIT University to support biodiversity monitoring teams validating BirdNET detection outputs. It has been used in student biodiversity monitoring projects at RMIT (10 student researchers), providing a consistent way to confirm uploads and streams are ingested as expected across sensors and time ranges, surface missing intervals and interruptions before they bias summaries, and generate figures for reports and project discussions.
 
 Its significance is in making CSV files reproducible outside a single project, allowing others to use the same ingestion and visualisation workflow, audit the pipeline configuration, and extend it with new panels or ingestion paths without re-building the system from scratch. This supports reliable interpretation of AI detections by making data ready for exploratory inspection straightforward across users and deployments.
 
