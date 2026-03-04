@@ -1,16 +1,23 @@
-# Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Technology
+# ChirpCheck (Visualisation for Biodiversity Monitoring)
 
 *A containerised GUI for exploring BirdNET detection CSVs in passive acoustic monitoring.*
 
-Visualisation for Advanced Biodiversity Monitoring Using AI-Driven Acoustic Technology lets ecologists, students, land managers, and citizen scientists explore large batches of BirdNET-style CSV outputs without writing code. With **one Docker command**, you get a local stack with:
+A tool that allows ecologists, students, and land managers explore large batches of CSV outputs without writing code. It focuses on the post‑classification gap: turning CSVs into auditable records, visualising both ecological signals and ingestion health, and enabling period comparisons.
+It runs as a Docker container stack with:
 
 - **Node‑RED**: CSV upload + normalisation (optional HTTP & MQTT ingestion)
 - **TimescaleDB (PostgreSQL 16)**: Time-series storage (hypertable)
-- **Grafana OSS**: Pre-provisioned dashboards (overview → compare → drill‑down)
-
-> **Why?** It focuses on the *post‑classification* gap: turning CSVs into canonical, auditable records; visualising both **ecological signals** and **ingestion health** (latency, throughput, errors); and enabling **period comparisons** with a non‑technical UI.
+- **Grafana OSS**: Pre-provisioned dashboards (overview, compare, and drill‑down)
 
 ![Image: Software architecture](paper/fig1-architecture.png)
+
+## Local app
+
+**ChirpCheck** desktop-style app, built on top of this project’s data model and visualisation approach, is also available for users who prefer a self-contained local GUI:
+
+- Project page: https://bit.ly/48eLaPT
+
+This repository remains the **canonical stack** (Node-RED flows, TimescaleDB schema, Grafana dashboards, and CI setup). The ChirpCheck app is a companion tool that packages the same ideas into a single installable application for end users.
 
 ## Contents
 
@@ -168,9 +175,6 @@ NODERED_PORT=1880
 # MQTT (optional)
 MQTT_PORT=1883
 ```
-
-> Change passwords for non‑local deployments. For remote use, also set `GF_SERVER_ROOT_URL`, TLS, and proper firewalling.
-
 
 ## Data model
 
@@ -346,41 +350,20 @@ docker compose up -d
 ```
 
 
-## Security notes
+## Security (local defaults)
 
-The default configuration is for **local development**:
-
-- Default passwords are simple and stored in .env.example.
-- HTTP endpoints are unencrypted and unauthenticated.
-- MQTT has no auth.
-
-For any network-exposed deployment:
-
-- Change all default passwords and rotate them regularly.
-- Enable TLS where supported (Grafana, reverse proxies, etc.).
-- Restrict inbound ports to trusted IPs (firewall, security groups).
-- Ensure CSVs and logs do not contain sensitive information without proper governance.
+Default settings are for local development only (simple passwords, no TLS/auth on HTTP, MQTT may be unauthenticated). For network-exposed deployments enable TLS, and restrict ports.
 
 
 ## Tests
 
-We provide a GitHub Actions **CI smoke test** workflow that:
-1. Launches the full stack using `docker compose` with `compose.yml` and `compose.ci.yml`.
-2. Applies SQL migrations via a one-shot `db-bootstrap` container.
-3. Runs an integration smoke test inside the `postgres` service, asserting that:
-    - all core tables (`sensors`, `sensor_data`, `ingestion_metrics`, `sensor_errors`) exist, and
-    - initial sensor metadata has been seeded.
+Verify the stack starts correctly, migrations run, and database tables are created. Run locally:
 
-This guarantees that the published Compose files, migrations, and Node-RED flows remain deployable and consistent across local machines, CI runners, and future demo deployments.
-
-
-## ChirpCheck local app
-
-A standalone **ChirpCheck** desktop-style app, built on top of this project’s data model and visualisation approach, is also available for users who prefer a self-contained local GUI:
-
-- Project page: https://bit.ly/48eLaPT
-
-This repository remains the **canonical stack** (Node-RED flows, TimescaleDB schema, Grafana dashboards, and CI setup). The ChirpCheck app is a companion tool that packages the same ideas into a single installable application for end users.
+```bash
+docker compose -f compose.yml -f compose.ci.yml up -d --build && \
+bash ci/wait-for-services.sh && \
+bash ci/assert-postgres.sh
+```
 
 
 ## Acknowledgements
@@ -389,8 +372,6 @@ This project was initially informed by the [Digitalisation AIO Package](https://
 The present architecture including BirdNET focused schema, SQL migrations, Node-RED flows, ingestion metrics, Grafana dashboards, and CI smoke tests  has been engineered specifically for this project.
 
 ## Cite this project
-
-If you use ChirpCheck in academic work, please cite:
 
 > Peña Leon, A., Phan, P., Wiley, T., Peake, I. D., Cheng, C.-T., & Malerba, M. E. *ChirpCheck: A GUI tool to visualise and explore BirdNET output files for passive acoustic monitoring*. Journal of Open Source Software (in review).
 

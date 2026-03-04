@@ -95,7 +95,7 @@ ChirpCheck is open source under the MIT licence in a public [GitHub repository](
 
 # AI usage disclosure
 
-AI tools were used only to assist with proofreading and improving clarity in project documentation (README). All architectural decisions, implementation, and technical content were created and checked by authors.
+AI tools were used only to assist with proofreading and improving clarity in project documentation. All architectural decisions, implementation, and technical content were created and checked by authors.
 
 # Acknowledgements
 
