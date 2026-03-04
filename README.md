@@ -1,42 +1,19 @@
-# ChirpCheck (Visualisation for Biodiversity Monitoring)
+# ChirpCheck: BirdNET CSV Explorer for Acoustic Biodiversity Monitoring
 
-*A containerised GUI for exploring BirdNET detection CSVs in passive acoustic monitoring.*
+![CI](https://github.com/alvaropenaleon/visualisation-for-advanced-biodiversity-monitoring-using-ai-driven-acoustic-technology/actions/workflows/ci.yml/badge.svg)
 
-A tool that allows ecologists, students, and land managers explore large batches of CSV outputs without writing code. It focuses on the post‑classification gap: turning CSVs into auditable records, visualising both ecological signals and ingestion health, and enabling period comparisons.
-It runs as a Docker container stack with:
+A containerised tool for exploring BirdNET detection CSVs used in passive acoustic monitoring. It converts CSV outputs into a time-series dataset and provides preconfigured dashboards for rapid inspection of detections and ingestion health.
 
-- **Node‑RED**: CSV upload + normalisation (optional HTTP & MQTT ingestion)
-- **TimescaleDB (PostgreSQL 16)**: Time-series storage (hypertable)
-- **Grafana OSS**: Pre-provisioned dashboards (overview, compare, and drill‑down)
+The stack runs with Docker Compose and includes:
+
+- Node-RED for CSV upload and ingestion
+- PostgreSQL with TimescaleDB for time-series storage
+- Grafana dashboards for interactive exploration
 
 ![Image: Software architecture](paper/fig1-architecture.png)
 
-## Local app
-
-**ChirpCheck** desktop-style app, built on top of this project’s data model and visualisation approach, is also available for users who prefer a self-contained local GUI:
-
-- Project page: https://bit.ly/48eLaPT
-
-This repository remains the **canonical stack** (Node-RED flows, TimescaleDB schema, Grafana dashboards, and CI setup). The ChirpCheck app is a companion tool that packages the same ideas into a single installable application for end users.
-
-## Contents
-
-- [Quickstart](#quickstart)
-- [Verify the stack](#verify-the-stack)
-- [Upload & explore](#upload--explore)
-- [Example data](#example-data)
-- [Configuration](#configuration)
-- [Data model](#data-model)
-- [Optional ingestion paths](#optional-ingestion-paths)
-- [Backups & persistence](#backups--persistence)
-- [Troubleshooting](#troubleshooting)
-- [Security notes](#security-notes)
-- [Tests](#tests)
-- [ChirpCheck local app](#chirpcheck-local-app)
-- [Acknowledgements](#acknowledgements)
-- [Cite this project](#cite-this-project)
-- [License](#license)
-- [UI preview](#ui-preview)
+The packaged desktop version of ChirpCheck built on this stack is available here: https://bit.ly/48eLaPT
+This repository remains the canonical stack (Node-RED flows, TimescaleDB schema, Grafana dashboards, and CI setup). 
 
 
 ## Quickstart
@@ -69,7 +46,7 @@ docker compose ps
 ```
 
 **Default ports** (override in `.env`):
-- Node‑RED: `http://localhost:1880` (dashboard UI at `/ui`)
+- Node‑RED: `http://localhost:1880`
 - Grafana: `http://localhost:3000`
 - PostgreSQL: `localhost:5432`
 - MQTT (Mosquitto, optional): `localhost:1883`
@@ -79,9 +56,7 @@ docker compose ps
 
 ## Verify the stack
 
-On first start, a one-shot `db-bootstrap` container runs the SQL migrations in `db/migrations/` against the `postgres` service and then exits.
-
-After `docker compose up -d`, run:
+When the stack starts, a `db-bootstrap` container applies SQL migrations from `db/migrations`.
 
 1. Check that Postgres is reachable
 ```bash
@@ -107,37 +82,12 @@ Expected output:
 (4 rows)
 ```
 
-If dashboards or flows fail to provision, restart those services:
+## Example data upload
 
-```bash
-docker compose restart grafana nodered
-```
+The repository includes small CSVs under examples/ to verify the full path.
 
-
-## Upload & explore
-
-1. Open **Node‑RED dashboard** at `http://localhost:1880/ui` to access the *CSV Upload* panel.  
-   - Select one or more BirdNET CSVs.  
-   - The flow:
-        - parses CSV in chunks,
-        - normalises fields (timestamps, species names, confidence, sensor IDs),
-        - stamps `received_at` / `inserted_at`,
-        - writes rows into the `sensor_data` hypertable and `ingestion_metrics`.
-2. Open **Grafana** at `http://localhost:3000` and select the **demo dashboard**.  
-   - Use the templated variables (**species**, **confidence**) to filter views.  
-   - Explore:
-        - **Overview**: total detections, species composition, basic time series
-        - **Comparative**: period comparisons between species or time windows
-        - **Data-quality / ingestion health**: latency, throughput, missing-data gaps, errors
-3. Export data for downstream analysis via **Panel → Inspect → Data → Download CSV**.
-
-
-## Example data
-
-The repository includes small CSVs under examples/ so you can verify the full path quickly.
-
-1. Upload one of the example files through the **CSV Upload** dashboard.
-2. Confirm that charts and tables populate in Grafana (time series, species breakdown, etc.).
+1. Open **Node‑RED dashboard** at `http://localhost:1880/ui`, upload one of the example files.
+2. Open **Grafana** at `http://localhost:3000` and confirm that charts and tables populate in Grafana (time series, species breakdown, etc.)
 
 Note: Any BirdNET-style CSV will work as long as it provides:
 - a timestamp (directly or derivable from the file path),
@@ -151,89 +101,25 @@ Typical headers supported by the normalisation flow include:
 
 ## Configuration
 
-Configuration is **declarative** and versioned in-repo:
+Configuration is declarative and stored in the repository:
 
 - **Node-RED** flows and dashboard stored under `nodered-data/` (mounted to /data and auto-loaded at startup).
 - **Grafana** data and dashboards under `grafana-data/` (mounted to `/var/lib/grafana`, includes pre-provisioned dashboards).
 - **SQL migrations** under `db/migrations/`, applied automatically at startup by the one-shot `db-bootstrap` service.
 
-Key `.env` entries (example):
-
-```dotenv
-# Postgres / TimescaleDB
-POSTGRES_DB=postgres
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-
-# Grafana
-GRAFANA_USER=admin
-GRAFANA_PASSWORD=admin
-
-# Node-RED
-NODERED_PORT=1880
-
-# MQTT (optional)
-MQTT_PORT=1883
-```
-
 ## Data model
 
-The stack uses a small, explicit schema designed for time-series analysis and ingestion tracking.
+The database schema is defined in `db/migrations/`. The main tables are:
 
-```sql
--- Dimension table sensor metadata
-CREATE TABLE IF NOT EXISTS sensors (
-    id       SERIAL PRIMARY KEY,
-    type     VARCHAR(50),
-    location VARCHAR(50)
-);
-
--- Avoid duplicated sensor seeds
-ALTER TABLE sensors
-ADD CONSTRAINT IF NOT EXISTS sensors_type_location_uniq
-UNIQUE (type, location);
-
--- Main detections table converted to hypertable on "time"
-CREATE TABLE IF NOT EXISTS sensor_data (
-    time            TIMESTAMPTZ NOT NULL,
-    sensor_id       INTEGER,
-    start_seconds   INTEGER,
-    end_seconds     INTEGER,
-    scientific_name VARCHAR(50),
-    common_name     VARCHAR(50),
-    confidence      DOUBLE PRECISION,
-    FOREIGN KEY (sensor_id) REFERENCES sensors (id)
-);
-
--- Per-row timestamps ingestion latency metrics
-CREATE TABLE IF NOT EXISTS ingestion_metrics (
-    received_at TIMESTAMPTZ NOT NULL,
-    inserted_at TIMESTAMPTZ NOT NULL
-);
-
--- Error log for rejected rows / failures
-CREATE TABLE IF NOT EXISTS sensor_errors (
-    time        TIMESTAMPTZ DEFAULT NOW(),
-    error_msg   TEXT NOT NULL,
-    raw_payload JSONB
-);
-
--- Convert sensor_data into a TimescaleDB hypertable
-SELECT create_hypertable(
-    'sensor_data',
-    'time',
-    if_not_exists => TRUE
-);
-```
-
-> Deployments enable **continuous aggregates** for heavy rollups such as daily species counts.
+- `sensor_data` BirdNET detections stored as a TimescaleDB hypertable
+- `sensors` sensor metadata
+- `ingestion_metrics` ingestion timestamps
+- `sensor_errors` rejected rows and parsing errors
 
 
 ## Optional ingestion paths
 
-Besides CSV upload via the dashboard, you can ingest detections via **HTTP** or **MQTT** using the unified ingestion pipeline in Node-RED.
-
-### HTTP (developer/testing)
+### HTTP
 
 The stack exposes:
 
@@ -256,9 +142,8 @@ curl -X POST http://localhost:1880/detections \
     }
   ]'
 ```
-The Node-RED flow validates and normalises this payload and writes to `sensor_data` and `ingestion_metrics`. For debugging there is also a `GET /detections` API that queries `sensor_data` with time/species filters.
 
-### MQTT (pilot/streaming)
+### MQTT (streaming)
 
 MQTT ingestion listens on the `detector/data` topic:
 
@@ -276,33 +161,7 @@ mosquitto_pub -h localhost -p 1883 \
   }'
 ```
 
-There is also a `POST /config` endpoint in Node-RED that publishes config messages to `detector/config/<sensor_id>` over MQTT, for edge device configuration pilots.
-
-
-## Backups & persistence
-
-Service data and configuration are persisted via bind mounts:
-
-- `./postgres-16-data`: TimescaleDB / PostgreSQL data
-- `./grafana-data`: Grafana data (SQLite, dashboards, plugins)
-- `./nodered-data`: Node-RED project (flows, dashboard, settings)
-- `./mosquitto-data`: Mosquitto broker configuration and persistence
-
-To back up a local deployment:
-
-1. Stop the stack:
-
-```bash
-docker compose down
-```
-
-2. Archive the relevant directories:
-
-```bash
-tar czf backup.tgz postgres-16-data grafana-data nodered-data mosquitto-data
-```
-
-In CI, these are replaced by Docker-managed named volumes via `compose.ci.yml` to avoid host-specific permissions while keeping the same container configuration.
+`POST /config` endpoint available Node-RED publishes config messages to `detector/config/<sensor_id>` over MQTT, for edge device configuration pilots.
 
 
 ## Troubleshooting
@@ -316,9 +175,7 @@ docker compose exec postgres \
 psql -U postgres -d postgres -c "SELECT COUNT(*) FROM sensor_data;"
 ```
 
-- **Errors during ingestion**
-
-Failed rows are logged into sensor_errors with error_msg and raw_payload.
+3. Confirm failed rows are logged into sensor_errors.
 
 ```bash
 docker compose exec postgres \
@@ -340,17 +197,8 @@ docker compose logs -f nodered
 docker compose logs -f grafana
 ```
 
-- **Port conflicts**
 
-Adjust ports in .env and restart:
-
-```bash
-docker compose down
-docker compose up -d
-```
-
-
-## Security (local defaults)
+## Security
 
 Default settings are for local development only (simple passwords, no TLS/auth on HTTP, MQTT may be unauthenticated). For network-exposed deployments enable TLS, and restrict ports.
 
@@ -381,7 +229,7 @@ The present architecture including BirdNET focused schema, SQL migrations, Node-
 This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
 
 
-## UI preview
+## Dashboard
 
 The stack ships with a pre-built Grafana dashboard and a CSV upload panel in Node-RED so users can go from raw BirdNET CSVs to exploratory plots in   minutes.
 
