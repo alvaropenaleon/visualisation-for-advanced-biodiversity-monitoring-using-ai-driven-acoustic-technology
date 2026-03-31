@@ -107,6 +107,7 @@ Configuration is declarative and stored in the repository:
 - **Grafana** data and dashboards under `grafana-data/` (mounted to `/var/lib/grafana`, includes pre-provisioned dashboards).
 - **SQL migrations** under `db/migrations/`, applied automatically at startup by the one-shot `db-bootstrap` service.
 
+
 ## Data model
 
 The database schema is defined in `db/migrations/`. The main tables are:
@@ -197,7 +198,6 @@ docker compose logs -f nodered
 docker compose logs -f grafana
 ```
 
-
 ## Security
 
 Default settings are for local development only (simple passwords, no TLS/auth on HTTP, MQTT may be unauthenticated). For network-exposed deployments enable TLS, and restrict ports.
@@ -212,6 +212,28 @@ docker compose -f compose.yml -f compose.ci.yml up -d --build && \
 bash ci/wait-for-services.sh && \
 bash ci/assert-postgres.sh
 ```
+
+
+## Contributing
+
+Contributions are made against the files in this repository and validated through the Docker Compose stack.
+
+The main editable components are:
+
+- `nodered-data/` for Node-RED flows and dashboard logic
+- `db/migrations/` for PostgreSQL/TimescaleDB schema changes
+- `grafana-data/` for provisioned Grafana dashboards and configuration
+- `examples/` for sample BirdNET-style CSV inputs used to validate ingestion paths
+- `ci/` for test scripts used to verify that the stack starts and the database is initialised correctly
+
+Typical workflow:
+
+1. Clone the repository.
+2. Edit the relevant component locally.
+3. Rebuild or refresh the stack with Docker Compose.
+4. Validate the change using example CSV uploads, HTTP endpoints, MQTT messages, and CI tests.
+
+Docker is the supported development and validation path for the integrated system. A separate non-Docker contributor install path is not yet available.
 
 
 ## Acknowledgements
